@@ -52,7 +52,7 @@ struct {
     int nextMapIndex = 0
 	bool mapIndexChanged = true
 	array<entity> playerSpawnedProps
-	array<ItemFlavor> characters  
+	array<ItemFlavor> characters
 	int SameKillerStoredKills=0
 	array<string> whitelistedWeapons
 	array<string> whitelistedAbilities
@@ -488,6 +488,8 @@ void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
 	if (FlowState_RandomGunsEverydie() && FlowState_FIESTADeathboxes())
 		CreateFlowStateDeathBoxForPlayer(victim, attacker, damageInfo)
 
+	victim.StartObserverMode( OBS_MODE_DEATHCAM )
+
 	switch(GetGameState())
     {
         case eGameState.Playing:
@@ -804,7 +806,6 @@ void function WpnPulloutOnRespawn(entity player, float duration)
 {
 	if(!IsValid( player ) || !IsAlive(player) ) return
 
-
 	if(GetCurrentPlaylistVarBool("flowstateReloadUltimateOnRespawn", false ))
 	{
 		entity tactical = player.GetOffhandWeapon( OFFHAND_TACTICAL )
@@ -815,7 +816,6 @@ void function WpnPulloutOnRespawn(entity player, float duration)
 		entity ultimate = player.GetOffhandWeapon( OFFHAND_ULTIMATE )
 		ultimate.SetWeaponPrimaryClipCount( ultimate.GetWeaponPrimaryClipCountMax() )
 	}
-
 	if(IsValid( player.GetNormalWeapon( WEAPON_INVENTORY_SLOT_PRIMARY_1 )))
 	{
 		entity weapon = player.GetNormalWeapon( WEAPON_INVENTORY_SLOT_PRIMARY_1 )
@@ -2675,9 +2675,9 @@ string function helpMessage()
 	"kill_self: 复活自己（如果你卡住了）\n" +
 	"scoreboard: 显示积分榜\n" +
 	"latency: 显示所有玩家的PING值\n" +
-	"say [聊天内容]: 发送消息给所有玩家\n" +
+
 	"spectate: 观战其他玩家\n" +
-	"commands: 再次显示该消息\n" +
+	"commands: 再次显示当前可用指令 \n" +
 	"\n" +
 	"Apex社区服KOOK频道: 98171075\n" +
 	"Apex社区服QQ群: 307689539"
