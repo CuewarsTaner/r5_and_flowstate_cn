@@ -916,8 +916,7 @@ void function GiveRandomPrimaryWeaponMetagame(entity player)
 		"mp_weapon_vinson optic_cq_hcog_bruiser stock_tactical_l3 highcal_mag_l3",
 		"mp_weapon_vinson optic_cq_hcog_classic stock_tactical_l3 highcal_mag_l3",
 		"mp_weapon_energy_ar optic_cq_hcog_bruiser energy_mag_l1 hopup_turbocharger stock_tactical_l3",
-		"mp_weapon_energy_ar optic_cq_hcog_classic energy_mag_l1 hopup_turbocharger stock_tactical_l3",
-		"mp_weapon_hemlok barrel_stabilizer_l3 optic_cq_hcog_bruiser stock_tactical_l3 highcal_mag_l3"
+		"mp_weapon_energy_ar optic_cq_hcog_classic energy_mag_l1 hopup_turbocharger stock_tactical_l3"
 	]
 
 	foreach(weapon in Weapons)
@@ -940,7 +939,9 @@ void function GiveRandomSecondaryWeaponMetagame(entity player)
 		"mp_weapon_wingman optic_cq_hcog_classic highcal_mag_l3",
 		"mp_weapon_energy_shotgun shotgun_bolt_l3 optic_cq_threat",
 		"mp_weapon_shotgun shotgun_bolt_l3 optic_cq_threat",
-		"mp_weapon_pdw optic_cq_hcog_classic highcal_mag_l3 stock_tactical_l3",				
+		"mp_weapon_pdw optic_cq_hcog_classic highcal_mag_l3 stock_tactical_l3",
+		"mp_weapon_volt_smg energy_mag_l2 stock_tactical_l3",
+		"mp_weapon_car optic_cq_hcog_classic stock_tactical_l3 bullets_mag_l3"
 	]
 
 	foreach(weapon in Weapons)
