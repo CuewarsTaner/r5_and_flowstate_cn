@@ -311,7 +311,7 @@ playlists
 			inherit defaults
 		}
 
-        map_editor
+		map_editor
 		{
 			inherit defaults
 		}
@@ -518,24 +518,25 @@ playlists
 				flowstateRoundsBeforeChangeLevel	0								//随机更替地图需要等待多少个回合
 				flowstateGiveAllOpticsToPlayer		1								//给玩家提供所有瞄准镜
 				flowstate_headshots_only_gamemode	0								//是否开启仅爆头模式（推荐respawn kit只有小帮手或单发狙击枪并关闭随机武器）
-
 				//custom maps by community					//社区自定义地图或POI
 				//World's Edge Map							//S3世界尽头
-				flowstate_Enable_BRIGHWATER_By_Zero 1       //是否开启Zero制作的地图POI
-				flowstate_Enable_CAVE_By_BlessedSeal 1      //是否开启BlessedSeal制作的地图POI
-				flowstate_Enable_SKILLTRAINER_By_Colombia	//是否开启Columbia制作的天空竞技场POI
+				flowstate_Enable_BRIGHWATER_By_Zero				0       //是否开启Zero制作的地图POI
+				flowstate_Enable_CAVE_By_BlessedSeal			0		//是否开启BlessedSeal制作的地图POI
+				flowstate_Enable_SKILLTRAINER_By_Colombia		1		//是否开启Columbia制作的天空竞技场POI
 				
-				//Kings Canyon OG map						//S0诸王峡谷
-				flowstate_Enable_CUSTOMMAP_By_Biscutz 1		//是否开启Biscutz制作的地图POI
-				flowstate_Enable_WHITEFOREST_By_Zero 1		//是否开启Zero制作的地图POI
+				//Kings Canyon OG map									//S0诸王峡谷
+				flowstate_Enable_CUSTOMMAP_By_Biscutz 0					//是否开启Biscutz制作的地图POI
+				flowstate_Enable_WHITEFOREST_By_Zero 0					//是否开启Zero制作的地图POI
+				
+				flowstateKickHighPingPlayer			0		//是否开启延迟自动踢人功能
+				flowstateMaxPingAllowed				230		//高于该延迟将被自动提出服务器
+				solo_mode 							1 //启用该选项以显示游戏中的在线玩家数量，不启用则会显示两个问号
+				flowstateDoorsEnabled				0 //是否开启建筑物的门
+				flowstateDoorsRegen					0 //若门受到了伤害但未被摧毁，则会自动回复生命值。推荐关闭
 
-				flowstateKickHighPingPlayer			0		//是否开启延迟自动踢人功能		
-				flowstateMaxPingAllowed				200		//高于该延迟将被自动提出服务器
-				solo_mode 							1		//启用该选项以显示游戏中的在线玩家数量，不启用则会显示两个问号
-				flowstateDoorsEnabled				1		//是否开启建筑物的门
-				flowstateDoorsRegen					0		//若门受到了伤害但未被摧毁，则会自动回复生命值。推荐关闭
+	
 
-				//visuals									//视觉选项
+				//visuals	//视觉选项
 				flowstateForceCharacter 			1		//是否强制所有玩家的传奇
 				flowstateChosenCharacter 			7		//0烟妹 1狗子 2侵蚀 3胖子 4命脉 5幻象 6动力 7机器人 8恶灵 9电妹 10密客
 				flowstateForceAdminCharacter		1		//是否强制管理员的传奇
@@ -550,7 +551,7 @@ playlists
 				//extrashields
 				flowstateExtrashieldsEnabled 		0
 				flowstateExtrashieldsSpawntime 		240
-				flowstateExtrashieldValue 			150 //extrashield actual value					
+				flowstateExtrashieldValue 			150 //extrashield actual value
 
 			}
 			gamemodes { custom_tdm { maps {									//TDM模式支持的地图
