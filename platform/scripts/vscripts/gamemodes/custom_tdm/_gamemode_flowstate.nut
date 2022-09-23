@@ -47,7 +47,7 @@ enum eTDMState
 }
 
 struct {
-	string scriptversion = "v3.2"
+	string scriptversion = "v3.35"
     int tdmState = eTDMState.IN_PROGRESS
     int nextMapIndex = 0
 	bool mapIndexChanged = true
@@ -487,8 +487,6 @@ void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
 {
 	if (FlowState_RandomGunsEverydie() && FlowState_FIESTADeathboxes())
 		CreateFlowStateDeathBoxForPlayer(victim, attacker, damageInfo)
-
-	victim.StartObserverMode( OBS_MODE_DEATHCAM )
 
 	switch(GetGameState())
     {
@@ -940,7 +938,7 @@ void function GiveRandomSecondaryWeaponMetagame(entity player)
 		"mp_weapon_r97 optic_cq_hcog_classic barrel_stabilizer_l3 stock_tactical_l3 bullets_mag_l3",
 		"mp_weapon_wingman optic_cq_hcog_classic highcal_mag_l3",
 		"mp_weapon_energy_shotgun shotgun_bolt_l3 optic_cq_threat",
-		"mp_weapon_shotgun shotgun_bolt_l3 optic_cq_threat",
+		"mp_weapon_shotgun shotgun_bolt_l2 optic_cq_threat",
 		"mp_weapon_pdw optic_cq_hcog_classic highcal_mag_l3 stock_tactical_l3",
 		"mp_weapon_volt_smg energy_mag_l2 stock_tactical_l3",
 		"mp_weapon_car optic_cq_hcog_classic stock_tactical_l3 bullets_mag_l3"
@@ -1086,7 +1084,10 @@ void function GiveRandomTac(entity player)
 		"mp_ability_area_sonar_scan",
 		"mp_weapon_grenade_sonar",
 		"mp_weapon_deployable_cover",
-		"mp_ability_holopilot"
+		"mp_ability_holopilot",
+		"mp_ability_cloak",
+		//"mp_ability_space_elevator_tac",
+		"mp_ability_phase_rewind"
 	]
 
 	foreach(ability in file.whitelistedAbilities)
@@ -2677,7 +2678,6 @@ string function helpMessage()
 	"kill_self: 复活自己（如果你卡住了）\n" +
 	"scoreboard: 显示积分榜\n" +
 	"latency: 显示所有玩家的PING值\n" +
-
 	"spectate: 观战其他玩家\n" +
 	"commands: 再次显示当前可用指令 \n" +
 	"\n" +
@@ -2729,7 +2729,7 @@ bool function ClientCommand_GiveWeapon(entity player, array<string> args)
 		Message(player, "武器白名单")
 		return false
 	}
-	
+
 	if( file.whitelistedAbilities.len() && file.whitelistedAbilities.find(args[1]) != -1 )
 	{
 		Message(player, "技能白名单")

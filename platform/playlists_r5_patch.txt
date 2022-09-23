@@ -1,7 +1,7 @@
 playlists
 {
 	version stable
-	versionNum 216
+	versionNum 226
 	Gamemodes
 	{
 		defaults
@@ -19,7 +19,7 @@ playlists
 				register_damage_to_ai 						1
 				register_dummie_kill_as_actual_kill 				1
 				dummies_have_random_shields 					1
-				dummies_agressivedummies 					1			
+				dummies_agressivedummies 					1				
 				
 				///////////////////////////////////////////////////////////////////////////////////
 				//// Code Required Vars
@@ -281,7 +281,7 @@ playlists
 				survival_quick_chat_enabled                    1 // Quips
 				desertlands_script_train_enable                1 // World's Edge Train
 				thirdperson_match                              0 // Third Person Mode
-				enable_nessies                                 1 // Kings Canyon Easter Egg
+				enable_nessies                                 0 // Kings Canyon Easter Egg
 
 				///////////////////////////////////////////////////////////////////////////////////
 				///////////////////////////////////////////////////////////////////////////////////
@@ -445,7 +445,7 @@ playlists
 				abbreviation                       "TDM"
 				lobbytitle                         "TDM"
 				pin_match_type                     survival
-				enable_nessies                     1		//是否启用小水怪
+				enable_nessies                     0		//是否启用小水怪
 				
    				//Flowstate By CaféDeColombiaFPS.
 				
@@ -486,12 +486,10 @@ playlists
 				respawn_kit_secondary_weapon 		"mp_weapon_energy_shotgun optic_cq_threat shotgun_bolt_l3 "		//复活默认副武器
 				respawn_kit_tactical 				"mp_ability_grapple"											//战术技能
 				respawn_kit_ultimate 				"mp_ability_phase_walk"											//终极技能
-				flowstateReloadTacticalOnRespawn	1																//复活战术技能冷却重置
-				flowstateReloadUltimateOnRespawn	1																//复活终极技能冷却重置
-				
+
 				//random weapons and abilities settings		//死斗模式是否开启随机武器和技能
 				flowstateRandomGuns 				0 		//是否加载大范围随机武器列表（什么枪都有）
-				flowstateRandomGunsMetagame			1 		//是否加载小范围随机武器列表（主301/平行/汗洛/哈沃克，副R99/小帮手/和平/EVA8/猎兽）
+				flowstateRandomGunsMetagame			1 		//是否加载小范围随机武器列表（主301/平行/哈沃克，副R99/小帮手/和平/EVA8/猎兽/电充/Car）
 				flowstateRandomTactical 			0 		//是否加载随机战术技能列表
 				flowstateRandomUltimate				0 		//是否加载随机终极技能列表
 
@@ -505,7 +503,7 @@ playlists
 				flowstateEndlessFFAorTDM			0								//是否开启无尽模式（不会刷新新的轮次，不会产生捍卫者）
 				Admins 								"CuewarsTaner NNanfeng1" 		//管理员游戏ID（多个管理员请用空格隔开）
 				respawn_delay						5								//复活延迟
-				flowstateRoundtime 					480								//每轮时间（世界尽头这张图地点多，建议调为360秒）
+				flowstateRoundtime 					480								//每轮时间（默认480秒）
 				flowstateBubble 					"111, 66, 245" 					//安全区颜色
 				flowstateResetKills 				1								//是否开启击杀数重置功能
 				flowstateTimer 						1
@@ -518,21 +516,24 @@ playlists
 				flowstateRoundsBeforeChangeLevel	0								//随机更替地图需要等待多少个回合
 				flowstateGiveAllOpticsToPlayer		1								//给玩家提供所有瞄准镜
 				flowstate_headshots_only_gamemode	0								//是否开启仅爆头模式（推荐respawn kit只有小帮手或单发狙击枪并关闭随机武器）
-				//custom maps by community					//社区自定义地图或POI
-				//World's Edge Map							//S3世界尽头
-				flowstate_Enable_BRIGHWATER_By_Zero				0       //是否开启Zero制作的地图POI
-				flowstate_Enable_CAVE_By_BlessedSeal			0		//是否开启BlessedSeal制作的地图POI
+				flowstateReloadTacticalOnRespawn	1								//复活战术技能冷却重置
+				flowstateReloadUltimateOnRespawn	1								//复活终极技能冷却重置
+				
+				//custom maps by community								//社区自定义地图或POI
+				//World's Edge Map										//S3世界尽头
+				flowstate_Enable_BRIGHWATER_By_Zero				1       //是否开启Zero制作的地图POI
+				flowstate_Enable_CAVE_By_BlessedSeal			1		//是否开启BlessedSeal制作的地图POI
 				flowstate_Enable_SKILLTRAINER_By_Colombia		1		//是否开启Columbia制作的天空竞技场POI
 				
 				//Kings Canyon OG map									//S0诸王峡谷
-				flowstate_Enable_CUSTOMMAP_By_Biscutz 0					//是否开启Biscutz制作的地图POI
-				flowstate_Enable_WHITEFOREST_By_Zero 0					//是否开启Zero制作的地图POI
+				flowstate_Enable_CUSTOMMAP_By_Biscutz			1		//是否开启Biscutz制作的地图POI
+				flowstate_Enable_WHITEFOREST_By_Zero			1		//是否开启Zero制作的地图POI
 				
-				flowstateKickHighPingPlayer			0		//是否开启延迟自动踢人功能
-				flowstateMaxPingAllowed				230		//高于该延迟将被自动提出服务器
-				solo_mode 							1 //启用该选项以显示游戏中的在线玩家数量，不启用则会显示两个问号
-				flowstateDoorsEnabled				0 //是否开启建筑物的门
-				flowstateDoorsRegen					0 //若门受到了伤害但未被摧毁，则会自动回复生命值。推荐关闭
+				flowstateKickHighPingPlayer			0					//是否开启延迟自动踢人功能
+				flowstateMaxPingAllowed				200					//高于该延迟将被自动提出服务器
+				solo_mode 							1					//启用该选项以显示游戏中的在线玩家数量，不启用则会显示两个问号
+				flowstateDoorsEnabled				0					//是否开启建筑物的门
+				flowstateDoorsRegen					0 					//若门受到了伤害但未被摧毁，则会自动回复生命值。推荐关闭
 
 	
 
@@ -649,6 +650,9 @@ playlists
 				flowstateRoundsBeforeChangeLevel		2
 				flowstateGiveAllOpticsToPlayer			0
 				flowstate_headshots_only_gamemode 0 //i recommend a wingman only in respawn kit above
+				flowstateReloadTacticalOnRespawn  	1
+				flowstateReloadUltimateOnRespawn 	1
+				
 				//custom maps by community
 				//World's Edge Map
 				flowstate_Enable_BRIGHWATER_By_Zero				0
@@ -769,6 +773,9 @@ playlists
 				flowstateRoundsBeforeChangeLevel		2
 				flowstateGiveAllOpticsToPlayer			0
 				flowstate_headshots_only_gamemode 0 //i recommend a wingman only in respawn kit above
+				flowstateReloadTacticalOnRespawn  	1
+				flowstateReloadUltimateOnRespawn 	1
+				
 				//custom maps by community
 				//World's Edge Map
 				flowstate_Enable_BRIGHWATER_By_Zero				0
@@ -854,7 +861,7 @@ playlists
 				max_teams                                      1
 				max_players                                    120
 				min_players                                    1
-				enable_nessies                                 1
+				enable_nessies                                 0
 			}
 			gamemodes { map_editor { maps {
 				mp_rr_canyonlands_64k_x_64k                    1
@@ -1303,7 +1310,7 @@ playlists
 				max_teams                                      1
 				max_players                                    120
 				min_players                                    1
-				enable_nessies                                 1
+				enable_nessies                                 0
 
 			}
 			gamemodes { survival { maps {
@@ -1387,15 +1394,14 @@ playlists
 				"Playtest_Only"                       "Playtest"
 				"MP_RR_ASHS_REDEMPTION"               "Ash's Redemption"
 				"MP_RR_AQUEDUCT"                      "Overflow"
-				"PROMO_LARGE_TITLE"                   "Welcome To R5Reloaded!"
-				"PROMO_LARGE_DESCRIPTION"             "Make sure to join the discord! discord.gg/r5reloaded"
-				"PROMO_LEFT_TITLE"                    "FLOWSTATE"
-				"PROMO_LEFT_DESCRIPTION"              "v3.0 beta"
-				"PROMO_RIGHT_TITLE"                   "FLOWSTATE"
-				"PROMO_RIGHT_DESCRIPTION"             "v3.0 beta"
-				"PROMO_SDK_ERROR"                     "You should not see this."
-				"DISCONNECT_BANNED"                   "The client's game account has been banned: Banned"	
-				"BETA_BUILD_WATERMARK" "KOOK频道:98171075 \n QQ群:307689539 \n CN服务器不需加速"		//在这里设置你的服务器水印（可用\n换行）
+                "VALVE_REJECT_BANNED"                 "You have been banned from this server."
+                "DISCONNECT_BANNED"                   "The client's game account has been banned."
+
+                "DISCONNECT_SEND_RELIABLEOVERFLOW"    "Connection to server overflowed (code:river)."
+                "DISCONNECT_SEND_OVERFLOW"            "Connection to server overflowed (code:dam)."
+                "DISCONNECT_NETCHAN_OVERFLOW"         "Connection to server overflowed (code:vulkan)."
+                "DISCONNECT_STRINGCMD_OVERFLOW"       "Connection to server overflowed (code:mountain)."
+				"BETA_BUILD_WATERMARK" "CN服务器不需加速 \n KOOK频道:98171075 \n QQ群:307689539"	//在这里设置你的服务器水印（可用\n换行）
 				"MP_RR_PARTY_CRASHER" "PARTY CRASHER"
 			}
 		}
