@@ -912,11 +912,8 @@ void function GiveRandomPrimaryWeaponMetagame(entity player)
 
     array<string> Weapons = [
 		"mp_weapon_rspn101 optic_cq_hcog_bruiser barrel_stabilizer_l3 stock_tactical_l3 bullets_mag_l3",
-		"mp_weapon_rspn101 optic_cq_hcog_classic barrel_stabilizer_l3 stock_tactical_l3 bullets_mag_l3",
 		"mp_weapon_vinson optic_cq_hcog_bruiser stock_tactical_l3 highcal_mag_l3",
-		"mp_weapon_vinson optic_cq_hcog_classic stock_tactical_l3 highcal_mag_l3",
 		"mp_weapon_energy_ar optic_cq_hcog_bruiser energy_mag_l1 hopup_turbocharger stock_tactical_l3",
-		"mp_weapon_energy_ar optic_cq_hcog_classic energy_mag_l1 hopup_turbocharger stock_tactical_l3"
 	]
 
 	foreach(weapon in Weapons)
