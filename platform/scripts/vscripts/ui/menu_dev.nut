@@ -729,7 +729,7 @@ void function SetupRespawnPlayersDevMenu()
 void function SetupTDMweapsons()
 {
 	SetupDevCommand( "R99冲锋枪", "tgive p mp_weapon_r97 optic_cq_hcog_bruiser stock_tactical_l3 barrel_stabilizer_l3 bullets_mag_l3" )
-	SetupDevCommand( "G7侦查权", "tgive p mp_weapon_g2 optic_ranged_hcog stock_sniper_l3 barrel_stabilizer_l3 bullets_mag_l3 hopup_double_tap" )
+	SetupDevCommand( "G7侦查枪", "tgive p mp_weapon_g2 optic_ranged_hcog stock_sniper_l3 barrel_stabilizer_l3 bullets_mag_l3 hopup_double_tap" )
 	SetupDevCommand( "RE-45手枪", "tgive p mp_weapon_autopistol optic_cq_hcog_bruiser barrel_stabilizer_l3 bullets_mag_l3" )
 	SetupDevCommand( "电能冲锋枪", "tgive p mp_weapon_volt_smg optic_cq_hcog_classic barrel_stabilizer_l3 bullets_mag_l3" )
 	SetupDevCommand( "R-301", "tgive p mp_weapon_rspn101 optic_cq_hcog_bruiser stock_tactical_l3 barrel_stabilizer_l3 bullets_mag_l3" )
