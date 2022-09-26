@@ -1083,7 +1083,7 @@ void function GiveRandomTac(entity player)
 		"mp_weapon_deployable_cover",
 		"mp_ability_holopilot",
 		"mp_ability_cloak",
-		//"mp_ability_space_elevator_tac",
+		"mp_ability_space_elevator_tac",
 		"mp_ability_phase_rewind"
 	]
 

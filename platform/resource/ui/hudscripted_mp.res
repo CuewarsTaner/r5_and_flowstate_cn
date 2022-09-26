@@ -300,7 +300,7 @@ Resource/UI/HudScripted_mp.res
 			visible					0
 			enabled 1
 			fontHeight				33
-			labelText				"TRAINING STATS"
+			labelText				"训练数据"
 			font					"TitleBoldFont"
 			allcaps					1
 			fgcolor_override		"252 198 3 255"
@@ -351,7 +351,7 @@ Resource/UI/HudScripted_mp.res
 		{
 				ControlName				Label
 				auto_wide_tocontents    0
-				labelText				"Kills:"
+				labelText				"击杀"
 				visible                 0
 				enabled 1
 				zpos 1
@@ -391,7 +391,7 @@ Resource/UI/HudScripted_mp.res
 		{
 				ControlName				Label
 				auto_wide_tocontents    0
-				labelText				"Accuracy:"
+				labelText				"命中"
 				visible                 0
 				enabled 1
 				zpos 1
@@ -431,7 +431,7 @@ Resource/UI/HudScripted_mp.res
 		{
 				ControlName				Label
 				auto_wide_tocontents    0
-				labelText				"Damage:"
+				labelText				"伤害"
 				visible                 0
 				enabled 1
 				zpos 1
@@ -471,7 +471,7 @@ Resource/UI/HudScripted_mp.res
 		{
 				ControlName				Label
 				auto_wide_tocontents    0
-				labelText				"Headshots"
+				labelText				"爆头"
 				visible                 0
 				enabled 1
 				zpos 1
