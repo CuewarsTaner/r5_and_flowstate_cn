@@ -144,7 +144,7 @@ void function _CustomTDM_Init()
 	} else{
 		AddClientCommandCallback("scoreboard", ClientCommand_Scoreboard)
 		AddClientCommandCallback("spectate", ClientCommand_SpectateEnemies)
-		//AddClientCommandCallback("teambal", ClientCommand_RebalanceTeams)
+		AddClientCommandCallback("teambal", ClientCommand_RebalanceTeams)
 		AddClientCommandCallback("circlenow", ClientCommand_CircleNow)
 		AddClientCommandCallback("god", ClientCommand_God)
 		AddClientCommandCallback("ungod", ClientCommand_UnGod)
@@ -154,8 +154,6 @@ void function _CustomTDM_Init()
 
 	AddClientCommandCallback("latency", ClientCommand_ShowLatency)
 	AddClientCommandCallback("flowstatekick", ClientCommand_FlowstateKick)
-	AddClientCommandCallback("adminsay", ClientCommand_AdminMsg)
-	AddClientCommandCallback("adminnoclip", ClientCommand_adminnoclip)
 	AddClientCommandCallback("commands", ClientCommand_Help)
 
 	for(int i = 0; GetCurrentPlaylistVarString("whitelisted_weapon_" + i.tostring(), "~~none~~") != "~~none~~"; i++)
@@ -218,6 +216,8 @@ LocPair function _GetVotingLocation()
 			return NewLocPair(<-19459, 2127, 6404>, <0, 180, 0>)
         case "mp_rr_arena_composite":
             return NewLocPair(<0, 4780, 220>, <0, -90, 0>)
+		case "mp_rr_desertlands_64k_x_64k_tt":
+            return NewLocPair(<-25197, -4278, -2138>, <0, -34, 0>)
         default:
 			Assert(false, "No voting location for the map!")
     }
@@ -472,14 +472,12 @@ void function DoubleAndTripleKillAudio(entity attacker)
 
 	if( attacker.p.downedEnemyAtOneTime == 2 )
 	{
-		foreach(player in GetPlayerArray())
-			thread EmitSoundOnEntityOnlyToPlayer(player, player, "diag_ap_aiNotify_killLeaderDoubleKill")
+		SurvivalCommentary_PlaySoundForAllPlayers( "diag_ap_aiNotify_killLeaderDoubleKill" )
 	}
 
 	if( attacker.p.downedEnemyAtOneTime == 3)
 	{
-		foreach(player in GetPlayerArray())
-			thread EmitSoundOnEntityOnlyToPlayer(player, player, "diag_ap_aiNotify_killLeaderTripleKill")
+		SurvivalCommentary_PlaySoundForAllPlayers( "diag_ap_aiNotify_killLeaderTripleKill" )
 	}
 }
 
@@ -620,10 +618,11 @@ void function _HandleRespawn(entity player, bool isDroppodSpawn = false)
 	if( player.IsObserver())
     {
 		player.StopObserverMode()
+		player.SetSpecReplayDelay( 0 )
         Remote_CallFunction_NonReplay(player, "ServerCallback_KillReplayHud_Deactivate")
     }
 
-	if(IsValid( player ) && !IsAlive(player))
+	if( IsValid( player ) && player.IsPlayer() && !IsAlive(player) )
     {
         if(Equipment_GetRespawnKitEnabled() && !FlowState_Gungame())
         {
@@ -829,7 +828,7 @@ void function WpnPulloutOnRespawn(entity player, float duration)
 	}
 	player.ClearFirstDeployForAllWeapons()
 	HolsterAndDisableWeapons(player)
-	wait duration
+	wait duration-0.5
 	if(IsValid(player))
 		DeployAndEnableWeapons(player)
 }
@@ -937,7 +936,6 @@ void function GiveRandomSecondaryWeaponMetagame(entity player)
 		"mp_weapon_energy_shotgun shotgun_bolt_l3 optic_cq_threat",
 		"mp_weapon_shotgun shotgun_bolt_l2 optic_cq_threat",
 		"mp_weapon_pdw optic_cq_hcog_classic highcal_mag_l3 stock_tactical_l3",
-		"mp_weapon_volt_smg energy_mag_l2 stock_tactical_l3",
 		"mp_weapon_car optic_cq_hcog_classic stock_tactical_l3 bullets_mag_l3"
 	]
 
@@ -1614,7 +1612,7 @@ void function SimpleChampionUI(){
 
 	foreach(player in GetPlayerArray())
 	{
-			if(IsValid(player))
+			if(IsValid(player) && !player.IsObserver())
 			{
 				_HandleRespawn(player)
 					if(FlowState_Gungame())
@@ -1706,7 +1704,7 @@ void function SimpleChampionUI(){
     foreach(player in GetPlayerArray())
     {
         try {
-            if(IsValid(player))
+            if(IsValid(player) && !player.IsObserver())
             {
 		        RemoveCinematicFlag(player, CE_FLAG_HIDE_MAIN_HUD | CE_FLAG_EXECUTION)
 		        player.SetThirdPersonShoulderModeOff()
@@ -1744,7 +1742,8 @@ if(GetBestPlayer()==PlayerWithMostDamage())
 		if(GetBestPlayerName() != "-still nobody-")
 			subtext = "\n           捍卫者: " + GetBestPlayerName() + " / " + GetBestPlayerScore() + "击杀 / " + GetDamageOfPlayerWithMostDamage() + " 造成伤害"
 		else subtext = ""
-			Message(player, file.selectedLocation.name, subtext, 25, "diag_ap_aiNotify_circleTimerStartNext_02")
+			Message(player, file.selectedLocation.name, subtext, 25, "")
+			SurvivalCommentary_PlaySoundForAllPlayers( "diag_ap_aiNotify_circleTimerStartNext_02" )
 		file.previousChampion=GetBestPlayer()
 		file.previousChallenger=PlayerWithMostDamage()
 		GameRules_SetTeamScore(player.GetTeam(), 0)
@@ -1759,7 +1758,8 @@ else{
 		if(GetBestPlayerName() != "-still nobody-")
 			subtext = "\n           击杀王: " + GetBestPlayerName() + " / " + GetBestPlayerScore() + " 击杀 \n    伤害王:  " + PlayerWithMostDamageName() + " / " + GetDamageOfPlayerWithMostDamage() + " 造成伤害"
 		else subtext = ""
-			Message(player, file.selectedLocation.name, subtext, 25, "diag_ap_aiNotify_circleTimerStartNext_02")
+			Message(player, file.selectedLocation.name, subtext, 25, "")
+			SurvivalCommentary_PlaySoundForAllPlayers( "diag_ap_aiNotify_circleTimerStartNext_02" )
 		file.previousChampion=GetBestPlayer()
 		file.previousChallenger=PlayerWithMostDamage()
 		GameRules_SetTeamScore(player.GetTeam(), 0)
@@ -1813,77 +1813,85 @@ if(GetCurrentPlaylistVarBool("flowstateEndlessFFAorTDM", false ))
 	thread AutoChangeLevelThread(endTime)
 
 if (FlowState_Timer()){
+SetGlobalNetInt( "currentDeathFieldStage", 0 )
+SetGlobalNetTime( "nextCircleStartTime", endTime )
 while( Time() <= endTime )
 	{
 		if(Time() == endTime-900)
 		{
-				foreach(player in GetPlayerArray())
+				/* foreach(player in GetPlayerArray())
 				{
 					if(IsValid(player))
 					{
 						Message(player,"距离本轮结束还有15分钟!","", 5)
 					}
-				}
+				} */
 			}
 			if(Time() == endTime-600)
 			{
-				foreach(player in GetPlayerArray())
+				/* foreach(player in GetPlayerArray())
 				{
 					if(IsValid(player))
 					{
 						Message(player,"距离本轮结束还有10分钟!","", 5)
 					}
-				}
+				} */
 			}
 			if(Time() == endTime-300)
 			{
-				foreach(player in GetPlayerArray())
+				/* foreach(player in GetPlayerArray())
 				{
 					if(IsValid(player))
 					{
 						Message(player,"距离本轮结束还有5分钟!","", 5)
 					}
-				}
+				} */
 			}
 			if(Time() == endTime-120)
 			{
-				foreach(player in GetPlayerArray())
+				/* foreach(player in GetPlayerArray())
 				{
 					if(IsValid(player))
 					{
 						Message(player,"距离本轮结束还有2分钟!","", 5)
 					}
-				}
+				} */
 			}
 			if(Time() == endTime-60)
 			{
-				foreach(player in GetPlayerArray())
+				/* foreach(player in GetPlayerArray())
 				{
 					if(IsValid(player))
 					{
-						Message(player,"距离本轮结束还有60秒!","", 5, "diag_ap_aiNotify_circleMoves60sec")
+						Message(player,"距离本轮结束还有60秒!","", 5, "")
+						SurvivalCommentary_PlaySoundForAllPlayers( "diag_ap_aiNotify_circleMoves60sec_01" )
 					}
-				}
+				} */
+				SurvivalCommentary_PlaySoundForAllPlayers( "diag_ap_aiNotify_circleMoves60sec_01" )
 			}
 			if(Time() == endTime-30)
 			{
-				foreach(player in GetPlayerArray())
+				/* foreach(player in GetPlayerArray())
 				{
 					if(IsValid(player))
 					{
-						Message(player,"距离本轮结束还有30秒!","", 5, "diag_ap_aiNotify_circleMoves30sec")
+						Message(player,"距离本轮结束还有30秒!","", 5, "")
+						SurvivalCommentary_PlaySoundForAllPlayers( "diag_ap_aiNotify_circleMoves30sec_01" )
 					}
-				}
+				} */
+				SurvivalCommentary_PlaySoundForAllPlayers( "diag_ap_aiNotify_circleMoves30sec_01" )
 			}
 			if(Time() == endTime-10)
 			{
-				foreach(player in GetPlayerArray())
+				/* foreach(player in GetPlayerArray())
 				{
 					if(IsValid(player))
 					{
-						Message(player,"距离本轮结束还有10秒!", "\n 本轮即将结束", 8, "diag_ap_aiNotify_circleMoves10sec")
+						Message(player,"距离本轮结束还有10秒!", "\n 本轮即将结束", 8, "")
+						SurvivalCommentary_PlaySoundForAllPlayers( "diag_ap_aiNotify_circleMoves10sec_01" )
 					}
-				}
+				} */
+				SurvivalCommentary_PlaySoundForAllPlayers( "diag_ap_aiNotify_circleMoves10sec_01" )
 			}
 			if(file.tdmState == eTDMState.NEXT_ROUND_NOW){
 				printt("Flowstate DEBUG - tdmState is eTDMState.NEXT_ROUND_NOW Loop ended.")
@@ -2523,7 +2531,7 @@ bool function ClientCommand_FlowstateKick(entity player, array < string > args) 
     foreach(sPlayer in GetPlayerArray()) {
         if (sPlayer.GetPlayerName() == args[0]) {
             printl("[Flowstate] -> Kicking " + sPlayer.GetPlayerName() + " from flowstate.")
-            ServerCommand("sv_kick " + sPlayer.GetPlayerName())
+            ClientCommand( player, "disconnect" )
             return true
         }
     }
@@ -2650,25 +2658,6 @@ bool function ClientCommand_SpectateSURF(entity player, array<string> args)
     return true
 }
 
-bool function ClientCommand_AdminMsg(entity player, array<string> args)
-{
-	if(IsAdmin( player )) {
-	    string playerName = player.GetPlayerName()
-	    string str = ""
-	    foreach (s in args)
-	    	str += " " + s
-
-        foreach(sPlayer in GetPlayerArray())
-        {
-            Message( sPlayer, "服务器管理员播报", "[管理员]" + playerName + "说: "  + str, 6)
-        }
-	} else 
-		return false
-
-	return true
-}
-
-
 string function helpMessage()
 {
 	return "\n\n           可用控制台命令\n\n " +
@@ -2717,7 +2706,10 @@ bool function ClientCommand_ShowLatency(entity player, array<string> args)
 bool function ClientCommand_GiveWeapon(entity player, array<string> args)
 {
     if ( FlowState_AdminTgive() && !IsAdmin(player) )
+	{
+		Message(player, "ERROR", "Admin has disabled TDM Weapons dev menu.")
 		return false
+	}
 
 	if(args.len() < 2) return false
 
