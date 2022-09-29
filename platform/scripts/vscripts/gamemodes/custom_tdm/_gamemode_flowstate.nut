@@ -1,9 +1,9 @@
 ///////////////////////////////////////////////////////
-// ███████ ██       ██████  ██     ██     ███████ ████████  █████  ████████ ███████
-// ██      ██      ██    ██ ██     ██     ██         ██    ██   ██    ██    ██
-// █████   ██      ██    ██ ██  █  ██     ███████    ██    ███████    ██    █████
-// ██      ██      ██    ██ ██ ███ ██          ██    ██    ██   ██    ██    ██
-// ██      ███████  ██████   ███ ███      ███████    ██    ██   ██    ██    ███████
+// ███████ ██       ██████  ██     ██     ███████ ████████  █████  ████████ ███████      ██████ ███    ██
+// ██      ██      ██    ██ ██     ██     ██         ██    ██   ██    ██    ██          ██      ████   ██
+// █████   ██      ██    ██ ██  █  ██     ███████    ██    ███████    ██    █████       ██      ██ ██  ██
+// ██      ██      ██    ██ ██ ███ ██          ██    ██    ██   ██    ██    ██          ██      ██  ██ ██
+// ██      ███████  ██████   ███ ███      ███████    ██    ██   ██    ██    ███████      ██████ ██   ████
 ///////////////////////////////////////////////////////
 // Credits:
 // CaféDeColombiaFPS (Retículo Endoplasmático#5955) -- owner/main dev
@@ -377,8 +377,8 @@ void function _OnPlayerConnected(entity player)
 			    	if(FlowState_RandomGunsEverydie())
 			    		UpgradeShields(player, true)
 
-			    	if(FlowState_Gungame())
-			    		KillStreakAnnouncer(player, true)
+			    	// if(FlowState_Gungame())
+			    		// KillStreakAnnouncer(player, true)
 
 			    	player.UnforceStand()
 			    	player.FreezeControlsOnServer()
@@ -428,8 +428,8 @@ void function _OnPlayerConnected(entity player)
 					if(FlowState_RandomGunsEverydie())
 						UpgradeShields(player, true)
 
-					if(FlowState_Gungame())
-						KillStreakAnnouncer(player, true)
+					// if(FlowState_Gungame())
+						// KillStreakAnnouncer(player, true)
 				}
 				break
 			default:
@@ -523,8 +523,8 @@ void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
 	    		if(FlowState_RandomGunsEverydie())
 	    		    UpgradeShields(victim, true)
 
-	    		if(FlowState_Gungame())
-	    		    KillStreakAnnouncer(victim, true)
+	    		//if(FlowState_Gungame())
+	    		    //KillStreakAnnouncer(victim, true)
 
 	    		if(file.tdmState != eTDMState.NEXT_ROUND_NOW)
 	    		    wait Deathmatch_GetRespawnDelay()
@@ -556,7 +556,7 @@ void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
 	    			if(FlowState_Gungame())
 	    			{
 	    			    GiveGungameWeapon(attacker)
-	    			    KillStreakAnnouncer(attacker, false)
+	    			    //KillStreakAnnouncer(attacker, false)
 	    			}
 
 	    			WpnAutoReloadOnKill(attacker)
@@ -647,14 +647,7 @@ void function _HandleRespawn(entity player, bool isDroppodSpawn = false)
         else
         {
             if(!player.p.storedWeapons.len())
-            {
 				DecideRespawnPlayer(player, true)
-				array<StoredWeapon> weapons = [
-					Equipment_GetRespawnKit_PrimaryWeapon(),
-					Equipment_GetRespawnKit_SecondaryWeapon()]
-				foreach (storedWeapon in weapons)
-					player.GiveWeapon( storedWeapon.name, storedWeapon.inventoryIndex, storedWeapon.mods )
-			}
             else
             {
 				DecideRespawnPlayer(player, false)
@@ -1028,11 +1021,8 @@ void function GiveActualGungameWeapon(int index, entity player)
 		"mp_weapon_rspn101 optic_cq_hcog_classic stock_tactical_l1 bullets_mag_l2",
 		"mp_weapon_defender optic_ranged_hcog stock_sniper_l2",
 		"mp_weapon_energy_ar optic_cq_hcog_bruiser energy_mag_l3 stock_tactical_l3 hopup_turbocharger",
-		"mp_weapon_wingman",
 		"mp_weapon_alternator_smg optic_cq_hcog_classic bullets_mag_l3 stock_tactical_l3",
 		"mp_weapon_semipistol",
-		"mp_weapon_g2",
-		"mp_weapon_shotgun_pistol",
 		"mp_weapon_esaw optic_cq_hcog_bruiser energy_mag_l1 barrel_stabilizer_l2",
 		"mp_weapon_doubletake energy_mag_l3",
 		"mp_weapon_rspn101 optic_cq_hcog_classic bullets_mag_l1 barrel_stabilizer_l1 stock_tactical_l1",
@@ -1042,7 +1032,6 @@ void function GiveActualGungameWeapon(int index, entity player)
 		"mp_weapon_vinson stock_tactical_l1 highcal_mag_l2",
 		"mp_weapon_r97 optic_cq_threat bullets_mag_l1 barrel_stabilizer_l3 stock_tactical_l1",
 		"mp_weapon_autopistol",
-		"mp_weapon_mastiff",
 		"mp_weapon_dmr optic_cq_hcog_bruiser highcal_mag_l2 barrel_stabilizer_l2 stock_sniper_l3",
 		"mp_weapon_pdw stock_tactical_l1 highcal_mag_l1",
 		"mp_weapon_esaw optic_cq_hcog_classic energy_mag_l1 barrel_stabilizer_l4_flash_hider",
@@ -1051,10 +1040,7 @@ void function GiveActualGungameWeapon(int index, entity player)
 		"mp_weapon_defender optic_sniper stock_sniper_l2",
 		"mp_weapon_esaw optic_cq_holosight_variable",
 		"mp_weapon_rspn101 optic_cq_holosight_variable",
-		"mp_weapon_vinson",
-		"mp_weapon_r97 ",
-		"mp_weapon_g2 bullets_mag_l3 barrel_stabilizer_l4_flash_hider stock_sniper_l3 hopup_double_tap",
-		"mp_weapon_semipistol bullets_mag_l2",
+		"mp_weapon_semipistol bullets_mag_l2"
 	]
 
 	foreach(weapon in Weapons)
@@ -1065,7 +1051,7 @@ void function GiveActualGungameWeapon(int index, entity player)
 				Weapons.removebyvalue(weapon)
 	}
 
-	__GiveWeapon( player, Weapons, slot, RandomIntRange( 0, Weapons.len() ), true)
+	__GiveWeapon( player, Weapons, slot, index, true)
 }
 
 void function GiveRandomTac(entity player)
@@ -1501,15 +1487,16 @@ void function GiveGungameWeapon(entity player) {
 	int WeaponIndex = player.GetPlayerNetInt( "kills" )
 	int realweaponIndex = WeaponIndex
 	int MaxWeapons = 41
-		if (WeaponIndex > MaxWeapons) {
+	if (WeaponIndex > MaxWeapons) 
+	{
         file.tdmState = eTDMState.NEXT_ROUND_NOW
 		foreach (sPlayer in GetPlayerArray())
-			{
+		{
 			sPlayer.SetPlayerNetInt("kills", 0) //Reset for kills
 	    	sPlayer.SetPlayerNetInt("assists", 0) //Reset for deaths
 			sPlayer.p.playerDamageDealt = 0.0
-			}
 		}
+	}
 
 	if(!FlowState_GungameRandomAbilities())
 	{
@@ -1782,7 +1769,7 @@ foreach(player in GetPlayerArray())
 			if(FlowState_Gungame())
 			{
 			player.SetPlayerGameStat( PGS_TITAN_KILLS, 0)
-			KillStreakAnnouncer(player, true)
+			// KillStreakAnnouncer(player, true)
 			}
 
 			if(FlowState_RandomGunsEverydie()){
@@ -2531,7 +2518,7 @@ bool function ClientCommand_FlowstateKick(entity player, array < string > args) 
     foreach(sPlayer in GetPlayerArray()) {
         if (sPlayer.GetPlayerName() == args[0]) {
             printl("[Flowstate] -> Kicking " + sPlayer.GetPlayerName() + " from flowstate.")
-            ClientCommand( player, "disconnect" )
+            ClientCommand( sPlayer, "disconnect" )
             return true
         }
     }
@@ -2727,46 +2714,50 @@ bool function ClientCommand_GiveWeapon(entity player, array<string> args)
 
 	entity weapon
 
-    switch(args[0])
-    {
-        case "p":
-        case "primary":
-            entity primary = player.GetNormalWeapon( WEAPON_INVENTORY_SLOT_PRIMARY_0 )
-            if( IsValid( primary ) ){
-				player.TakeWeaponByEntNow( primary )
-				weapon = player.GiveWeapon(args[1], WEAPON_INVENTORY_SLOT_PRIMARY_0)
-			}
-        break
-        case "s":
-        case "secondary":
-            entity secondary = player.GetNormalWeapon( WEAPON_INVENTORY_SLOT_PRIMARY_1 )
-            if( IsValid( secondary ) ) {
-				player.TakeWeaponByEntNow( secondary )
-				weapon = player.GiveWeapon(args[1], WEAPON_INVENTORY_SLOT_PRIMARY_1)
-			}
-        break
-        case "t":
-        case "tactical":
-            entity tactical = player.GetOffhandWeapon( OFFHAND_TACTICAL )
-			if( IsValid( tactical ) ) {
-				float oldTacticalChargePercent = float( tactical.GetWeaponPrimaryClipCount()) / float(tactical.GetWeaponPrimaryClipCountMax() )
-				player.TakeOffhandWeapon( OFFHAND_TACTICAL )
+	try {
+		switch(args[0])
+		{
+			case "p":
+			case "primary":
+				entity primary = player.GetNormalWeapon( WEAPON_INVENTORY_SLOT_PRIMARY_0 )
+				if( IsValid( primary ) ){
+					player.TakeWeaponByEntNow( primary )
+					weapon = player.GiveWeapon(args[1], WEAPON_INVENTORY_SLOT_PRIMARY_0)
+				}
+			break
+			case "s":
+			case "secondary":
+				entity secondary = player.GetNormalWeapon( WEAPON_INVENTORY_SLOT_PRIMARY_1 )
+				if( IsValid( secondary ) ) {
+					player.TakeWeaponByEntNow( secondary )
+					weapon = player.GiveWeapon(args[1], WEAPON_INVENTORY_SLOT_PRIMARY_1)
+				}
+			break
+			case "t":
+			case "tactical":
+				entity tactical = player.GetOffhandWeapon( OFFHAND_TACTICAL )
+				if( IsValid( tactical ) ) {
+					float oldTacticalChargePercent = float( tactical.GetWeaponPrimaryClipCount()) / float(tactical.GetWeaponPrimaryClipCountMax() )
+					player.TakeOffhandWeapon( OFFHAND_TACTICAL )
 
-				weapon = player.GiveOffhandWeapon(args[1], OFFHAND_TACTICAL)
-				entity newTactical = player.GetOffhandWeapon( OFFHAND_TACTICAL )
-				newTactical.SetWeaponPrimaryClipCount( int( newTactical.GetWeaponPrimaryClipCountMax() * oldTacticalChargePercent ) )
-			}
-        break
-        case "u":
-        case "ultimate":
-            entity ultimate = player.GetOffhandWeapon( OFFHAND_ULTIMATE )
-            if( IsValid( ultimate ) )
-			{
-				player.TakeOffhandWeapon( OFFHAND_ULTIMATE )
-				weapon = player.GiveOffhandWeapon(args[1], OFFHAND_ULTIMATE)
-			}
-        break
-    }
+					weapon = player.GiveOffhandWeapon(args[1], OFFHAND_TACTICAL)
+					entity newTactical = player.GetOffhandWeapon( OFFHAND_TACTICAL )
+					newTactical.SetWeaponPrimaryClipCount( int( newTactical.GetWeaponPrimaryClipCountMax() * oldTacticalChargePercent ) )
+				}
+			break
+			case "u":
+			case "ultimate":
+				entity ultimate = player.GetOffhandWeapon( OFFHAND_ULTIMATE )
+				if( IsValid( ultimate ) )
+				{
+					player.TakeOffhandWeapon( OFFHAND_ULTIMATE )
+					weapon = player.GiveOffhandWeapon(args[1], OFFHAND_ULTIMATE)
+				}
+			break
+		}
+	} catch( e420 ) {
+            printt("Invalid weapon name for tgive command.")
+        }
 
     if( args.len() > 2 )
     {
@@ -2774,7 +2765,7 @@ bool function ClientCommand_GiveWeapon(entity player, array<string> args)
             weapon.SetMods(args.slice(2, args.len()))
         }
         catch( e2 ) {
-            print("invalid mod")
+            printt("Invalid mod.")
         }
     }
     if( IsValid(weapon) && !weapon.IsWeaponOffhand() )
