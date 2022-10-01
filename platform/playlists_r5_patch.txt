@@ -562,7 +562,7 @@ playlists //汉化版本 by融化的芒果CC
 				mp_rr_canyonlands_staging                      1			//靶场
 				mp_rr_ashs_redemption                          1			//艾许的救赎（泰坦陨落2）
 				mp_rr_aqueduct									1			//竞技场-熔岩流
-				mp_rr_arena_composite							1			//控制
+				mp_rr_arena_composite							1			//控制模式活动地图
 				mp_rr_aqueduct_night							1			//竞技场-熔岩流（暗影）
 				mp_rr_desertlands_64k_x_64k_tt					1			//世界尽头海市蜃楼（？？）
 				mp_rr_party_crasher								1			//竞技场-派对破坏者

@@ -2678,7 +2678,7 @@ bool function ClientCommand_Help(entity player, array<string> args)
 		{
 			Message(player, "Apex SURF", "", 5)
 		} else{
-			Message(player, "欢迎游玩死斗模式\n KOOK频道:98171075  Q群:307689539", helpMessage(), 10)
+			Message(player, "欢迎游玩死斗模式\n   KOOK频道:98171075  Q群:307689539", helpMessage(), 10)
 		}
 	}
 	return true
