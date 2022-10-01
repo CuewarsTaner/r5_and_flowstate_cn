@@ -509,11 +509,11 @@ playlists //汉化版本 by融化的芒果CC
 				flowstateTimer 						1
 				flowstateLockPOI 					0								//是否锁定地图POI（如果想锁定地图POI，flowstateRandomizePOIS的值必须设置为0）
 				flowstateLockeedPOI 				0
-				flowstateCapitolCityReplacesTTVLocation 1							//将POI的TTV Building升级为整个国会城												 
-				flowstateGrenadesDisabled			1
+				flowstateCapitolCityReplacesTTVLocation 0							//将POI的TTV Building升级为整个国会城												 
+				flowstateGrenadesDisabled			1								//是否禁用手雷
 				flowstateAdminTgive 				0								//tgive命令适用于全体玩家（0）或仅管理员（1）
-				flowstateAutoChangeLevelEnable		0								//是否启用随机地图更替
-				flowstateRoundsBeforeChangeLevel	0								//随机更替地图需要等待多少个回合
+				flowstateAutoChangeLevelEnable		1								//是否定时重启服务器
+				flowstateRoundsBeforeChangeLevel	20								//游玩多少轮后重启服务器（推荐每20轮执行一次）
 				flowstateGiveAllOpticsToPlayer		1								//给玩家提供所有瞄准镜
 				flowstate_headshots_only_gamemode	0								//是否开启仅爆头模式（推荐respawn kit只有小帮手或单发狙击枪并关闭随机武器）
 				flowstateReloadTacticalOnRespawn	1								//复活战术技能冷却重置
@@ -530,7 +530,7 @@ playlists //汉化版本 by融化的芒果CC
 				flowstateKickHighPingPlayer			1					//是否开启延迟自动踢人功能
 				flowstateMaxPingAllowed				200					//高于该延迟将被自动提出服务器
 				solo_mode 							1					//启用该选项以显示游戏中的在线玩家数量，不启用则会显示两个问号
-				flowstateDoorsEnabled				0					//是否开启建筑物的门
+				flowstateDoorsEnabled				1					//是否开启建筑物的门
 				flowstateDoorsRegen					0 					//若门受到了伤害但未被摧毁，则会自动回复生命值。推荐关闭
 
 	
@@ -539,10 +539,10 @@ playlists //汉化版本 by融化的芒果CC
 				flowstateForceCharacter 			1		//是否强制所有玩家的传奇
 				flowstateChosenCharacter 			6		//0烟妹 1狗子 2侵蚀 3胖子 4命脉 5幻象 6动力 7机器人 8恶灵 9电妹 10密客
 				flowstateForceAdminCharacter		1		//是否强制管理员的传奇
-				flowstateChosenAdminCharacter		10		//0烟妹 1狗子 2侵蚀 3胖子 4命脉 5幻象 6动力 7机器人 8恶灵 9电妹 10密客
+				flowstateChosenAdminCharacter		6		//0烟妹 1狗子 2侵蚀 3胖子 4命脉 5幻象 6动力 7机器人 8恶灵 9电妹 10密客
 				flowstateDummyOverride 				0		// explains itself, it's bugged with some abilities (grapple ie)
 				
-				//game continuity 
+				//game continuity
 				flowstateAutoreloadPrimary 			1		//主武器是否自动重新加载
 				flowstateAutoreloadSecondary 		1		//副武器是否自动重新加载
 				flowstateKillshotEnabled 			1		//是否开启击杀声效
@@ -557,14 +557,15 @@ playlists //汉化版本 by融化的芒果CC
 				mp_rr_canyonlands_64k_x_64k                    1			//S0诸王峡谷
 				mp_rr_canyonlands_mu1                          1			//S2诸王峡谷
 				mp_rr_desertlands_64k_x_64k                    1			//S3世界尽头
-				mp_rr_desertlands_64k_x_64k_nx                 1			//S3世界尽头黑夜
-				mp_rr_canyonlands_mu1_night                    1			//S2诸王峡谷黑夜
+				mp_rr_desertlands_64k_x_64k_nx                 1			//S3世界尽头（暗影）
+				mp_rr_canyonlands_mu1_night                    1			//S2诸王峡谷（暗影）
 				mp_rr_canyonlands_staging                      1			//靶场
-				mp_rr_ashs_redemption                          1			//艾许的救赎
-				mp_rr_aqueduct									1			//熔岩流
+				mp_rr_ashs_redemption                          1			//艾许的救赎（泰坦陨落2）
+				mp_rr_aqueduct									1			//竞技场-熔岩流
 				mp_rr_arena_composite							1			//控制
-				mp_rr_aqueduct_night							1			//熔岩流黑夜
-				mp_rr_desertlands_64k_x_64k_tt					1			//世界尽头海市蜃楼
+				mp_rr_aqueduct_night							1			//竞技场-熔岩流（暗影）
+				mp_rr_desertlands_64k_x_64k_tt					1			//世界尽头海市蜃楼（？？）
+				mp_rr_party_crasher								1			//竞技场-派对破坏者
 			} } }
 		}
 		
