@@ -218,6 +218,8 @@ LocPair function _GetVotingLocation()
             return NewLocPair(<0, 4780, 220>, <0, -90, 0>)
 		case "mp_rr_desertlands_64k_x_64k_tt":
             return NewLocPair(<-25197, -4278, -2138>, <0, -34, 0>)
+		case "mp_rr_party_crasher":
+			return NewLocPair(<1729.17407, -3585.65137, 581.736206>, <0, 103.168709, 0>)
         default:
 			Assert(false, "No voting location for the map!")
     }
@@ -388,7 +390,7 @@ void function _OnPlayerConnected(entity player)
 				{
 					_HandleRespawn(player)
 					ClearInvincible(player)
-					player.UnfreezeControlsOnServer()
+					player.FreezeControlsOnServer()
 				}
 			break
 			case eGameState.Playing:
@@ -472,12 +474,12 @@ void function DoubleAndTripleKillAudio(entity attacker)
 
 	if( attacker.p.downedEnemyAtOneTime == 2 )
 	{
-		SurvivalCommentary_PlaySoundForAllPlayers( "diag_ap_aiNotify_killLeaderDoubleKill" )
+		SurvivalCommentary_PlaySoundForAllPlayers( "diag_ap_aiNotify_killLeaderDoubleKill_01" )
 	}
 
 	if( attacker.p.downedEnemyAtOneTime == 3)
 	{
-		SurvivalCommentary_PlaySoundForAllPlayers( "diag_ap_aiNotify_killLeaderTripleKill" )
+		SurvivalCommentary_PlaySoundForAllPlayers( "diag_ap_aiNotify_killLeaderTr" )
 	}
 }
 
@@ -502,7 +504,7 @@ void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
 						Remote_CallFunction_NonReplay( player, "ServerCallback_Survival_HighlightedPlayerKilled", victim, attacker, eSurvivalCommentaryPlayerType.KILLLEADER )
 				}
 
-	    		if(file.tdmState != eTDMState.NEXT_ROUND_NOW && IsValid(victim) && IsValid(attacker) && Spectator_GetReplayIsEnabled() && ShouldSetObserverTarget( attacker ))
+	    		if(file.tdmState != eTDMState.NEXT_ROUND_NOW && IsValid(victim) && IsValid(attacker) && Spectator_GetReplayIsEnabled() && ShouldSetObserverTarget( attacker ) && attacker.IsPlayer())
 				{
 					victim.FreezeControlsOnServer()
 	    			victim.SetObserverTarget( attacker )
@@ -797,12 +799,12 @@ void function WpnPulloutOnRespawn(entity player, float duration)
 	if(!IsValid( player ) || !IsAlive(player) ) return
 
 	
-	if(GetCurrentPlaylistVarBool("flowstateReloadUltimateOnRespawn", false ))
+	if(GetCurrentPlaylistVarBool("flowstateReloadTacticalOnRespawn", false ))
 	{
 		entity tactical = player.GetOffhandWeapon( OFFHAND_TACTICAL )
 		tactical.SetWeaponPrimaryClipCount( tactical.GetWeaponPrimaryClipCountMax() )
 	}
-	if(GetCurrentPlaylistVarBool("flowstateReloadTacticalOnRespawn", false ))
+	if(GetCurrentPlaylistVarBool("flowstateReloadUltimateOnRespawn", false ))
 	{	
 		entity ultimate = player.GetOffhandWeapon( OFFHAND_ULTIMATE )
 		ultimate.SetWeaponPrimaryClipCount( ultimate.GetWeaponPrimaryClipCountMax() )
@@ -903,9 +905,9 @@ void function GiveRandomPrimaryWeaponMetagame(entity player)
 	int slot = WEAPON_INVENTORY_SLOT_PRIMARY_0
 
     array<string> Weapons = [
-		"mp_weapon_rspn101 optic_cq_hcog_bruiser barrel_stabilizer_l3 stock_tactical_l3 bullets_mag_l3",
+		"mp_weapon_rspn101 optic_cq_hcog_bruiser barrel_stabilizer_l4_flash_hider stock_tactical_l3 bullets_mag_l3",
 		"mp_weapon_vinson optic_cq_hcog_bruiser stock_tactical_l3 highcal_mag_l3",
-		"mp_weapon_energy_ar optic_cq_hcog_bruiser energy_mag_l1 hopup_turbocharger stock_tactical_l3",
+		"mp_weapon_energy_ar optic_cq_hcog_bruiser energy_mag_l1 hopup_turbocharger stock_tactical_l3"
 	]
 
 	foreach(weapon in Weapons)
@@ -924,12 +926,13 @@ void function GiveRandomSecondaryWeaponMetagame(entity player)
 	int slot = WEAPON_INVENTORY_SLOT_PRIMARY_1
 
     array<string> Weapons = [
-		"mp_weapon_r97 optic_cq_hcog_classic barrel_stabilizer_l3 stock_tactical_l3 bullets_mag_l3",
 		"mp_weapon_wingman optic_cq_hcog_classic highcal_mag_l3",
 		"mp_weapon_energy_shotgun shotgun_bolt_l3 optic_cq_threat",
-		"mp_weapon_shotgun shotgun_bolt_l2 optic_cq_threat",
+		"mp_weapon_shotgun shotgun_bolt_l3 optic_cq_threat",
+		"mp_weapon_r97 optic_cq_hcog_classic barrel_stabilizer_l4_flash_hider stock_tactical_l3 bullets_mag_l3",
 		"mp_weapon_pdw optic_cq_hcog_classic highcal_mag_l3 stock_tactical_l3",
-		"mp_weapon_car optic_cq_hcog_classic stock_tactical_l3 bullets_mag_l3"
+		"mp_weapon_car optic_cq_hcog_classic stock_tactical_l3 bullets_mag_l3",
+		"mp_weapon_volt_smg barrel_stabilizer_l4_flash_hider energy_mag_l3 stock_tactical_l3"
 	]
 
 	foreach(weapon in Weapons)
