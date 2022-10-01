@@ -513,7 +513,7 @@ playlists //汉化版本 by融化的芒果CC
 				flowstateGrenadesDisabled			1								//是否禁用手雷
 				flowstateAdminTgive 				0								//tgive命令适用于全体玩家（0）或仅管理员（1）
 				flowstateAutoChangeLevelEnable		1								//是否定时重启服务器
-				flowstateRoundsBeforeChangeLevel	20								//游玩多少轮后重启服务器（推荐每20轮执行一次）
+				flowstateRoundsBeforeChangeLevel	10								//游玩多少轮后重启服务器（推荐每10轮执行一次）
 				flowstateGiveAllOpticsToPlayer		1								//给玩家提供所有瞄准镜
 				flowstate_headshots_only_gamemode	0								//是否开启仅爆头模式（推荐respawn kit只有小帮手或单发狙击枪并关闭随机武器）
 				flowstateReloadTacticalOnRespawn	1								//复活战术技能冷却重置
