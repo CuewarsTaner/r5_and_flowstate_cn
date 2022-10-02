@@ -1,3 +1,4 @@
+//汉化 by 融化的芒果CC
 untyped
 
 global function InitDevMenu
@@ -277,7 +278,7 @@ void function SetupDefaultDevCommandsMP()
 		SetupDevMenu( "Editor", SetDevMenu_Editor )
 	
 	if(GetCurrentPlaylistName() == "custom_tdm")
-		SetupDevMenu( "死斗模式：更换武器", SetDevMenu_TDMWeapons )
+		SetupDevMenu( "死斗模式：更换主武器", SetDevMenu_TDMWeapons )
 
 	if(GetCheatsState()){
 		
@@ -290,7 +291,7 @@ void function SetupDefaultDevCommandsMP()
 			SetupDevMenu( "更换传奇", SetDevMenu_SurvivalCharacter )
 			//SetupDevMenu( "Override Spawn Character", SetDevMenu_OverrideSpawnSurvivalCharacter )
 			SetupDevMenu( "Survival", SetDevMenu_Survival )
-			SetupDevMenu( "自定义配件", SetDevMenu_SurvivalLoot, "attachment_custom" )
+			SetupDevMenu( "Custom Attachments", SetDevMenu_SurvivalLoot, "attachment_custom" )
 			SetupDevMenu( "生存武器", SetDevMenu_SurvivalLoot, "main_weapon" )
 			SetupDevMenu( "武器配件", SetDevMenu_SurvivalLoot, "attachment" )
 			SetupDevMenu( "头盔", SetDevMenu_SurvivalLoot, "helmet" )
@@ -373,8 +374,8 @@ void function SetupDefaultDevCommandsMP()
 		//SetupDevCommand( "Jump Randomly Forever", "script_client thread JumpRandomlyForever()" )
 
 		//SetupDevCommand( "Toggle Zeroing Mode", "script ToggleZeroingMode()" )
-		SetupDevCommand( "开启上帝模式", "script EnableDemigod( gp()[0] )" )
-		SetupDevCommand( "关闭上帝模式", "script DisableDemigod( gp()[0] )" )
+		SetupDevCommand( "开启上帝模式", "script MakeInvincible( gp()[0] )" )
+		SetupDevCommand( "关闭上帝模式", "script ClearInvincible( gp()[0] )" )
 		//SetupDevCommand( "Toggle Screen Alignment Tool", "script_client DEV_ToggleScreenAlignmentTool()" )
 
 		SetupDevCommand( "切换第三人称视角", "ToggleThirdPerson" )
@@ -728,31 +729,38 @@ void function SetupRespawnPlayersDevMenu()
 }
 void function SetupTDMweapsons()
 {
-	SetupDevCommand( "R99冲锋枪", "tgive p mp_weapon_r97 optic_cq_hcog_bruiser stock_tactical_l3 barrel_stabilizer_l3 bullets_mag_l3" )
-	SetupDevCommand( "G7侦查枪", "tgive p mp_weapon_g2 optic_ranged_hcog stock_sniper_l3 barrel_stabilizer_l3 bullets_mag_l3 hopup_double_tap" )
-	SetupDevCommand( "RE-45手枪", "tgive p mp_weapon_autopistol optic_cq_hcog_bruiser barrel_stabilizer_l3 bullets_mag_l3" )
-	SetupDevCommand( "电能冲锋枪", "tgive p mp_weapon_volt_smg optic_cq_hcog_classic barrel_stabilizer_l3 bullets_mag_l3" )
-	SetupDevCommand( "R-301", "tgive p mp_weapon_rspn101 optic_cq_hcog_bruiser stock_tactical_l3 barrel_stabilizer_l3 bullets_mag_l3" )
-	SetupDevCommand( "P2020手枪", "tgive p mp_weapon_semipistol optic_cq_hcog_classic bullets_mag_l3 hopup_unshielded_dmg" )
-	SetupDevCommand( "转换者冲锋枪", "tgive p mp_weapon_alternator_smg optic_cq_hcog_bruiser stock_tactical_l3 barrel_stabilizer_l3 bullets_mag_l3" )
-	SetupDevCommand( "赫姆洛克", "tgive p mp_weapon_hemlok optic_cq_hcog_bruiser stock_tactical_l3 barrel_stabilizer_l3 highcal_mag_l3" )
+	//突击步枪
+	SetupDevCommand( "R-301卡宾枪", "tgive p mp_weapon_rspn101 optic_cq_hcog_bruiser stock_tactical_l3 barrel_stabilizer_l3 bullets_mag_l3" )
 	SetupDevCommand( "平行步枪", "tgive p mp_weapon_vinson optic_cq_hcog_bruiser stock_tactical_l3 highcal_mag_l3")
-	SetupDevCommand( "喷火轻机枪", "tgive p mp_weapon_lmg optic_cq_hcog_bruiser stock_tactical_l3 barrel_stabilizer_l3 highcal_mag_l3" )
+	SetupDevCommand( "赫姆洛克突击步枪", "tgive p mp_weapon_hemlok optic_cq_hcog_bruiser stock_tactical_l3 barrel_stabilizer_l3 highcal_mag_l3" )
+	SetupDevCommand( "哈沃克步枪", "tgive p mp_weapon_energy_ar optic_cq_hcog_bruiser stock_tactical_l3 energy_mag_l1 hopup_turbocharger" )
+	//轻机枪
+	SetupDevCommand( "喷火轻机枪", "tgive p mp_weapon_lmg optic_cq_hcog_bruiser stock_tactical_l3 barrel_stabilizer_l3 highcal_mag_l2" )
+	SetupDevCommand( "专注轻机枪", "tgive p mp_weapon_esaw optic_cq_hcog_bruiser stock_tactical_l3 barrel_stabilizer_l3 energy_mag_l1 hopup_turbocharger" )
+	SetupDevCommand( "L-Star能量机枪", "tgive p mp_weapon_lstar" )
+	//冲锋枪
+	SetupDevCommand( "R-99冲锋枪", "tgive p mp_weapon_r97 optic_cq_hcog_bruiser stock_tactical_l3 barrel_stabilizer_l3 bullets_mag_l3" )
+	SetupDevCommand( "转换者冲锋枪", "tgive p mp_weapon_alternator_smg optic_cq_hcog_bruiser stock_tactical_l3 barrel_stabilizer_l3 bullets_mag_l3" )
 	SetupDevCommand( "猎兽冲锋枪", "tgive p mp_weapon_pdw optic_cq_hcog_classic stock_tactical_l3 highcal_mag_l3" )
-	SetupDevCommand( "小帮手", "tgive p mp_weapon_wingman optic_cq_hcog_classic highcal_mag_l3" )
+	SetupDevCommand( "电能冲锋枪", "tgive p mp_weapon_volt_smg optic_cq_hcog_classic barrel_stabilizer_l3 bullets_mag_l3" )
+	SetupDevCommand( "CAR冲锋枪", "tgive p mp_weapon_car optic_cq_hcog_classic barrel_stabilizer_l3 bullets_mag_l3" )
+	//神射手武器
+	SetupDevCommand( "G7侦查枪", "tgive p mp_weapon_g2 optic_ranged_hcog stock_sniper_l3 barrel_stabilizer_l3 bullets_mag_l3 hopup_double_tap" )
+	SetupDevCommand( "三重式狙击枪", "tgive p mp_weapon_doubletake energy_mag_l3 optic_ranged_hcog stock_sniper_l3 hopup_energy_choke" )
+	//手枪
+	SetupDevCommand( "RE-45自动手枪", "tgive p mp_weapon_autopistol optic_cq_hcog_bruiser barrel_stabilizer_l3 bullets_mag_l3" )
+	SetupDevCommand( "P2020手枪", "tgive p mp_weapon_semipistol optic_cq_hcog_classic bullets_mag_l3 hopup_unshielded_dmg" )
+	SetupDevCommand( "辅助手枪", "tgive p mp_weapon_wingman optic_cq_hcog_classic highcal_mag_l3" )
+	//霰弹枪
+	SetupDevCommand( "EVA-8", "tgive s mp_weapon_shotgun shotgun_bolt_l3 optic_cq_hcog_classic hopup_double_tap" )
+	SetupDevCommand( "莫桑比克", "tgive s mp_weapon_shotgun_pistol shotgun_bolt_l3 optic_cq_hcog_classic hopup_unshielded_dmg" )
+	SetupDevCommand( "和平捍卫者霰弹枪", "tgive s mp_weapon_energy_shotgun shotgun_bolt_l3 optic_cq_hcog_classic hopup_energy_choke" )
+	//SetupDevCommand( "獒犬霰弹枪","tgive s mp_weapon_mastiff")
+	//狙击枪
 	SetupDevCommand( "长弓", "tgive p mp_weapon_dmr optic_sniper_variable barrel_stabilizer_l3 stock_sniper_l3 highcal_mag_l3" )
 	SetupDevCommand( "充能步枪", "tgive p mp_weapon_defender optic_sniper_threat stock_sniper_l3" )
-	SetupDevCommand( "专注轻机枪", "tgive p mp_weapon_esaw optic_cq_hcog_bruiser stock_tactical_l3 barrel_stabilizer_l3 energy_mag_l1 hopup_turbocharger" )
-	SetupDevCommand( "哈沃克", "tgive p mp_weapon_energy_ar optic_cq_hcog_bruiser stock_tactical_l3 energy_mag_l1 hopup_turbocharger" )
-	SetupDevCommand( "EVA8霰弹枪", "tgive s mp_weapon_shotgun shotgun_bolt_l3 optic_cq_hcog_classic hopup_double_tap" )
-	SetupDevCommand( "莫桑比克", "tgive s mp_weapon_shotgun_pistol shotgun_bolt_l3 optic_cq_hcog_classic hopup_unshielded_dmg" )
-	SetupDevCommand( "和平捍卫者", "tgive s mp_weapon_energy_shotgun shotgun_bolt_l3 optic_cq_hcog_classic hopup_energy_choke" )
-	SetupDevCommand( "三重击", "tgive p mp_weapon_doubletake energy_mag_l3 optic_ranged_hcog stock_sniper_l3 hopup_energy_choke" )
-	//SetupDevCommand( "克雷贝尔", "tgive p mp_weapon_sniper" ) 
-	SetupDevCommand( "L-Star轻机枪", "tgive p mp_weapon_lstar" )
-	//SetupDevCommand( "獒犬霰弹枪","tgive s mp_weapon_mastiff")
-
-
+	//SetupDevCommand( "克雷贝尔", "tgive p mp_weapon_sniper" )
+	
 
 	//foreach ( player in GetPlayerArray() )
 	//{

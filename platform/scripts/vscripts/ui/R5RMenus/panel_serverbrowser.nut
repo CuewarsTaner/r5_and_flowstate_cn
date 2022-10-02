@@ -1,3 +1,4 @@
+//汉化 by 融化的芒果CC
 global function InitR5RServerBrowserPanel
 global function InitR5RConnectingPanel
 

@@ -1,3 +1,4 @@
+//汉化 by 融化的芒果CC
 untyped
 
 global function ClGameState_Init
@@ -767,10 +768,9 @@ void function ClGameState_Changed()
 
 void function GameState_SpectatorTargetChanged( entity player, entity previousTarget, entity currentTarget )
 {
-	if ( IsValid( currentTarget ) )
-		UpdateGamestateRuiTracking( currentTarget )
-	else
-		UpdateGamestateRuiTracking( player )
+	UpdateGamestateRuiTracking( currentTarget )
+	UpdateGamestateRuiTracking( previousTarget )
+	UpdateGamestateRuiTracking( player )
 }
 
 void function SetGameModeSuddenDeathAnnouncementSubtext( string text )
