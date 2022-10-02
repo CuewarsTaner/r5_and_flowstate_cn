@@ -175,7 +175,7 @@
 		"labelText"				"你正在使用CN Depot汉化整合包"
 		"font"					"DefaultBold_41"
 		"allcaps"				"0"
-		"fgcolor_override"		"255 100 100 255"
+		"fgcolor_override"		"255 255 0 255"
 
 		"pin_to_sibling"		"Info2"
 		"pin_corner_to_sibling"	"TOP_LEFT"
