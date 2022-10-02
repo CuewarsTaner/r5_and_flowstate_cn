@@ -156,6 +156,7 @@ void function _CustomTDM_Init()
 
 	AddClientCommandCallback("controllerstate", ClientCommand_ControllerReport)
 	AddClientCommandCallback("controllersummary", ClientCommand_ControllerSummary)
+
 	for(int i = 0; GetCurrentPlaylistVarString("whitelisted_weapon_" + i.tostring(), "~~none~~") != "~~none~~"; i++)
 	{
 		file.whitelistedWeapons.append(GetCurrentPlaylistVarString("whitelisted_weapon_" + i.tostring(), "~~none~~"))
@@ -803,7 +804,6 @@ void function _HandleRespawn(entity player, bool isDroppodSpawn = false)
 	
 	player.p.comingFromSpectator = false
 }
-
 
 void function TpPlayerToSpawnPoint(entity player)
 {
@@ -2702,7 +2702,7 @@ string function helpMessage()
 	"scoreboard: 显示积分榜\n" +
 	"latency: 显示所有玩家的PING值\n" +
 	"spectate: 观战其他玩家\n" +
-	"controllersummary: 查看当前服务器手柄玩家数量\n" +
+	"controllersummary: 查看手柄玩家数量\n" +
 	"commands: 再次显示当前可用指令 \n" +
 	"\n" +
 	"Apex社区服KOOK频道: 98171075\n" +
@@ -2721,10 +2721,10 @@ bool function ClientCommand_Help(entity player, array<string> args)
 
 		} else if (FlowState_PROPHUNT())
 		{
-			Message(player, "WELCOME TO FLOWSTATE: PROPHUNT", helpMessagePROPHUNT(), 10)
+			Message(player, "欢迎游玩躲猫猫模式\n KOOK频道:98171075  Q群:307689539", helpMessagePROPHUNT(), 10)
 		} else if (FlowState_SURF())
 		{
-			Message(player, "Apex SURF", "", 5)
+			Message(player, "欢迎游玩滑翔模式\n KOOK频道:98171075  Q群:307689539", "", 5)
 		} else{
 			Message(player, "欢迎游玩死斗模式\n   KOOK频道:98171075  Q群:307689539", helpMessage(), 10)
 		}
