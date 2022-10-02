@@ -47,32 +47,33 @@ global table<string, asset> MapAssets = {
 global table<string, string> MapNames = {
 	[ "mp_rr_canyonlands_staging" ] = "靶场",
 	[ "mp_rr_aqueduct" ] = "熔岩流",
-	[ "mp_rr_aqueduct_night" ] = "熔岩流黑夜",
-	[ "mp_rr_ashs_redemption" ] = "艾许的救赎",
+	[ "mp_rr_aqueduct_night" ] = "熔岩流(黑夜)",
+	[ "mp_rr_ashs_redemption" ] = "艾许战场",
 	[ "mp_rr_canyonlands_64k_x_64k" ] = "S1诸王峡谷",
 	[ "mp_rr_canyonlands_mu1" ] = "S2诸王峡谷",
-	[ "mp_rr_canyonlands_mu1_night" ] = "S2诸王峡谷黑夜",
-	[ "mp_rr_desertlands_64k_x_64k" ] = "世界尽头",
-	[ "mp_rr_desertlands_64k_x_64k_nx" ] = "世界尽头黑夜",
-	[ "mp_rr_desertlands_64k_x_64k_tt" ] = "世界尽头幻影航班",
+	[ "mp_rr_canyonlands_mu1_night" ] = "S2诸王峡谷(黑夜)",
+	[ "mp_rr_desertlands_64k_x_64k" ] = "S3世界尽头",
+	[ "mp_rr_desertlands_64k_x_64k_nx" ] = "S3世界尽头(黑夜)",
+	[ "mp_rr_desertlands_64k_x_64k_tt" ] = "S3世界尽头(幻影航班)",
 	[ "mp_rr_arena_composite" ] = "控制",
+	[ "mp_rr_party_crasher" ] = "派对破坏者",
 	[ "mp_lobby" ] = "大厅"
 }
 
 //Playlist to readable name
 global table<string, string> playlisttoname = {
-	[ "custom_aimtrainer" ] = "Flowstate Aim Trainer",
+	[ "custom_aimtrainer" ] = "练枪挑战",
 	[ "firingrange" ] = "靶场 (Beta)",
 	[ "survival" ] = "大逃杀 (Beta)",
 	[ "FallLTM" ] = "ShadowFall",
 	[ "duos" ] = "双人作战 (Beta)",
 	[ "custom_tdm" ] = "死斗模式",
 	[ "custom_ctf" ] = "夺旗模式",
-	[ "survival_dev" ] = "大逃杀(Dev)",
-	[ "custom_tdm_fiesta" ] = "死斗模式Fiesta",
-	[ "custom_tdm_gungame" ] = "死斗模式Gungame (Beta)",
-	[ "custom_prophunt" ] = "Flowstate Prophunt (Beta)",
-	[ "custom_surf" ] = "Flowstate SURF",
+	[ "survival_dev" ] = "大逃杀 (Dev)",
+	[ "custom_tdm_fiesta" ] = "死斗模式-盛宴",
+	[ "custom_tdm_gungame" ] = "死斗模式-枪战 (Beta)",
+	[ "custom_prophunt" ] = "躲猫猫模式 (Beta)",
+	[ "custom_surf" ] = "滑翔模式",
 	[ "map_editor" ] = "地图编辑器",
 	[ "dev_default" ] = "Dev Default"
 }

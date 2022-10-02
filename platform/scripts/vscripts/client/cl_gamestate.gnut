@@ -169,8 +169,8 @@ void function SetCommonScoreRUIVars( var rui )
 	if ( IsSoloMode() )
 	{
 		RuiSetBool( rui, "shouldDisplayLivingPlayerCount", false )
-		RuiSetString( rui, "squadsRemainingTextSingular", "在线玩家数量" )
-		RuiSetString( rui, "squadsRemainingTextPlural", "在线玩家数量" )
+		RuiSetString( rui, "squadsRemainingTextSingular", "名玩家激斗中" )
+		RuiSetString( rui, "squadsRemainingTextPlural", "名玩家激斗中" )
 	}
 	else if(GetCurrentPlaylistVarBool( "dummies_horde_enabled", false )){
 		RuiSetBool( rui, "shouldDisplayLivingPlayerCount", false )

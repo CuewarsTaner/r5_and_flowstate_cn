@@ -156,7 +156,6 @@ void function _CustomTDM_Init()
 
 	AddClientCommandCallback("controllerstate", ClientCommand_ControllerReport)
 	AddClientCommandCallback("controllersummary", ClientCommand_ControllerSummary)
-
 	for(int i = 0; GetCurrentPlaylistVarString("whitelisted_weapon_" + i.tostring(), "~~none~~") != "~~none~~"; i++)
 	{
 		file.whitelistedWeapons.append(GetCurrentPlaylistVarString("whitelisted_weapon_" + i.tostring(), "~~none~~"))
