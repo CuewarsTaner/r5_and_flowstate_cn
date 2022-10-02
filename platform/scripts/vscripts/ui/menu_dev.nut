@@ -283,6 +283,8 @@ void function SetupDefaultDevCommandsMP()
 	if(GetCurrentPlaylistName() == "custom_tdm")
 		SetupDevMenu( "死斗模式：更换副武器", SetDevMenu_TDMSecondaryWeapons )
 	
+	if(GetCurrentPlaylistName() == "custom_tdm")
+		SetupDevCommand( "死斗模式：保存当前武器", "saveguns" )
 
 	if(GetCheatsState()){
 		

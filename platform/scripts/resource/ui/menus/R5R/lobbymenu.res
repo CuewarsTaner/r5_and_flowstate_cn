@@ -86,7 +86,7 @@
 			"tall"						"40"
 			"visible"					"1"
 			"fontHeight"				"50"
-			"labelText"					"R5R社区服"
+			"labelText"					"R5Reloaded"
 			"font"						"DefaultBold_41"
 			"allcaps"					"1"
 			"fgcolor_override"			"255 255 255 255"
