@@ -507,7 +507,7 @@ void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
 				
 				if ( victim == GetKillLeader() )
 				{
-					thread SurvivalCommentary_HostAnnounce( eSurvivalCommentaryBucket.KILL_LEADER_ELIMINATED, 1.0 )
+					thread SurvivalCommentary_KilledPlayerAnnounce( eSurvivalCommentaryBucket.KILL_LEADER_ELIMINATED, attacker, 1.0, "", "bc_weKilledKillLeader" )
 
 					foreach ( player in GetPlayerArray() )
 						Remote_CallFunction_NonReplay( player, "ServerCallback_Survival_HighlightedPlayerKilled", victim, attacker, eSurvivalCommentaryPlayerType.KILLLEADER )
@@ -580,12 +580,14 @@ void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
 					if(	!IsValid( GetKillLeader() ) && attackerKills == 2)
 					{
 						thread SetKillLeader( attacker, attackerKills, true )
+						thread SurvivalCommentary_KilledPlayerAnnounce( eSurvivalCommentaryBucket.NEW_KILL_LEADER, attacker, 1.0, "bc_killLeaderNew", "bc_squadmateBecomesKillLeader", "bc_iBecomeKillLeader", true )
 						return
 					}
 
 					if ( IsValid( GetKillLeader() ) && attackerKills > GetKillLeader().GetPlayerNetInt( "kills" ) && attacker != GetKillLeader())
 					{
 						thread SetKillLeader( attacker, attackerKills, true)
+						thread SurvivalCommentary_KilledPlayerAnnounce( eSurvivalCommentaryBucket.NEW_KILL_LEADER, attacker, 1.0, "bc_killLeaderNew", "bc_squadmateBecomesKillLeader", "bc_iBecomeKillLeader", true )
 					}
 
 					if ( IsValid( GetKillLeader() ) && attacker == GetKillLeader() && attacker.p.downedEnemyAtOneTime < 3)
@@ -606,7 +608,7 @@ void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
 
 	file.deathPlayersCounter++
 	if(file.deathPlayersCounter == 1 )
-		thread AddSurvivalCommentaryEvent( eSurvivalEventType.FIRST_BLOOD )
+		thread AddSurvivalCommentaryEvent( eSurvivalEventType.FIRST_BLOOD, attacker )
 
 	UpdatePlayerCounts()
 }
@@ -1872,79 +1874,76 @@ while( Time() <= endTime )
 	{
 		if(Time() == endTime-900)
 		{
-				/* foreach(player in GetPlayerArray())
+				foreach(player in GetPlayerArray())
 				{
 					if(IsValid(player))
 					{
 						Message(player,"距离本轮结束还有15分钟!","", 5)
 					}
-				} */
+				}
 			}
 			if(Time() == endTime-600)
 			{
-				/* foreach(player in GetPlayerArray())
+				foreach(player in GetPlayerArray())
 				{
 					if(IsValid(player))
 					{
 						Message(player,"距离本轮结束还有10分钟!","", 5)
 					}
-				} */
+				}
 			}
 			if(Time() == endTime-300)
 			{
-				/* foreach(player in GetPlayerArray())
+				foreach(player in GetPlayerArray())
 				{
 					if(IsValid(player))
 					{
 						Message(player,"距离本轮结束还有5分钟!","", 5)
 					}
-				} */
+				}
 			}
 			if(Time() == endTime-120)
 			{
-				/* foreach(player in GetPlayerArray())
+				foreach(player in GetPlayerArray())
 				{
 					if(IsValid(player))
 					{
 						Message(player,"距离本轮结束还有2分钟!","", 5)
 					}
-				} */
+				}
 			}
 			if(Time() == endTime-60)
 			{
-				/* foreach(player in GetPlayerArray())
+				foreach(player in GetPlayerArray())
 				{
 					if(IsValid(player))
 					{
 						Message(player,"距离本轮结束还有60秒!","", 5, "")
-						SurvivalCommentary_PlaySoundForAllPlayers( "diag_ap_aiNotify_circleMoves60sec_01" )
+						EmitSoundOnEntityOnlyToPlayer( player, player, "diag_ap_aiNotify_circleMoves60sec" )
 					}
-				} */
-				//SurvivalCommentary_PlaySoundForAllPlayers( "diag_ap_aiNotify_circleMoves60sec_01" )
+				}
 			}
 			if(Time() == endTime-30)
 			{
-				/* foreach(player in GetPlayerArray())
+				foreach(player in GetPlayerArray())
 				{
 					if(IsValid(player))
 					{
 						Message(player,"距离本轮结束还有30秒!","", 5, "")
-						SurvivalCommentary_PlaySoundForAllPlayers( "diag_ap_aiNotify_circleMoves30sec_01" )
+						EmitSoundOnEntityOnlyToPlayer( player, player, "diag_ap_aiNotify_circleMoves30sec" )
 					}
-				} */
-				//SurvivalCommentary_PlaySoundForAllPlayers( "diag_ap_aiNotify_circleMoves30sec_01" )
+				}
 			}
 			if(Time() == endTime-10)
 			{
-				/* foreach(player in GetPlayerArray())
+				foreach(player in GetPlayerArray())
 				{
 					if(IsValid(player))
 					{
 						Message(player,"距离本轮结束还有10秒!", "\n 本轮即将结束", 8, "")
-						SurvivalCommentary_PlaySoundForAllPlayers( "diag_ap_aiNotify_circleMoves10sec_01" )
+						EmitSoundOnEntityOnlyToPlayer( player, player, "diag_ap_aiNotify_circleMoves10sec" )
 					}
-				} */
-				//SurvivalCommentary_PlaySoundForAllPlayers( "diag_ap_aiNotify_circleMoves10sec_01" )
+				}
 			}
 			if(file.tdmState == eTDMState.NEXT_ROUND_NOW){
 				//printt("Flowstate DEBUG - tdmState is eTDMState.NEXT_ROUND_NOW Loop ended.")
