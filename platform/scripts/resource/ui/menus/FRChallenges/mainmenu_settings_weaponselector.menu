@@ -255,7 +255,7 @@ scripts/resource/ui/menus/FRChallenges/mainmenu_settings_weaponselector.menu
 			tall					40
 			fontHeight				30
 			font					TitleBoldFont
-			fgcolor_override		"255 255 255 255"
+			fgcolor_override		"255 255 0 255"
 		
 			xpos                    -15
 			ypos                    -15

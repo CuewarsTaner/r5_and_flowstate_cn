@@ -168,13 +168,14 @@ scripts/resource/ui/menus/panels/buymenu2.res
 		Havoc_Name
 		{
 			ControlName				Label
+			tall					30
 			wide                    224
-			labelText				"哈沃克"
+			labelText				"哈沃克步枪"
 			visible                 1
 			zpos 5
 			fgcolor_override		"2 252 240 255"
-			ypos                                       20
-			xpos					100
+			ypos                    32
+			xpos					95
 			fontHeight				25
 			pin_to_sibling          Havoc
 			pin_corner_to_sibling   BOTTOM_RIGHT
@@ -215,13 +216,14 @@ scripts/resource/ui/menus/panels/buymenu2.res
 		LStar_Name
 		{
 			ControlName				Label
+			tall					30
 			wide                    224
-			labelText				"L-Star"
+			labelText				"L-STAR能量机枪"
 			visible                 1
 			zpos 5
 			fgcolor_override		"2 252 240 255"
-			ypos                                       20
-			xpos					100
+			ypos                    32
+			xpos					73
 			fontHeight				25
 			pin_to_sibling          LStar
 			pin_corner_to_sibling   BOTTOM_RIGHT
@@ -262,13 +264,14 @@ scripts/resource/ui/menus/panels/buymenu2.res
 		Devotion_Name
 		{
 			ControlName				Label
+			tall					30
 			wide                    224
 			labelText				"专注轻机枪"
 			visible                 1
 			zpos 5
 			fgcolor_override		"2 252 240 255"
-			ypos                                       20
-			xpos					100
+			ypos                    32
+			xpos					95
 			fontHeight				25
 			pin_to_sibling          Devotion
 			pin_corner_to_sibling   BOTTOM_RIGHT
@@ -310,13 +313,14 @@ scripts/resource/ui/menus/panels/buymenu2.res
 		Hemlok_Name
 		{
 			ControlName				Label
+			tall					30
 			wide                    224
-			labelText				"赫姆洛克"
+			labelText				"赫姆洛克连发步枪"
 			visible                 1
 			zpos 5
 			fgcolor_override		"2 252 240 255"
-			ypos                                       20
-			xpos					100
+			ypos                    32
+			xpos					65
 			fontHeight				25
 			pin_to_sibling          Hemlok
 			pin_corner_to_sibling   BOTTOM_RIGHT
@@ -358,13 +362,14 @@ scripts/resource/ui/menus/panels/buymenu2.res
 		Flatline_Name
 		{
 			ControlName				Label
+			tall					30
 			wide                    224
 			labelText				"平行步枪"
 			visible                 1
 			zpos 5
 			fgcolor_override		"2 252 240 255"
-			ypos                                       20
-			xpos					100
+			ypos                    32
+			xpos					105
 			fontHeight				25
 			pin_to_sibling          Flatline
 			pin_corner_to_sibling   BOTTOM_RIGHT
@@ -406,13 +411,14 @@ scripts/resource/ui/menus/panels/buymenu2.res
 		Spitfire_Name
 		{
 			ControlName				Label
+			tall					30
 			wide                    224
 			labelText				"喷火轻机枪"
 			visible                 1
 			zpos 5
 			fgcolor_override		"2 252 240 255"
-			ypos                                       20
-			xpos					100
+			ypos                    32
+			xpos					95
 			fontHeight				25
 			pin_to_sibling          Spitfire
 			pin_corner_to_sibling   BOTTOM_RIGHT
@@ -454,13 +460,14 @@ scripts/resource/ui/menus/panels/buymenu2.res
 		R301_Name
 		{
 			ControlName				Label
+			tall					30
 			wide                    224
-			labelText				"R-301"
+			labelText				"R-301卡宾枪"
 			visible                 1
 			zpos 5
 			fgcolor_override		"2 252 240 255"
-			ypos                                       20
-			xpos					100
+			ypos                    32
+			xpos					92
 			fontHeight				25
 			pin_to_sibling          R301
 			pin_corner_to_sibling   BOTTOM_RIGHT
@@ -501,13 +508,14 @@ scripts/resource/ui/menus/panels/buymenu2.res
 		Rampage_Name
 		{
 			ControlName				Label
+			tall					30
 			wide                    224
 			labelText				"暴走"
 			visible                 1
 			zpos 5
 			fgcolor_override		"2 252 240 255"
-			ypos                                       20
-			xpos					95
+			ypos                    32
+			xpos					125
 			fontHeight				25
 			pin_to_sibling          Rampage
 			pin_corner_to_sibling   BOTTOM_RIGHT

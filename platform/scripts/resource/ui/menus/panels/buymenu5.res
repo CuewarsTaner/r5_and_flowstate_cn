@@ -169,13 +169,14 @@ scripts/resource/ui/menus/panels/buymenu1.res
 		Volt_Name
 		{
 			ControlName				Label
+			tall					30
 			wide                    224
 			labelText				"电能冲锋枪"
 			visible                 1
 			zpos 5
 			fgcolor_override		"2 252 240 255"
-			ypos                                       20
-			xpos					120
+			ypos                    32
+			xpos					95
 			fontHeight				25
 			pin_to_sibling          Volt
 			pin_corner_to_sibling   BOTTOM_RIGHT
@@ -216,13 +217,14 @@ scripts/resource/ui/menus/panels/buymenu1.res
 		R99_Name
 		{
 			ControlName				Label
+			tall					30
 			wide                    224
 			labelText				"R-99冲锋枪"
 			visible                 1
 			zpos 5
 			fgcolor_override		"2 252 240 255"
-			ypos                                       20
-			xpos					120
+			ypos                    32
+			xpos					93
 			fontHeight				25
 			pin_to_sibling          R99
 			pin_corner_to_sibling   BOTTOM_RIGHT
@@ -263,13 +265,14 @@ scripts/resource/ui/menus/panels/buymenu1.res
 		Car_Name
 		{
 			ControlName				Label
+			tall					30
 			wide                    224
-			labelText				"Car冲锋枪"
+			labelText				"CAR冲锋枪"
 			visible                 1
 			zpos 5
 			fgcolor_override		"2 252 240 255"
-			ypos                                       20
-			xpos					120
+			ypos                    32
+			xpos					97
 			fontHeight				25
 			pin_to_sibling          Car
 			pin_corner_to_sibling   BOTTOM_RIGHT
@@ -312,13 +315,14 @@ scripts/resource/ui/menus/panels/buymenu1.res
 		Prowler_Name
 		{
 			ControlName				Label
+			tall					30
 			wide                    224
 			labelText				"猎兽冲锋枪"
 			visible                 1
 			zpos 5
 			fgcolor_override		"2 252 240 255"
-			ypos                                       20
-			xpos					110
+			ypos                    32
+			xpos					95
 			fontHeight				25
 			pin_to_sibling          Prowler
 			pin_corner_to_sibling   BOTTOM_RIGHT
@@ -359,13 +363,14 @@ scripts/resource/ui/menus/panels/buymenu1.res
 		Alternator_Name
 		{
 			ControlName				Label
+			tall					30
 			wide                    224
 			labelText				"转换者冲锋枪"
 			visible                 1
 			zpos 5
 			fgcolor_override		"2 252 240 255"
-			ypos                                       20
-			xpos					90
+			ypos                    32
+			xpos					85
 			fontHeight				25
 			pin_to_sibling          Alternator
 			pin_corner_to_sibling   BOTTOM_RIGHT

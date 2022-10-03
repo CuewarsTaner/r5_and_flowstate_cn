@@ -169,13 +169,14 @@ scripts/resource/ui/menus/panels/buymenu1.res
 		P2020_Name
 		{
 			ControlName				Label
+			tall					30
 			wide                    224
 			labelText				"P2020手枪"
 			visible                 1
 			zpos 5
 			fgcolor_override		"2 252 240 255"
-			ypos                                       20
-			xpos					100
+			ypos                    32
+			xpos					95
 			fontHeight				25
 			pin_to_sibling          P2020
 			pin_corner_to_sibling   BOTTOM_RIGHT
@@ -216,13 +217,14 @@ scripts/resource/ui/menus/panels/buymenu1.res
 		Mozambique_Name
 		{
 			ControlName				Label
+			tall					30
 			wide                    224
 			labelText				"莫桑比克"
 			visible                 1
 			zpos 5
 			fgcolor_override		"2 252 240 255"
-			ypos                                       20
-			xpos					80
+			ypos                    32
+			xpos					105
 			fontHeight				25
 			pin_to_sibling          Mozambique
 			pin_corner_to_sibling   BOTTOM_RIGHT
@@ -263,13 +265,14 @@ scripts/resource/ui/menus/panels/buymenu1.res
 		Wingman_Name
 		{
 			ControlName				Label
+			tall					30
 			wide                    224
-			labelText				"小帮手"
+			labelText				"辅助手枪"
 			visible                 1
 			zpos 5
 			fgcolor_override		"2 252 240 255"
-			ypos                                       20
-			xpos					90
+			ypos                    32
+			xpos					105
 			fontHeight				25
 			pin_to_sibling          Wingman
 			pin_corner_to_sibling   BOTTOM_RIGHT
@@ -311,13 +314,14 @@ scripts/resource/ui/menus/panels/buymenu1.res
 		RE45_Name
 		{
 			ControlName				Label
+			tall					30
 			wide                    224
-			labelText				"RE-45"
+			labelText				"RE-45自动手枪"
 			visible                 1
 			zpos 5
 			fgcolor_override		"2 252 240 255"
-			ypos                                       20
-			xpos					110
+			ypos                    32
+			xpos					80
 			fontHeight				25
 			pin_to_sibling          RE45
 			pin_corner_to_sibling   BOTTOM_RIGHT
@@ -359,13 +363,14 @@ scripts/resource/ui/menus/panels/buymenu1.res
 		EVA8_Name
 		{
 			ControlName				Label
+			tall					30
 			wide                    224
 			labelText				"EVA-8霰弹枪"
 			visible                 1
 			zpos 5
 			fgcolor_override		"2 252 240 255"
-			ypos                                       20
-			xpos					100
+			ypos                    32
+			xpos					90
 			fontHeight				25
 			pin_to_sibling          EVA8
 			pin_corner_to_sibling   BOTTOM_RIGHT
@@ -407,13 +412,14 @@ scripts/resource/ui/menus/panels/buymenu1.res
 		Mastiff_Name
 		{
 			ControlName				Label
+			tall					30
 			wide                    224
 			labelText				"獒犬霰弹枪"
 			visible                 1
 			zpos 5
 			fgcolor_override		"2 252 240 255"
-			ypos                                       20
-			xpos					105
+			ypos                    32
+			xpos					95
 			fontHeight				25
 			pin_to_sibling          Mastiff
 			pin_corner_to_sibling   BOTTOM_RIGHT
@@ -455,13 +461,14 @@ scripts/resource/ui/menus/panels/buymenu1.res
 		Peacekeeper_Name
 		{
 			ControlName				Label
+			tall					30
 			wide                    224
 			labelText				"和平捍卫者"
 			visible                 1
 			zpos 5
 			fgcolor_override		"2 252 240 255"
-			ypos                                       20
-			xpos					100
+			ypos                    32
+			xpos					95
 			fontHeight				25
 			pin_to_sibling          Peacekeeper
 			pin_corner_to_sibling   BOTTOM_RIGHT

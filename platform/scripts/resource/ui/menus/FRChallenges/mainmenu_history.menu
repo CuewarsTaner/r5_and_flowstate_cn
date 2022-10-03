@@ -363,9 +363,10 @@ scripts/resource/ui/menus/FRChallenges/mainmenu_history.menu
 		"ChallengeNameLbl"
 		{
 			"ControlName"			"Label"
+			"tall"					"28"
 			"labelText"				"挑战项目"
 			"xpos"					"-50"
-			"ypos"					"0"
+			"ypos"					"3"
 			"auto_wide_tocontents"	"1"
 			"zpos" 					"4"
 			"fontHeight"			"25"
@@ -378,9 +379,10 @@ scripts/resource/ui/menus/FRChallenges/mainmenu_history.menu
 		"DummiesKilledLbl"
 		{
 			"ControlName"			"Label"
+			"tall"					"28"
 			"labelText"				"击杀"
 			"xpos"					"-250"
-			"ypos"					"0"
+			"ypos"					"3"
 			"zpos"					"6"
 			"textalignment"			"center"
 			"wide"					"150"
@@ -395,9 +397,10 @@ scripts/resource/ui/menus/FRChallenges/mainmenu_history.menu
 		"ChallengeScoreLbl"
 		{
 			"ControlName"			"Label"
+			"tall"					"28"
 			"labelText"				"命中次数"
 			"xpos"					"-400"
-			"ypos"					"0"
+			"ypos"					"3"
 			"zpos"					"6"
 			"textalignment"			"center"
 			"wide"					"150"
@@ -412,9 +415,10 @@ scripts/resource/ui/menus/FRChallenges/mainmenu_history.menu
 		"ChallengeWeaponLbl"
 		{
 			"ControlName"			"Label"
+			"tall"					"28"
 			"labelText"				"武器"
 			"xpos"					"-540"
-			"ypos"					"0"
+			"ypos"					"3"
 			"zpos"					"6"
 			"textalignment"			"center"
 			"wide"					"150"
@@ -428,9 +432,10 @@ scripts/resource/ui/menus/FRChallenges/mainmenu_history.menu
 		"ChallengeAccuracyLbl"
 		{
 			"ControlName"			"Label"
+			"tall"					"28"
 			"labelText"				"命中率"
 			"xpos"					"-685"
-			"ypos"					"0"
+			"ypos"					"3"
 			"zpos"					"6"
 			"textalignment"			"center"
 			"wide"					"150"
@@ -985,6 +990,7 @@ scripts/resource/ui/menus/FRChallenges/mainmenu_history.menu
 		"ChallengeName0"
 		{
 			"ControlName"				"Label"
+			"tall"						"30"
 			"labelText"					""
 			"xpos"						"-15"
 			"ypos"						"0"
@@ -1002,6 +1008,7 @@ scripts/resource/ui/menus/FRChallenges/mainmenu_history.menu
 		"ChallengeName1"
 		{
 			"ControlName"				"Label"
+			"tall"						"30"
 			"labelText"					""
 			"xpos"						"-15"
 			"ypos"						"0"
@@ -1019,6 +1026,7 @@ scripts/resource/ui/menus/FRChallenges/mainmenu_history.menu
 		"ChallengeName2"
 		{
 			"ControlName"				"Label"
+			"tall"						"30"
 			"labelText"					""
 			"xpos"						"-15"
 			"ypos"						"0"
@@ -1036,6 +1044,7 @@ scripts/resource/ui/menus/FRChallenges/mainmenu_history.menu
 		"ChallengeName3"
 		{
 			"ControlName"				"Label"
+			"tall"						"30"
 			"labelText"					""
 			"xpos"						"-15"
 			"ypos"						"0"
@@ -1053,6 +1062,7 @@ scripts/resource/ui/menus/FRChallenges/mainmenu_history.menu
 		"ChallengeName4"
 		{
 			"ControlName"				"Label"
+			"tall"						"30"
 			"labelText"					""
 			"xpos"						"-15"
 			"ypos"						"0"
@@ -1070,6 +1080,7 @@ scripts/resource/ui/menus/FRChallenges/mainmenu_history.menu
 		"ChallengeName5"
 		{
 			"ControlName"				"Label"
+			"tall"						"30"
 			"labelText"					""
 			"xpos"						"-15"
 			"ypos"						"0"
@@ -1087,6 +1098,7 @@ scripts/resource/ui/menus/FRChallenges/mainmenu_history.menu
 		"ChallengeName6"
 		{
 			"ControlName"				"Label"
+			"tall"						"30"
 			"labelText"					""
 			"xpos"						"-15"
 			"ypos"						"0"
@@ -1104,6 +1116,7 @@ scripts/resource/ui/menus/FRChallenges/mainmenu_history.menu
 		"ChallengeName7"
 		{
 			"ControlName"				"Label"
+			"tall"						"30"
 			"labelText"					""
 			"xpos"						"-15"
 			"ypos"						"0"
@@ -1121,6 +1134,7 @@ scripts/resource/ui/menus/FRChallenges/mainmenu_history.menu
 		"ChallengeName8"
 		{
 			"ControlName"				"Label"
+			"tall"						"30"
 			"labelText"					""
 			"xpos"						"-15"
 			"ypos"						"0"
@@ -1138,6 +1152,7 @@ scripts/resource/ui/menus/FRChallenges/mainmenu_history.menu
 		"ChallengeName9"
 		{
 			"ControlName"				"Label"
+			"tall"						"30"
 			"labelText"					""
 			"xpos"						"-15"
 			"ypos"						"0"
@@ -1155,6 +1170,7 @@ scripts/resource/ui/menus/FRChallenges/mainmenu_history.menu
 		"ChallengeName10"
 		{
 			"ControlName"				"Label"
+			"tall"						"30"
 			"labelText"					""
 			"xpos"						"-15"
 			"ypos"						"0"
@@ -1172,6 +1188,7 @@ scripts/resource/ui/menus/FRChallenges/mainmenu_history.menu
 		"ChallengeName11"
 		{
 			"ControlName"				"Label"
+			"tall"						"30"
 			"labelText"					""
 			"xpos"						"-15"
 			"ypos"						"0"
@@ -1189,6 +1206,7 @@ scripts/resource/ui/menus/FRChallenges/mainmenu_history.menu
 		"ChallengeName12"
 		{
 			"ControlName"				"Label"
+			"tall"						"30"
 			"labelText"					""
 			"xpos"						"-15"
 			"ypos"						"0"
@@ -1206,6 +1224,7 @@ scripts/resource/ui/menus/FRChallenges/mainmenu_history.menu
 		"ChallengeName13"
 		{
 			"ControlName"				"Label"
+			"tall"						"30"
 			"labelText"					""
 			"xpos"						"-15"
 			"ypos"						"0"
@@ -1223,6 +1242,7 @@ scripts/resource/ui/menus/FRChallenges/mainmenu_history.menu
 		"ChallengeName14"
 		{
 			"ControlName"				"Label"
+			"tall"						"30"
 			"labelText"					""
 			"xpos"						"-15"
 			"ypos"						"0"
@@ -1240,6 +1260,7 @@ scripts/resource/ui/menus/FRChallenges/mainmenu_history.menu
 		"ChallengeName15"
 		{
 			"ControlName"				"Label"
+			"tall"						"30"
 			"labelText"					""
 			"xpos"						"-15"
 			"ypos"						"0"
@@ -1257,6 +1278,7 @@ scripts/resource/ui/menus/FRChallenges/mainmenu_history.menu
 		"ChallengeName16"
 		{
 			"ControlName"				"Label"
+			"tall"						"30"
 			"labelText"					""
 			"xpos"						"-15"
 			"ypos"						"0"
@@ -1274,6 +1296,7 @@ scripts/resource/ui/menus/FRChallenges/mainmenu_history.menu
 		"ChallengeName17"
 		{
 			"ControlName"				"Label"
+			"tall"						"30"
 			"labelText"					""
 			"xpos"						"-15"
 			"ypos"						"0"
@@ -1291,6 +1314,7 @@ scripts/resource/ui/menus/FRChallenges/mainmenu_history.menu
 		"ChallengeName18"
 		{
 			"ControlName"				"Label"
+			"tall"						"30"
 			"labelText"					""
 			"xpos"						"-15"
 			"ypos"						"0"

@@ -157,8 +157,8 @@ scripts/resource/ui/menus/panels/buymenu1.res
 			zpos 5
 			fgcolor_override		"2 252 240 255"
 			ypos                    0
-			xpos					65
-			fontHeight				35
+			xpos					90
+			fontHeight				25
 			pin_to_sibling          ClickWeaponButton
 			pin_corner_to_sibling   CENTER
 			pin_to_sibling_corner   CENTER
@@ -204,9 +204,9 @@ scripts/resource/ui/menus/panels/buymenu1.res
 			visible                 1
 			zpos 5
 			fgcolor_override		"2 252 240 255"
-			xpos					40
+			xpos					70
 			ypos                    0
-			fontHeight				35
+			fontHeight				25
 			pin_to_sibling          HitscanAutoButton
 			pin_corner_to_sibling   CENTER
 			pin_to_sibling_corner   CENTER

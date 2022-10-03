@@ -41,6 +41,7 @@ const string PURPLE_SHIELD = "armor_pickup_lv3"
 global table<string,string> weaponlist
 
 global bool isBrightWaterByZer0 = false
+global const float KILLLEADER_STREAK_ANNOUNCE_TIME = 5
 bool plsTripleAudio = false;
 table playersInfo
 
@@ -366,7 +367,7 @@ void function _OnPlayerConnected(entity player)
 	else if (FlowState_Gungame())
 	    Message(player, "FLOWSTATE: GUNGAME", "波浪键可呼出控制台，输入commands查看可用指令\n>>>>>>  KOOK频道:98171075  Q群:307689539  <<<<<<", 10)
 	else
-	    Message(player, "FLOWSTATE: FFA/TDM", "波浪键可呼出控制台，输入commands查看可用指令\n>>>>>>  KOOK频道:98171075  Q群:307689539  <<<<<<", 10)
+	    Message(player, "FLOWSTATE: DM", "波浪键可呼出控制台，输入commands查看可用指令\n>>>>>>  KOOK频道:98171075  Q群:307689539  <<<<<<", 10)
 
 	if(IsValid(player))
 	{
@@ -473,22 +474,6 @@ void function __HighPingCheck(entity player)
 	}
 }
 
-void function DoubleAndTripleKillAudio(entity attacker)
-{
-	// sorry i will reimplement this later
-	if (!IsValid(attacker) || !attacker.p.isDownedEnemyRecently || attacker != GetKillLeader())
-		return
-
-	/* if( attacker.p.downedEnemyAtOneTime == 2 )
-	{
-		SurvivalCommentary_PlaySoundForAllPlayers( "diag_ap_aiNotify_killLeaderDoubleKill_01" )
-	}
-	if( attacker.p.downedEnemyAtOneTime == 3)
-	{
-		SurvivalCommentary_PlaySoundForAllPlayers( "diag_ap_aiNotify_killLeaderTripleKill_01" )
-	} */
-}
-
 void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
 {
 	if (FlowState_RandomGunsEverydie() && FlowState_FIESTADeathboxes())
@@ -554,7 +539,7 @@ void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
 				}
 	    	}
 
-                        // Attacker
+            // Attacker
             void functionref() attackerHandleFunc = void function() : (victim, attacker, damageInfo)
 	    	{
 	    		if(IsValid(attacker) && attacker.IsPlayer() && IsAlive(attacker) && attacker != victim)
@@ -565,37 +550,66 @@ void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
 	    			    PlayerRestoreHPFIESTA(attacker, 100)
 	    			    UpgradeShields(attacker, false)
 	    			} else PlayerRestoreHP(attacker, 100, Equipment_GetDefaultShieldHP())
+
 	    			if(FlowState_KillshotEnabled())
 					{
 	    			    DamageInfo_AddCustomDamageType( damageInfo, DF_KILLSHOT )
 	    			    thread EmitSoundOnEntityOnlyToPlayer( attacker, attacker, "flesh_bulletimpact_downedshot_1p_vs_3p" )
 	    			}
+
 	    			if(FlowState_Gungame())
 	    			{
 	    			    GiveGungameWeapon(attacker)
 	    			    //KillStreakAnnouncer(attacker, false)
 	    			}
+
 	    			WpnAutoReloadOnKill(attacker)
 	    			GameRules_SetTeamScore(attacker.GetTeam(), GameRules_GetTeamScore(attacker.GetTeam()) + 1)
+
 					int attackerKills = attacker.GetPlayerNetInt( "kills" )
+
 					if(	!IsValid( GetKillLeader() ) && attackerKills == 2)
 					{
 						thread SetKillLeader( attacker, attackerKills, true )
 						thread SurvivalCommentary_KilledPlayerAnnounce( eSurvivalCommentaryBucket.NEW_KILL_LEADER, attacker, 1.0, "bc_killLeaderNew", "bc_squadmateBecomesKillLeader", "bc_iBecomeKillLeader", true )
 						return
 					}
+
 					if ( IsValid( GetKillLeader() ) && attackerKills > GetKillLeader().GetPlayerNetInt( "kills" ) && attacker != GetKillLeader())
 					{
 						thread SetKillLeader( attacker, attackerKills, true)
 						thread SurvivalCommentary_KilledPlayerAnnounce( eSurvivalCommentaryBucket.NEW_KILL_LEADER, attacker, 1.0, "bc_killLeaderNew", "bc_squadmateBecomesKillLeader", "bc_iBecomeKillLeader", true )
 					}
+					
+					if( IsValid( GetKillLeader() ) && attacker == GetKillLeader() && Time() - attacker.p.lastDownedEnemyTime >= KILLLEADER_STREAK_ANNOUNCE_TIME )
+						attacker.p.downedEnemy = 0
 
-					if ( IsValid( GetKillLeader() ) && attacker == GetKillLeader() && attacker.p.downedEnemyAtOneTime < 3)
+					if( IsValid( GetKillLeader() ) && attacker == GetKillLeader() )
+						attacker.p.downedEnemy++
+					
+					if ( IsValid( GetKillLeader() ) && attacker == GetKillLeader() && Time() - attacker.p.lastDownedEnemyTime <= KILLLEADER_STREAK_ANNOUNCE_TIME )
 					{
-						attacker.p.downedEnemyAtOneTime += 1
 						Signal(attacker, "NewKillOnPlayerStreak")
-						thread RecentlyDownedEnemy(attacker, 5)
+
+						string announce
+						switch( attacker.p.downedEnemy )
+						{
+							case 2:
+								announce = "diag_ap_aiNotify_killLeaderDoubleKill"
+								break
+							
+							case 3:
+								announce = "diag_ap_aiNotify_killLeaderTripleKill"
+								break
+						}
+
+						foreach( player in GetPlayerArray_AliveConnected() )
+							EmitSoundOnEntityOnlyToPlayer( player, player, announce )
 					}
+
+					printt( "attacker.p.lastDownedEnemyTime: " + attacker.p.lastDownedEnemyTime + " | attacker.p.downedEnemy: " + attacker.p.downedEnemy + " | Time() - attacker.p.lastDownedEnemyTime <= KILLLEADER_STREAK_ANNOUNCE_TIME: ", Time() - attacker.p.lastDownedEnemyTime <= KILLLEADER_STREAK_ANNOUNCE_TIME )
+
+					attacker.p.lastDownedEnemyTime = Time()
 	    		}
             }
 	    	thread victimHandleFunc()
@@ -641,19 +655,6 @@ void function CheckForObservedTarget(entity player)
 		player.p.lastFrameObservedTarget = player.GetObserverTarget()
 		WaitFrame()
 	}
-}
-
-void function RecentlyDownedEnemy( entity attacker, float time )
-{
-	EndSignal(attacker, "NewKillOnPlayerStreak")
-	attacker.p.isDownedEnemyRecently = true
-	DoubleAndTripleKillAudio(attacker)
-
-	wait time
-
-	if(!IsValid(attacker)) return
-	attacker.p.isDownedEnemyRecently = false
-	attacker.p.downedEnemyAtOneTime = 0
 }
 
 void function _HandleRespawn(entity player, bool isDroppodSpawn = false)
@@ -708,7 +709,6 @@ void function _HandleRespawn(entity player, bool isDroppodSpawn = false)
 
 	if( IsValid( player ) && IsAlive(player))
 	{
-		printt("solo desde player connected")
 		if(!isDroppodSpawn)
 		    TpPlayerToSpawnPoint(player)
 
@@ -2018,7 +2018,7 @@ foreach(player in GetPlayerArray())
 		if(!IsValid(player)) continue
 		
 		AddCinematicFlag(player, CE_FLAG_HIDE_MAIN_HUD | CE_FLAG_EXECUTION)
-		Message(player,"- 本轮积分榜 -", "\n         Name:    K  |   D   |   KD   |   造成伤害 \n \n" + ScoreboardFinal() + "\n Flowstate " + file.scriptversion + " by CaféDeColombiaFPS.", 7, "UI_Menu_RoundSummary_Results")
+		Message(player,"- 本轮积分榜 -", "\n         Name:    K  |   D   |   KD   |   造成伤害 \n \n" + ScoreboardFinal() + "\n          Custom_tdm made by sal#3261.\n     Flowstate DM " + file.scriptversion + " made by @CafeFPS.", 7, "UI_Menu_RoundSummary_Results")
 	}
 
 wait 7
@@ -2715,16 +2715,16 @@ bool function ClientCommand_Help(entity player, array<string> args)
 			Message(player, "WELCOME TO FLOWSTATE: FIESTA", helpMessage(), 10)}
 		else if (FlowState_Gungame())
 		{
-			Message(player, "欢迎游玩军备竞赛\n KOOK频道:98171075  Q群:307689539", helpMessage(), 10)
+			Message(player, "欢迎游玩军备竞赛", helpMessage(), 10)
 
 		} else if (FlowState_PROPHUNT())
 		{
-			Message(player, "欢迎游玩躲猫猫模式\n KOOK频道:98171075  Q群:307689539", helpMessagePROPHUNT(), 10)
+			Message(player, "欢迎游玩躲猫猫模式", helpMessagePROPHUNT(), 10)
 		} else if (FlowState_SURF())
 		{
-			Message(player, "欢迎游玩滑翔模式\n KOOK频道:98171075  Q群:307689539", "", 5)
+			Message(player, "欢迎游玩滑翔模式", "", 5)
 		} else{
-			Message(player, "欢迎游玩死斗模式\n   KOOK频道:98171075  Q群:307689539", helpMessage(), 10)
+			Message(player, "欢迎游玩死斗模式", helpMessage(), 10)
 		}
 	}
 	return true

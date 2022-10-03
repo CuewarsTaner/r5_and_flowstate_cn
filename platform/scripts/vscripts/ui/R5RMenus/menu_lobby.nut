@@ -71,7 +71,7 @@ global table<string, string> playlisttoname = {
 	[ "custom_ctf" ] = "夺旗模式",
 	[ "survival_dev" ] = "大逃杀 (Dev)",
 	[ "custom_tdm_fiesta" ] = "死斗模式-盛宴",
-	[ "custom_tdm_gungame" ] = "死斗模式-枪战 (Beta)",
+	[ "custom_tdm_gungame" ] = "死斗模式-军备竞赛 (Beta)",
 	[ "custom_prophunt" ] = "躲猫猫模式 (Beta)",
 	[ "custom_surf" ] = "滑翔模式",
 	[ "map_editor" ] = "地图编辑器",
@@ -80,9 +80,9 @@ global table<string, string> playlisttoname = {
 
 //Vis to readable name
 global table<int, string> VisibilityNames = {
-	[ eServerVisibility.OFFLINE ] = "Offline",
-	[ eServerVisibility.HIDDEN ] = "Hidden",
-	[ eServerVisibility.PUBLIC ] = "Public"
+	[ eServerVisibility.OFFLINE ] = "本地",
+	[ eServerVisibility.HIDDEN ] = "隐藏",
+	[ eServerVisibility.PUBLIC ] = "公开"
 }
 
 void function InitR5RLobbyMenu( var newMenuArg )

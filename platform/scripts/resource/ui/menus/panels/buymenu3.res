@@ -167,12 +167,13 @@ scripts/resource/ui/menus/panels/buymenu3.res
 		G7_Name
 		{
 			ControlName				Label
+			tall					30
 			wide                    224
 			labelText				"G7侦查枪"
 			visible                 1
 			zpos 5
 			fgcolor_override		"2 252 240 255"
-			ypos                                       20
+			ypos                    32
 			xpos					100
 			fontHeight				25
 			pin_to_sibling          G7
@@ -215,13 +216,14 @@ scripts/resource/ui/menus/panels/buymenu3.res
 		Longbow_Name
 		{
 			ControlName				Label
+			tall					30
 			wide                    224
 			labelText				"长弓"
 			visible                 1
 			zpos 5
 			fgcolor_override		"2 252 240 255"
-			ypos                                       20
-			xpos					90
+			ypos                    32
+			xpos					125
 			fontHeight				25
 			pin_to_sibling          Longbow
 			pin_corner_to_sibling   BOTTOM_RIGHT
@@ -263,12 +265,13 @@ scripts/resource/ui/menus/panels/buymenu3.res
 		TripleTake_Name
 		{
 			ControlName				Label
+			tall					30
 			wide                    224
-			labelText				"三重击"
+			labelText				"三重式狙击枪"
 			visible                 1
 			zpos 5
 			fgcolor_override		"2 252 240 255"
-			ypos                                       20
+			ypos                    32
 			xpos					85
 			fontHeight				25
 			pin_to_sibling          TripleTake
@@ -310,13 +313,14 @@ scripts/resource/ui/menus/panels/buymenu3.res
 		ChargeRifle_Name
 		{
 			ControlName				Label
+			tall					30
 			wide                    224
 			labelText				"充能步枪"
 			visible                 1
 			zpos 5
 			fgcolor_override		"2 252 240 255"
-			ypos                                       20
-			xpos					80
+			ypos                    32
+			xpos					105
 			fontHeight				25
 			pin_to_sibling          ChargeRifle
 			pin_corner_to_sibling   BOTTOM_RIGHT
@@ -356,13 +360,14 @@ scripts/resource/ui/menus/panels/buymenu3.res
 		Kraber_Name
 		{
 			ControlName				Label
+			tall					30
 			wide                    224
-			labelText				"克雷贝尔"
+			labelText				"克雷贝尔狙击枪"
 			visible                 1
 			zpos 5
 			fgcolor_override		"2 252 240 255"
-			ypos                                       20
-			xpos					90
+			ypos                    32
+			xpos					75
 			fontHeight				25
 			pin_to_sibling          Kraber
 			pin_corner_to_sibling   BOTTOM_RIGHT
@@ -403,13 +408,14 @@ scripts/resource/ui/menus/panels/buymenu3.res
 		Repeater_Name
 		{
 			ControlName				Label
+			tall					30
 			wide                    224
-			labelText				"30-30连发枪"
+			labelText				"30-30"
 			visible                 1
 			zpos 5
 			fgcolor_override		"2 252 240 255"
-			ypos                                       20
-			xpos					50
+			ypos                    32
+			xpos					118
 			fontHeight				25
 			pin_to_sibling          Repeater
 			pin_corner_to_sibling   BOTTOM_RIGHT
