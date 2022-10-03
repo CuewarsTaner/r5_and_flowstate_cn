@@ -41,7 +41,6 @@ const string PURPLE_SHIELD = "armor_pickup_lv3"
 global table<string,string> weaponlist
 
 global bool isBrightWaterByZer0 = false
-global const float KILLLEADER_STREAK_ANNOUNCE_TIME = 5
 bool plsTripleAudio = false;
 table playersInfo
 
@@ -474,6 +473,22 @@ void function __HighPingCheck(entity player)
 	}
 }
 
+void function DoubleAndTripleKillAudio(entity attacker)
+{
+	// sorry i will reimplement this later
+	if (!IsValid(attacker) || !attacker.p.isDownedEnemyRecently || attacker != GetKillLeader())
+		return
+
+	/* if( attacker.p.downedEnemyAtOneTime == 2 )
+	{
+		SurvivalCommentary_PlaySoundForAllPlayers( "diag_ap_aiNotify_killLeaderDoubleKill_01" )
+	}
+	if( attacker.p.downedEnemyAtOneTime == 3)
+	{
+		SurvivalCommentary_PlaySoundForAllPlayers( "diag_ap_aiNotify_killLeaderTripleKill_01" )
+	} */
+}
+
 void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
 {
 	if (FlowState_RandomGunsEverydie() && FlowState_FIESTADeathboxes())
@@ -539,7 +554,7 @@ void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
 				}
 	    	}
 
-            // Attacker
+                        // Attacker
             void functionref() attackerHandleFunc = void function() : (victim, attacker, damageInfo)
 	    	{
 	    		if(IsValid(attacker) && attacker.IsPlayer() && IsAlive(attacker) && attacker != victim)
@@ -550,66 +565,37 @@ void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
 	    			    PlayerRestoreHPFIESTA(attacker, 100)
 	    			    UpgradeShields(attacker, false)
 	    			} else PlayerRestoreHP(attacker, 100, Equipment_GetDefaultShieldHP())
-
 	    			if(FlowState_KillshotEnabled())
 					{
 	    			    DamageInfo_AddCustomDamageType( damageInfo, DF_KILLSHOT )
 	    			    thread EmitSoundOnEntityOnlyToPlayer( attacker, attacker, "flesh_bulletimpact_downedshot_1p_vs_3p" )
 	    			}
-
 	    			if(FlowState_Gungame())
 	    			{
 	    			    GiveGungameWeapon(attacker)
 	    			    //KillStreakAnnouncer(attacker, false)
 	    			}
-
 	    			WpnAutoReloadOnKill(attacker)
 	    			GameRules_SetTeamScore(attacker.GetTeam(), GameRules_GetTeamScore(attacker.GetTeam()) + 1)
-
 					int attackerKills = attacker.GetPlayerNetInt( "kills" )
-
 					if(	!IsValid( GetKillLeader() ) && attackerKills == 2)
 					{
 						thread SetKillLeader( attacker, attackerKills, true )
 						thread SurvivalCommentary_KilledPlayerAnnounce( eSurvivalCommentaryBucket.NEW_KILL_LEADER, attacker, 1.0, "bc_killLeaderNew", "bc_squadmateBecomesKillLeader", "bc_iBecomeKillLeader", true )
 						return
 					}
-
 					if ( IsValid( GetKillLeader() ) && attackerKills > GetKillLeader().GetPlayerNetInt( "kills" ) && attacker != GetKillLeader())
 					{
 						thread SetKillLeader( attacker, attackerKills, true)
 						thread SurvivalCommentary_KilledPlayerAnnounce( eSurvivalCommentaryBucket.NEW_KILL_LEADER, attacker, 1.0, "bc_killLeaderNew", "bc_squadmateBecomesKillLeader", "bc_iBecomeKillLeader", true )
 					}
-					
-					if( IsValid( GetKillLeader() ) && attacker == GetKillLeader() && Time() - attacker.p.lastDownedEnemyTime >= KILLLEADER_STREAK_ANNOUNCE_TIME )
-						attacker.p.downedEnemy = 0
 
-					if( IsValid( GetKillLeader() ) && attacker == GetKillLeader() )
-						attacker.p.downedEnemy++
-					
-					if ( IsValid( GetKillLeader() ) && attacker == GetKillLeader() && Time() - attacker.p.lastDownedEnemyTime <= KILLLEADER_STREAK_ANNOUNCE_TIME )
+					if ( IsValid( GetKillLeader() ) && attacker == GetKillLeader() && attacker.p.downedEnemyAtOneTime < 3)
 					{
+						attacker.p.downedEnemyAtOneTime += 1
 						Signal(attacker, "NewKillOnPlayerStreak")
-
-						string announce
-						switch( attacker.p.downedEnemy )
-						{
-							case 2:
-								announce = "diag_ap_aiNotify_killLeaderDoubleKill"
-								break
-							
-							case 3:
-								announce = "diag_ap_aiNotify_killLeaderTripleKill"
-								break
-						}
-
-						foreach( player in GetPlayerArray_AliveConnected() )
-							EmitSoundOnEntityOnlyToPlayer( player, player, announce )
+						thread RecentlyDownedEnemy(attacker, 5)
 					}
-
-					printt( "attacker.p.lastDownedEnemyTime: " + attacker.p.lastDownedEnemyTime + " | attacker.p.downedEnemy: " + attacker.p.downedEnemy + " | Time() - attacker.p.lastDownedEnemyTime <= KILLLEADER_STREAK_ANNOUNCE_TIME: ", Time() - attacker.p.lastDownedEnemyTime <= KILLLEADER_STREAK_ANNOUNCE_TIME )
-
-					attacker.p.lastDownedEnemyTime = Time()
 	    		}
             }
 	    	thread victimHandleFunc()
@@ -655,6 +641,19 @@ void function CheckForObservedTarget(entity player)
 		player.p.lastFrameObservedTarget = player.GetObserverTarget()
 		WaitFrame()
 	}
+}
+
+void function RecentlyDownedEnemy( entity attacker, float time )
+{
+	EndSignal(attacker, "NewKillOnPlayerStreak")
+	attacker.p.isDownedEnemyRecently = true
+	DoubleAndTripleKillAudio(attacker)
+
+	wait time
+
+	if(!IsValid(attacker)) return
+	attacker.p.isDownedEnemyRecently = false
+	attacker.p.downedEnemyAtOneTime = 0
 }
 
 void function _HandleRespawn(entity player, bool isDroppodSpawn = false)
@@ -992,7 +991,7 @@ void function GiveRandomSecondaryWeaponMetagame(entity player)
 
     array<string> Weapons = [
 		"mp_weapon_wingman optic_cq_hcog_classic highcal_mag_l3",
-		"mp_weapon_energy_shotgun shotgun_bolt_l3 optic_cq_threat",
+		"mp_weapon_energy_shotgun shotgun_bolt_l3 optic_cq_threat hopup_energy_choke",
 		"mp_weapon_shotgun shotgun_bolt_l3 optic_cq_threat",
 		"mp_weapon_r97 optic_cq_hcog_classic barrel_stabilizer_l3 stock_tactical_l3 bullets_mag_l3",
 		"mp_weapon_pdw optic_cq_hcog_classic stock_tactical_l3 highcal_mag_l3",
