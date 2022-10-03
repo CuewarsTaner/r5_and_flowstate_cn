@@ -41,6 +41,7 @@ const string PURPLE_SHIELD = "armor_pickup_lv3"
 global table<string,string> weaponlist
 
 global bool isBrightWaterByZer0 = false
+global const float KILLLEADER_STREAK_ANNOUNCE_TIME = 5
 bool plsTripleAudio = false;
 table playersInfo
 
@@ -473,23 +474,6 @@ void function __HighPingCheck(entity player)
 	}
 }
 
-void function DoubleAndTripleKillAudio(entity attacker)
-{
-	// sorry i will reimplement this later
-	if (!IsValid(attacker) || !attacker.p.isDownedEnemyRecently || attacker != GetKillLeader())
-		return
-
-	/* if( attacker.p.downedEnemyAtOneTime == 2 )
-	{
-		SurvivalCommentary_PlaySoundForAllPlayers( "diag_ap_aiNotify_killLeaderDoubleKill_01" )
-	}
-
-	if( attacker.p.downedEnemyAtOneTime == 3)
-	{
-		SurvivalCommentary_PlaySoundForAllPlayers( "diag_ap_aiNotify_killLeaderTripleKill_01" )
-	} */
-}
-
 void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
 {
 	if (FlowState_RandomGunsEverydie() && FlowState_FIESTADeathboxes())
@@ -596,13 +580,36 @@ void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
 						thread SetKillLeader( attacker, attackerKills, true)
 						thread SurvivalCommentary_KilledPlayerAnnounce( eSurvivalCommentaryBucket.NEW_KILL_LEADER, attacker, 1.0, "bc_killLeaderNew", "bc_squadmateBecomesKillLeader", "bc_iBecomeKillLeader", true )
 					}
+					
+					if( IsValid( GetKillLeader() ) && attacker == GetKillLeader() && Time() - attacker.p.lastDownedEnemyTime >= KILLLEADER_STREAK_ANNOUNCE_TIME )
+						attacker.p.downedEnemy = 0
 
-					if ( IsValid( GetKillLeader() ) && attacker == GetKillLeader() && attacker.p.downedEnemyAtOneTime < 3)
+					if( IsValid( GetKillLeader() ) && attacker == GetKillLeader() )
+						attacker.p.downedEnemy++
+					
+					if ( IsValid( GetKillLeader() ) && attacker == GetKillLeader() && Time() - attacker.p.lastDownedEnemyTime <= KILLLEADER_STREAK_ANNOUNCE_TIME )
 					{
-						attacker.p.downedEnemyAtOneTime += 1
 						Signal(attacker, "NewKillOnPlayerStreak")
-						thread RecentlyDownedEnemy(attacker, 5)
+
+						string announce
+						switch( attacker.p.downedEnemy )
+						{
+							case 2:
+								announce = "diag_ap_aiNotify_killLeaderDoubleKill"
+								break
+							
+							case 3:
+								announce = "diag_ap_aiNotify_killLeaderTripleKill"
+								break
+						}
+
+						foreach( player in GetPlayerArray_AliveConnected() )
+							EmitSoundOnEntityOnlyToPlayer( player, player, announce )
 					}
+
+					printt( "attacker.p.lastDownedEnemyTime: " + attacker.p.lastDownedEnemyTime + " | attacker.p.downedEnemy: " + attacker.p.downedEnemy + " | Time() - attacker.p.lastDownedEnemyTime <= KILLLEADER_STREAK_ANNOUNCE_TIME: ", Time() - attacker.p.lastDownedEnemyTime <= KILLLEADER_STREAK_ANNOUNCE_TIME )
+
+					attacker.p.lastDownedEnemyTime = Time()
 	    		}
             }
 	    	thread victimHandleFunc()
@@ -648,19 +655,6 @@ void function CheckForObservedTarget(entity player)
 		player.p.lastFrameObservedTarget = player.GetObserverTarget()
 		WaitFrame()
 	}
-}
-
-void function RecentlyDownedEnemy( entity attacker, float time )
-{
-	EndSignal(attacker, "NewKillOnPlayerStreak")
-	attacker.p.isDownedEnemyRecently = true
-	DoubleAndTripleKillAudio(attacker)
-
-	wait time
-
-	if(!IsValid(attacker)) return
-	attacker.p.isDownedEnemyRecently = false
-	attacker.p.downedEnemyAtOneTime = 0
 }
 
 void function _HandleRespawn(entity player, bool isDroppodSpawn = false)
@@ -807,7 +801,7 @@ void function _HandleRespawn(entity player, bool isDroppodSpawn = false)
 
 	if(!player.p.comingFromSpectator)
 		thread Flowstate_GrantSpawnImmunity(player, 2.5)
-		thread LoadCustomWeapon(player)
+		thread LoadCustomWeapon(player)		///TDM Auto-Reloaded Saved Weapons at Respawn
 	
 	player.p.comingFromSpectator = false
 }
@@ -825,39 +819,39 @@ void function Flowstate_GrantSpawnImmunity(entity player, float duration)
 {
 	if(!IsValid(player)) return
 	
-	OnThreadEnd(
-	function() : ( player )
-		{
-			if(!IsValid(player)) return
+	//OnThreadEnd(
+	//function() : ( player )
+	//	{
+	//		if(!IsValid(player)) return
+	//
+	//		player.MakeVisible()
+	//		player.ClearInvulnerable()
+	//		player.SetTakeDamageType( DAMAGE_YES )
+	//		Highlight_ClearEnemyHighlight( player )
+	//	}
+	//)
+	thread WpnPulloutOnRespawn(player, 0)
 
-			player.MakeVisible()
-			player.ClearInvulnerable()
-			player.SetTakeDamageType( DAMAGE_YES )
-			Highlight_ClearEnemyHighlight( player )
-		}
-	)
-	thread WpnPulloutOnRespawn(player, duration)
-
-	EmitSoundOnEntityOnlyToPlayer( player, player, "PhaseGate_Enter_1p" )
-	EmitSoundOnEntityExceptToPlayer( player, player, "PhaseGate_Enter_3p" )
+	//EmitSoundOnEntityOnlyToPlayer( player, player, "PhaseGate_Enter_1p" )
+	//EmitSoundOnEntityExceptToPlayer( player, player, "PhaseGate_Enter_3p" )
 
 	StatusEffect_AddTimed( player, eStatusEffect.adrenaline_visuals, 1.0, duration, duration )
 	StatusEffect_AddTimed( player, eStatusEffect.speed_boost, 0.3, duration, duration )
 	StatusEffect_AddTimed( player, eStatusEffect.drone_healing, 1.0, duration, duration )
 	StatusEffect_AddTimed( player, eStatusEffect.stim_visual_effect, 1.0, duration, duration )
 
-	player.SetTakeDamageType( DAMAGE_NO )
-	Highlight_SetEnemyHighlight( player, "survival_enemy_skydiving" )
-	player.SetInvulnerable()
+	//player.SetTakeDamageType( DAMAGE_NO )
+	//Highlight_SetEnemyHighlight( player, "survival_enemy_skydiving" )
+	//player.SetInvulnerable()
 
-	float endTime = Time() + duration
-	while(Time() <= endTime && IsValid(player)){
-		player.MakeInvisible()
-		wait 0.5
-		if(IsValid(player))
-			player.MakeVisible()
-		wait 0.5
-	}
+	//float endTime = Time() + duration
+	//while(Time() <= endTime && IsValid(player)){
+	//	player.MakeInvisible()
+	//	wait 0.5
+	//	if(IsValid(player))
+	//		player.MakeVisible()
+	//	wait 0.5
+	//}
 }
 
 void function WpnPulloutOnRespawn(entity player, float duration)
@@ -3032,7 +3026,7 @@ if (player.GetPlayerName() in weaponlist)
 	ClientCommand( player, weaponlist[player.GetPlayerName()] )
 	wait 0.1
 	WpnAutoReloadOnKill(player)
-	thread WpnPulloutOnRespawn(player, 2.5)
+	thread WpnPulloutOnRespawn(player, 0)
 }
 }
 
