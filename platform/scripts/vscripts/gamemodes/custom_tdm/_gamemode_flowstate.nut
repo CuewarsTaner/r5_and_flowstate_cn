@@ -157,7 +157,8 @@ void function _CustomTDM_Init()
 	AddClientCommandCallback("latency", ClientCommand_ShowLatency)
 	AddClientCommandCallback("flowstatekick", ClientCommand_FlowstateKick)
 	AddClientCommandCallback("commands", ClientCommand_Help)
-	AddClientCommandCallback("saveguns", ClientCommand_SaveCurrentWeapon)
+	AddClientCommandCallback("saveguns", ClientCommand_SaveCurrentWeapons)
+	AddClientCommandCallback("resetguns", ClientCommand_ResetSavedWeapons)
 
 	AddClientCommandCallback("controllerstate", ClientCommand_ControllerReport)
 	AddClientCommandCallback("controllersummary", ClientCommand_ControllerSummary)
@@ -2992,7 +2993,7 @@ void function AnimationTiming( entity legend, float cycle )
 
 
 ///Save TDM Current Weapons
-bool function ClientCommand_SaveCurrentWeapon(entity player, array<string> args)
+bool function ClientCommand_SaveCurrentWeapons(entity player, array<string> args)
 {	entity weapon1
 	entity weapon2
 	string optics1
@@ -3033,4 +3034,16 @@ if (player.GetPlayerName() in weaponlist)
 	WpnAutoReloadOnKill(player)
 	thread WpnPulloutOnRespawn(player, 2.5)
 }
+}
+
+
+//Reset TDM Saved Weapons
+bool function ClientCommand_ResetSavedWeapons(entity player, array<string> args)
+{	
+	if (!IsValid(player)) return false
+	if (player.GetPlayerName() in weaponlist)
+	{
+		delete weaponlist[player.GetPlayerName()]
+	}
+	return true
 }
