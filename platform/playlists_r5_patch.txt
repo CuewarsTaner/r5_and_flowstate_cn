@@ -501,7 +501,7 @@ playlists //汉化版本 by融化的芒果CC
 				
 				//GENERAL SETTINGS
 				flowstateEndlessFFAorTDM			0								//是否开启无尽模式（不会刷新新的轮次，不会产生捍卫者）
-				Admins 								"CuewarsTaner NNanfeng1" 		//管理员游戏ID（多个管理员请用空格隔开）
+				Admins 								"CuewarsTaner NNanfeng1 Makimakimaaaaa" 		//管理员游戏ID（多个管理员请用空格隔开）
 				respawn_delay						5								//复活延迟
 				flowstateRoundtime 					480								//每轮时间（默认480秒）
 				flowstateBubble 					"111, 66, 245" 					//安全区颜色
@@ -519,9 +519,9 @@ playlists //汉化版本 by融化的芒果CC
 				flowstateReloadTacticalOnRespawn	1								//复活战术技能冷却重置
 				flowstateReloadUltimateOnRespawn	1								//复活终极技能冷却重置
 				//World's Edge Map										//S3世界尽头
-				flowstate_Enable_BRIGHWATER_By_Zero				1       //是否开启Zero制作的地图POI
-				flowstate_Enable_CAVE_By_BlessedSeal			1		//是否开启BlessedSeal制作的地图POI
-				flowstate_Enable_SKILLTRAINER_By_Colombia		1		//是否开启Columbia制作的天空竞技场POI
+				flowstate_Enable_BRIGHWATER_By_Zero				0       //是否开启Zero制作的地图POI（白色森林、湖泊竞技场）
+				flowstate_Enable_CAVE_By_BlessedSeal			0		//是否开启BlessedSeal制作的地图POI（高台竞技场）
+				flowstate_Enable_SKILLTRAINER_By_Colombia		0		//是否开启Columbia制作的地图POI（天空竞技场）
 				
 				//Kings Canyon OG map									//S0诸王峡谷
 				flowstate_Enable_CUSTOMMAP_By_Biscutz			1		//是否开启Biscutz制作的地图POI
@@ -554,18 +554,18 @@ playlists //汉化版本 by融化的芒果CC
 
 			}
 			gamemodes { custom_tdm { maps {
-				mp_rr_canyonlands_64k_x_64k                    1			//S0诸王峡谷
+				mp_rr_canyonlands_64k_x_64k                    1			//S1诸王峡谷
 				mp_rr_canyonlands_mu1                          1			//S2诸王峡谷
 				mp_rr_desertlands_64k_x_64k                    1			//S3世界尽头
-				mp_rr_desertlands_64k_x_64k_nx                 1			//S3世界尽头（暗影）
-				mp_rr_canyonlands_mu1_night                    1			//S2诸王峡谷（暗影）
+				mp_rr_desertlands_64k_x_64k_nx                 1			//S3世界尽头(黑夜)
+				mp_rr_canyonlands_mu1_night                    1			//S2诸王峡谷(黑夜)
 				mp_rr_canyonlands_staging                      1			//靶场
-				mp_rr_ashs_redemption                          1			//艾许的救赎（泰坦陨落2）
-				mp_rr_aqueduct									1			//竞技场-熔岩流
-				mp_rr_arena_composite							1			//控制模式活动地图
-				mp_rr_aqueduct_night							1			//竞技场-熔岩流（暗影）
-				mp_rr_desertlands_64k_x_64k_tt					1			//世界尽头海市蜃楼（？？）
-				mp_rr_party_crasher								1			//竞技场-派对破坏者
+				mp_rr_ashs_redemption                          1			//艾许战场
+				mp_rr_aqueduct									1			//熔岩流
+				mp_rr_arena_composite							1			//控制
+				mp_rr_aqueduct_night							1			//熔岩流(黑夜)
+				mp_rr_desertlands_64k_x_64k_tt					1			//S3世界尽头(幻影航班)
+				mp_rr_party_crasher								1			//派对破坏者
 			} } }
 		}
 		

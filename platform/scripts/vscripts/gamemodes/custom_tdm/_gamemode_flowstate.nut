@@ -11,6 +11,7 @@
 // AyeZee#6969 -- tdm/ffa dropships and droppods
 // Zer0Bytes#4428 -- rewrite
 // everyone else -- advice
+// Makimaki -- TDM Saved Weapon List
 
 global function _CustomTDM_Init
 global function _RegisterLocation
@@ -35,6 +36,9 @@ global function	ClientCommand_ShowLatency
 const string WHITE_SHIELD = "armor_pickup_lv1"
 const string BLUE_SHIELD = "armor_pickup_lv2"
 const string PURPLE_SHIELD = "armor_pickup_lv3"
+
+//TDM Saved Weapon List
+global table<string,string> weaponlist
 
 global bool isBrightWaterByZer0 = false
 bool plsTripleAudio = false;
@@ -153,6 +157,7 @@ void function _CustomTDM_Init()
 	AddClientCommandCallback("latency", ClientCommand_ShowLatency)
 	AddClientCommandCallback("flowstatekick", ClientCommand_FlowstateKick)
 	AddClientCommandCallback("commands", ClientCommand_Help)
+	AddClientCommandCallback("saveguns", ClientCommand_SaveCurrentWeapon)
 
 	AddClientCommandCallback("controllerstate", ClientCommand_ControllerReport)
 	AddClientCommandCallback("controllersummary", ClientCommand_ControllerSummary)
@@ -356,11 +361,11 @@ void function _OnPlayerConnected(entity player)
 	SetPlayerSettings(player, TDM_PLAYER_SETTINGS)
 
 	if(FlowState_RandomGunsEverydie())
-	    Message(player, "FLOWSTATE: FIESTA", "波浪键可呼出控制台，输入commands查看可用指令\n     KOOK频道:98171075  Q群:307689539 ", 10)
+	    Message(player, "FLOWSTATE: FIESTA", "波浪键可呼出控制台，输入commands查看可用指令\n>>>>>>  KOOK频道:98171075  Q群:307689539  <<<<<<", 10)
 	else if (FlowState_Gungame())
-	    Message(player, "FLOWSTATE: GUNGAME", "波浪键可呼出控制台，输入commands查看可用指令\n     KOOK频道:98171075  Q群:307689539 ", 10)
+	    Message(player, "FLOWSTATE: GUNGAME", "波浪键可呼出控制台，输入commands查看可用指令\n>>>>>>  KOOK频道:98171075  Q群:307689539  <<<<<<", 10)
 	else
-	    Message(player, "FLOWSTATE: FFA/TDM", "波浪键可呼出控制台，输入commands查看可用指令\n     KOOK频道:98171075  Q群:307689539 ", 10)
+	    Message(player, "FLOWSTATE: FFA/TDM", "波浪键可呼出控制台，输入commands查看可用指令\n>>>>>>  KOOK频道:98171075  Q群:307689539  <<<<<<", 10)
 
 	if(IsValid(player))
 	{
@@ -801,6 +806,7 @@ void function _HandleRespawn(entity player, bool isDroppodSpawn = false)
 
 	if(!player.p.comingFromSpectator)
 		thread Flowstate_GrantSpawnImmunity(player, 2.5)
+		thread LoadCustomWeapon(player)
 	
 	player.p.comingFromSpectator = false
 }
@@ -969,7 +975,7 @@ void function GiveRandomPrimaryWeaponMetagame(entity player)
 	int slot = WEAPON_INVENTORY_SLOT_PRIMARY_0
 
     array<string> Weapons = [
-		"mp_weapon_rspn101 optic_cq_hcog_bruiser barrel_stabilizer_l4_flash_hider stock_tactical_l3 bullets_mag_l3",
+		"mp_weapon_rspn101 optic_cq_hcog_bruiser barrel_stabilizer_l3 stock_tactical_l3 bullets_mag_l3",
 		"mp_weapon_vinson optic_cq_hcog_bruiser stock_tactical_l3 highcal_mag_l3",
 		"mp_weapon_energy_ar optic_cq_hcog_bruiser hopup_turbocharger stock_tactical_l3"
 	]
@@ -993,10 +999,10 @@ void function GiveRandomSecondaryWeaponMetagame(entity player)
 		"mp_weapon_wingman optic_cq_hcog_classic highcal_mag_l3",
 		"mp_weapon_energy_shotgun shotgun_bolt_l3 optic_cq_threat",
 		"mp_weapon_shotgun shotgun_bolt_l3 optic_cq_threat",
-		"mp_weapon_r97 optic_cq_hcog_classic barrel_stabilizer_l4_flash_hider stock_tactical_l3 bullets_mag_l3",
-		"mp_weapon_pdw optic_cq_hcog_classic highcal_mag_l3 stock_tactical_l3",
-		"mp_weapon_car optic_cq_hcog_classic stock_tactical_l3 bullets_mag_l3",
-		"mp_weapon_volt_smg barrel_stabilizer_l4_flash_hider energy_mag_l3 stock_tactical_l3"
+		"mp_weapon_r97 optic_cq_hcog_classic barrel_stabilizer_l3 stock_tactical_l3 bullets_mag_l3",
+		"mp_weapon_pdw optic_cq_hcog_classic stock_tactical_l3 highcal_mag_l3",
+		"mp_weapon_car optic_cq_hcog_classic barrel_stabilizer_l3 stock_tactical_l3 bullets_mag_l3",
+		"mp_weapon_volt_smg optic_cq_hcog_classic barrel_stabilizer_l3 stock_tactical_l3 energy_mag_l3"
 	]
 
 	foreach(weapon in Weapons)
@@ -1043,7 +1049,7 @@ void function GiveRandomSecondaryWeapon( entity player)
 	int slot = WEAPON_INVENTORY_SLOT_PRIMARY_1
 
     array<string> Weapons = [
-		"mp_weapon_r97 optic_cq_holosight bullets_mag_l2 stock_tactical_l3 barrel_stabilizer_l4_flash_hider",
+		"mp_weapon_r97 optic_cq_holosight bullets_mag_l2 stock_tactical_l3 barrel_stabilizer_l3",
 		"mp_weapon_energy_shotgun shotgun_bolt_l2",
 		"mp_weapon_pdw highcal_mag_l3 stock_tactical_l2",
 		"mp_weapon_mastiff shotgun_bolt_l3",
@@ -1073,13 +1079,13 @@ void function GiveActualGungameWeapon(int index, entity player)
 	int slot = WEAPON_INVENTORY_SLOT_PRIMARY_0
 
     array<string> Weapons = [
-		"mp_weapon_r97 optic_cq_hcog_classic barrel_stabilizer_l4_flash_hider stock_tactical_l3 bullets_mag_l2",
+		"mp_weapon_r97 optic_cq_hcog_classic barrel_stabilizer_l3 stock_tactical_l3 bullets_mag_l2",
 		"mp_weapon_wingman optic_cq_hcog_classic highcal_mag_l1",
-		"mp_weapon_rspn101 optic_cq_hcog_bruiser barrel_stabilizer_l4_flash_hider stock_tactical_l3 bullets_mag_l2",
+		"mp_weapon_rspn101 optic_cq_hcog_bruiser barrel_stabilizer_l3 stock_tactical_l3 bullets_mag_l2",
 		"mp_weapon_energy_shotgun shotgun_bolt_l1",
 		"mp_weapon_vinson optic_cq_hcog_bruiser stock_tactical_l3 highcal_mag_l3",
 		"mp_weapon_shotgun shotgun_bolt_l1",
-		"mp_weapon_hemlok optic_cq_hcog_bruiser stock_tactical_l3 highcal_mag_l3 barrel_stabilizer_l4_flash_hider",
+		"mp_weapon_hemlok optic_cq_hcog_bruiser stock_tactical_l3 highcal_mag_l3 barrel_stabilizer_l3",
 		"mp_weapon_mastiff",
 		"mp_weapon_pdw optic_cq_hcog_classic stock_tactical_l3 highcal_mag_l3",
 		"mp_weapon_autopistol optic_cq_hcog_classic bullets_mag_l1",
@@ -1101,7 +1107,7 @@ void function GiveActualGungameWeapon(int index, entity player)
 		"mp_weapon_autopistol",
 		"mp_weapon_dmr optic_cq_hcog_bruiser highcal_mag_l2 barrel_stabilizer_l2 stock_sniper_l3",
 		"mp_weapon_pdw stock_tactical_l1 highcal_mag_l1",
-		"mp_weapon_esaw optic_cq_hcog_classic energy_mag_l1 barrel_stabilizer_l4_flash_hider",
+		"mp_weapon_esaw optic_cq_hcog_classic energy_mag_l1 barrel_stabilizer_l3",
 		"mp_weapon_alternator_smg optic_cq_hcog_classic barrel_stabilizer_l2",
 		"mp_weapon_sniper",
 		"mp_weapon_defender optic_sniper stock_sniper_l2",
@@ -1795,8 +1801,7 @@ if(GetBestPlayer()==PlayerWithMostDamage())
 			subtext = "\n           捍卫者: " + GetBestPlayerName() + " / " + GetBestPlayerScore() + "击杀 / " + GetDamageOfPlayerWithMostDamage() + " 造成伤害"
 		else subtext = ""
 			Message(player, file.selectedLocation.name, subtext, 25, "")
-			//SurvivalCommentary_PlaySoundForAllPlayers( "diag_ap_aiNotify_circleTimerStartNext_02" )
-			thread SurvivalCommentary_HostAnnounce( eSurvivalCommentaryBucket.BEGIN_ROUND1, 0 )
+			EmitSoundOnEntityOnlyToPlayer( player, player, "diag_ap_aiNotify_circleTimerStartNext" )
 		file.previousChampion=GetBestPlayer()
 		file.previousChallenger=PlayerWithMostDamage()
 		GameRules_SetTeamScore(player.GetTeam(), 0)
@@ -1812,8 +1817,7 @@ else{
 			subtext = "\n           击杀王: " + GetBestPlayerName() + " / " + GetBestPlayerScore() + " 击杀 \n    伤害王:  " + PlayerWithMostDamageName() + " / " + GetDamageOfPlayerWithMostDamage() + " 造成伤害"
 		else subtext = ""
 			Message(player, file.selectedLocation.name, subtext, 25, "")
-			//SurvivalCommentary_PlaySoundForAllPlayers( "diag_ap_aiNotify_circleTimerStartNext_02" )
-			thread SurvivalCommentary_HostAnnounce( eSurvivalCommentaryBucket.BEGIN_ROUND1, 0 )
+			EmitSoundOnEntityOnlyToPlayer( player, player, "diag_ap_aiNotify_circleTimerStartNext" )
 		file.previousChampion=GetBestPlayer()
 		file.previousChallenger=PlayerWithMostDamage()
 		GameRules_SetTeamScore(player.GetTeam(), 0)
@@ -2984,4 +2988,49 @@ void function AnimationTiming( entity legend, float cycle )
 		legend.Anim_Play( animationStrings[RandomInt(animationStrings.len())] )
 		WaittillAnimDone(legend)
 	}
+}
+
+
+///Save TDM Current Weapons
+bool function ClientCommand_SaveCurrentWeapon(entity player, array<string> args)
+{	entity weapon1
+	entity weapon2
+	string optics1
+	string optics2
+	array<string> mods1 
+	array<string> mods2 
+	string weaponname1
+	string weaponname2
+	try
+	{
+		weapon1 = player.GetNormalWeapon( WEAPON_INVENTORY_SLOT_PRIMARY_0 )
+		weapon2 = player.GetNormalWeapon( WEAPON_INVENTORY_SLOT_PRIMARY_1 )
+		mods1 = GetWeaponMods( weapon1 )
+		mods2 = GetWeaponMods( weapon2 )
+		foreach (mod in mods1)
+			optics1 = mod + " " + optics1
+		foreach (mod in mods2)
+			optics2 = mod + " " + optics2
+		weaponname1 = "tgive p "+weapon1.GetWeaponClassName()+" " + optics1 + "; "
+		weaponname2 = "tgive s "+weapon2.GetWeaponClassName()+" " + optics2
+	}
+	catch(error)
+	{}	
+	weaponlist[player.GetPlayerName()] <- weaponname1+weaponname2
+	// print(weaponname1)
+	// print(weaponname2)
+	return true
+}
+
+
+//Auto-load TDM Saved Weapons at Respawn
+void function LoadCustomWeapon(entity player)
+{
+if (player.GetPlayerName() in weaponlist)
+{	print(weaponlist[player.GetPlayerName()])
+	ClientCommand( player, weaponlist[player.GetPlayerName()] )
+	wait 0.1
+	WpnAutoReloadOnKill(player)
+	thread WpnPulloutOnRespawn(player, 2.5)
+}
 }
