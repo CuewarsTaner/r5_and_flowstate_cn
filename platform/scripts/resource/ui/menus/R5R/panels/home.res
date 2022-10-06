@@ -193,7 +193,7 @@
 		"wrap"					"1"
 		"fontHeight"			"25"
 		"textAlignment"			"north-west"
-		"labelText"				"当前版本：CN Depot V20221003（Depot v2.2）"
+		"labelText"				"当前版本：CN Depot V20221004（Depot v2.2）"
 		"font"					"DefaultBold_41"
 		"allcaps"				"0"
 		"fgcolor_override"		"200 200 200 255"

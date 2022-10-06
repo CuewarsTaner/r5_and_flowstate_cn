@@ -40,6 +40,8 @@ global table<string, asset> MapAssets = {
 	[ "mp_rr_desertlands_64k_x_64k_nx" ] = $"rui/menu/maps/mp_rr_desertlands_64k_x_64k_nx",
 	[ "mp_rr_desertlands_64k_x_64k_tt" ] = $"rui/menu/maps/mp_rr_desertlands_64k_x_64k_tt",
 	[ "mp_rr_arena_composite" ] = $"rui/menu/maps/mp_rr_arena_composite",
+	[ "mp_rr_arena_skygarden" ] = $"rui/menu/maps/mp_rr_arena_skygarden",
+	[ "mp_rr_party_crasher" ] = $"rui/menu/maps/mp_rr_party_crasher",
 	[ "mp_lobby" ] = $"rui/menu/maps/mp_lobby"
 }
 
@@ -54,8 +56,9 @@ global table<string, string> MapNames = {
 	[ "mp_rr_canyonlands_mu1_night" ] = "S2诸王峡谷(黑夜)",
 	[ "mp_rr_desertlands_64k_x_64k" ] = "S3世界尽头",
 	[ "mp_rr_desertlands_64k_x_64k_nx" ] = "S3世界尽头(黑夜)",
-	[ "mp_rr_desertlands_64k_x_64k_tt" ] = "S3世界尽头(幻影航班)",
+	[ "mp_rr_desertlands_64k_x_64k_tt" ] = "S3世界尽头(幻象游轮)",
 	[ "mp_rr_arena_composite" ] = "控制",
+	[ "mp_rr_arena_skygarden" ] = "再来一次",
 	[ "mp_rr_party_crasher" ] = "派对破坏者",
 	[ "mp_lobby" ] = "大厅"
 }

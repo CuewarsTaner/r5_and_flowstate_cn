@@ -477,7 +477,7 @@ playlists //汉化版本 by融化的芒果CC
 				match_ending_enabled               0
 				sur_circle_start_paused            1
 
-				replay_new_ui 1
+				replay_new_ui 0
 					
 				//For FFA classic mode						//死斗模式默认武器和技能
 				//specific weapons and abilities settings	//复活默认武器与技能设定
@@ -504,7 +504,7 @@ playlists //汉化版本 by融化的芒果CC
 				Admins 								"CuewarsTaner NNanfeng1 Makimakimaaaaa" 		//管理员游戏ID（多个管理员请用空格隔开）
 				respawn_delay						5								//复活延迟
 				flowstateRoundtime 					480								//每轮时间（默认480秒）
-				flowstateBubble 					"111, 66, 245" 					//安全区颜色
+				flowstateBubble 					"127, 73, 37" 					//安全区颜色
 				flowstateResetKills 				1								//是否开启击杀数重置功能
 				flowstateTimer 						1
 				flowstateLockPOI 					0								//是否锁定地图POI（如果想锁定地图POI，flowstateRandomizePOIS的值必须设置为0）
@@ -564,7 +564,7 @@ playlists //汉化版本 by融化的芒果CC
 				mp_rr_aqueduct									1			//熔岩流
 				mp_rr_arena_composite							1			//控制
 				mp_rr_aqueduct_night							1			//熔岩流(黑夜)
-				mp_rr_desertlands_64k_x_64k_tt					1			//S3世界尽头(幻影航班)
+				mp_rr_desertlands_64k_x_64k_tt					1			//S3世界尽头(幻象游轮)
 				mp_rr_party_crasher								1			//派对破坏者
 			} } }
 		}

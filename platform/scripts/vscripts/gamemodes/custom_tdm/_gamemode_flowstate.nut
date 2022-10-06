@@ -139,6 +139,9 @@ void function _CustomTDM_Init()
         else thread _OnPlayerDied(victim, attacker, damageInfo)
     })
 
+	if( FlowState_PROPHUNT() || FlowState_SURF() )
+		AddCallback_OnPlayerKilled( _OnPlayerDiedShared )
+
 	if(FlowState_PROPHUNT()){
 		AddClientCommandCallback("next_round", ClientCommand_NextRoundPROPHUNT)
 		AddClientCommandCallback("scoreboard", ClientCommand_ScoreboardPROPHUNT)
@@ -367,11 +370,11 @@ void function _OnPlayerConnected(entity player)
 	SetPlayerSettings(player, TDM_PLAYER_SETTINGS)
 
 	if(FlowState_RandomGunsEverydie())
-	    Message(player, "FLOWSTATE: FIESTA", "波浪键可呼出控制台，输入commands查看可用指令\n>>>>>>  KOOK频道:98171075  Q群:307689539  <<<<<<", 10)
+	    Message(player, "死斗模式-盛宴", "波浪键可呼出控制台，输入commands查看可用指令\n>>>>>>  KOOK频道:98171075  Q群:307689539  <<<<<<", 6)
 	else if (FlowState_Gungame())
-	    Message(player, "FLOWSTATE: GUNGAME", "波浪键可呼出控制台，输入commands查看可用指令\n>>>>>>  KOOK频道:98171075  Q群:307689539  <<<<<<", 10)
+	    Message(player, "死斗模式-军备竞赛", "波浪键可呼出控制台，输入commands查看可用指令\n>>>>>>  KOOK频道:98171075  Q群:307689539  <<<<<<", 6)
 	else
-	    Message(player, "FLOWSTATE: DM", "波浪键可呼出控制台，输入commands查看可用指令\n>>>>>>  KOOK频道:98171075  Q群:307689539  <<<<<<", 10)
+	    Message(player, "死斗模式", "波浪键可呼出控制台，输入commands查看可用指令\n>>>>>>  KOOK频道:98171075  Q群:307689539  <<<<<<", 6)
 
 	if(IsValid(player))
 	{
@@ -464,7 +467,7 @@ void function __HighPingCheck(entity player)
 		player.ForceStand()
 		HolsterAndDisableWeapons( player )
 
-		Message(player, "FLOWSTATE KICK", "管理员已开启PING值限制: " + FlowState_MaxPingAllowed() + " ms. \n 您的PING值过高: " + (int(player.GetLatency()* 1000) - 40) + " ms.", 3)
+		Message(player, "FLOWSTATE自动踢出", "管理员已开启PING值限制: " + FlowState_MaxPingAllowed() + " ms. \n 您的PING值过高: " + (int(player.GetLatency()* 1000) - 40) + " ms.", 3)
 
 		wait 3
 
@@ -483,13 +486,23 @@ void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
 	if (FlowState_RandomGunsEverydie() && FlowState_FIESTADeathboxes())
 		CreateFlowStateDeathBoxForPlayer(victim, attacker, damageInfo)
 
+	if( victim.p.isSpectating )
+		return
+
 	switch(GetGameState())
     {
         case eGameState.Playing:
             // Víctim
             void functionref() victimHandleFunc = void function() : (victim, attacker, damageInfo) {
+
+				if( ShouldSetObserverTarget( attacker ) )
+					victim.SetObserverTarget( attacker )
+				else
+					victim.SetObserverTarget( null )
 				
-				wait 1
+				victim.StartObserverMode( OBS_MODE_DEATHCAM ) // Titanfall-style deathcam
+				
+				wait 1.5
 				
 				if(!IsValid(victim) || !IsValid(attacker)) return
 				
@@ -620,6 +633,11 @@ void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
             thread attackerHandleFunc()
         break
         default:
+			if( victim.GetObserverTarget() != null )
+				victim.SetObserverTarget( null )
+
+			victim.StartObserverMode( OBS_MODE_DEATHCAM )
+			
 	    	_HandleRespawn(victim)
 	    break
     }
@@ -629,6 +647,14 @@ void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
 		thread AddSurvivalCommentaryEvent( eSurvivalEventType.FIRST_BLOOD, attacker )
 
 	UpdatePlayerCounts()
+}
+
+void function _OnPlayerDiedShared( entity victim, entity attacker, var damageInfo )
+{
+	if( victim.GetObserverTarget() != null )
+		victim.SetObserverTarget( null )
+
+	victim.StartObserverMode( OBS_MODE_DEATHCAM )
 }
 
 void function CheckForObservedTarget(entity player)
@@ -665,7 +691,10 @@ void function _HandleRespawn(entity player, bool isDroppodSpawn = false)
 {
     if(!IsValid(player)) return
 
-	if( player.IsObserver())
+	if( player.p.isSpectating )
+		return
+
+	if( player.IsObserver() )
     {
 		player.SetSpecReplayDelay( 0 )
 		player.SetObserverTarget( null )
@@ -802,11 +831,8 @@ void function _HandleRespawn(entity player, bool isDroppodSpawn = false)
 	if(FlowState_Gungame() && IsValid( player ))
 		GiveGungameWeapon(player)
 
-	if(!player.p.comingFromSpectator)
-		thread Flowstate_GrantSpawnImmunity(player, 2.5)
-		thread LoadCustomWeapon(player)		///TDM Auto-Reloaded Saved Weapons at Respawn
-	
-	player.p.comingFromSpectator = false
+	thread Flowstate_GrantSpawnImmunity(player, 2.5)
+	thread LoadCustomWeapon(player)		///TDM Auto-Reloaded Saved Weapons at Respawn
 }
 
 void function TpPlayerToSpawnPoint(entity player)
@@ -1000,7 +1026,7 @@ void function GiveRandomSecondaryWeaponMetagame(entity player)
 		"mp_weapon_r97 optic_cq_hcog_classic barrel_stabilizer_l3 stock_tactical_l3 bullets_mag_l3",
 		"mp_weapon_pdw optic_cq_hcog_classic stock_tactical_l3 highcal_mag_l3",
 		"mp_weapon_car optic_cq_hcog_classic barrel_stabilizer_l3 stock_tactical_l3 bullets_mag_l3",
-		"mp_weapon_volt_smg optic_cq_hcog_classic barrel_stabilizer_l3 stock_tactical_l3 energy_mag_l3"
+		//"mp_weapon_volt_smg optic_cq_hcog_classic barrel_stabilizer_l3 stock_tactical_l3 energy_mag_l3"
 	]
 
 	foreach(weapon in Weapons)
@@ -1467,7 +1493,7 @@ void function UpgradeShields(entity player, bool died)
             break
 			case 8:
 				foreach(sPlayer in GetPlayerArray())
-				    Message(sPlayer,"护甲进化", player.GetPlayerName() + "取得8杀!护甲进化!", 5, "")
+				    Message(sPlayer,"击杀播报", player.GetPlayerName() + "取得8杀!护甲进化!", 5, "")
 			break
 			case 15:
 				foreach(sPlayer in GetPlayerArray())
@@ -1547,7 +1573,7 @@ void function GiveFlowstateOvershield( entity player, bool isOvershieldFromGroun
 	player.SetShieldHealth( FlowState_ExtrashieldValue() )
 	if(isOvershieldFromGround){
 			foreach(sPlayer in GetPlayerArray()){
-			Message(sPlayer,"EXTRA SHIELD PROVIDED", player.GetPlayerName() + " has 50 extra shield.", 5, "")
+			Message(sPlayer,"额外护盾已植入", player.GetPlayerName() + "已植入50额外护盾值", 5, "")
 		}
 	}
 }
@@ -1812,7 +1838,7 @@ else{
 		string nextlocation = file.selectedLocation.name
 		string subtext
 		if(GetBestPlayerName() != "-still nobody-")
-			subtext = "\n           击杀王: " + GetBestPlayerName() + " / " + GetBestPlayerScore() + " 击杀 \n    伤害王:  " + PlayerWithMostDamageName() + " / " + GetDamageOfPlayerWithMostDamage() + " 造成伤害"
+			subtext = "\n           捍卫者: " + GetBestPlayerName() + " / " + GetBestPlayerScore() + " 击杀 \n    伤害王:  " + PlayerWithMostDamageName() + " / " + GetDamageOfPlayerWithMostDamage() + " 造成伤害"
 		else subtext = ""
 			Message(player, file.selectedLocation.name, subtext, 25, "")
 			EmitSoundOnEntityOnlyToPlayer( player, player, "diag_ap_aiNotify_circleTimerStartNext" )
@@ -1962,22 +1988,6 @@ else if (!FlowState_Timer() ){
 			WaitFrame()
 		}
 }
-
-foreach(player in GetPlayerArray())
-    {		
-		if(player.IsObserver())
-		{
-			player.UnfreezeControlsOnServer()
-			player.MakeVisible()
-			player.SetPlayerNetInt( "spectatorTargetCount", 0 )
-			player.SetSpecReplayDelay( 0 )
-			player.SetObserverTarget( null )
-			player.StopObserverMode()
-			Remote_CallFunction_NonReplay(player, "ServerCallback_KillReplayHud_Deactivate") //defensive
-			player.p.comingFromSpectator = true
-			player.TakeDamage(player.GetMaxHealth() + 1, null, null, { damageSourceId=damagedef_suicide, scriptType=DF_BYPASS_SHIELD })
-		}
-	}
 	
 wait 1
 
@@ -1985,7 +1995,7 @@ foreach(player in GetPlayerArray())
     {
 		if(!IsValid(player)) continue
 
-		if(!IsAlive(player) && !player.IsObserver)
+		if(!IsAlive(player) && !player.p.isSpectating)
 		{
 			_HandleRespawn(player)
 			ClearInvincible(player)
@@ -2401,7 +2411,7 @@ string function ScoreboardFinal(bool fromConsole = false)
 		p.damage = int(player.p.playerDamageDealt)
 		// p.lastLatency = int(player.GetLatency()* 1000)
 
-		if (fromConsole && player.IsObserver() && IsAlive(player))
+		if (fromConsole && player.p.isSpectating && IsAlive(player))
 			spectators.append(p)
 		else
 			playersInfo.append(p)
@@ -2457,7 +2467,7 @@ array<PlayerInfo> spectators = []
 					p.damage = int(player.p.playerDamageDealt)
 					p.lastLatency = int(player.GetLatency()* 1000)
 
-					if (fromConsole && player.IsObserver() && IsAlive(player)) {spectators.append(p)}
+					if (fromConsole && player.p.isSpectating && IsAlive(player)) {spectators.append(p)}
 					else {playersInfo.append(p)}
 
         }
@@ -2639,14 +2649,14 @@ bool function ClientCommand_ControllerSummary(entity player, array < string > ar
 			msg += sPlayer.GetPlayerName() + "\n"
 		}
 		
-	Message(player, "CONTROLLER SUMMARY", "There are " + controllers + " controller players connected. \n" + msg)
+	Message(player, "检查手柄玩家数量", "当前服务器共有" + controllers + "名手柄玩家 \n" + msg)
 	
     return true
 }
 
 bool function ClientCommand_SpectateEnemies(entity player, array<string> args)
 {
-    if ( GetGameState() == eGameState.MapVoting || GetGameState() == eGameState.WaitingForPlayers || file.tdmState == eTDMState.NEXT_ROUND_NOW || !IsAlive(player) )
+    if ( GetGameState() == eGameState.MapVoting || GetGameState() == eGameState.WaitingForPlayers || file.tdmState == eTDMState.NEXT_ROUND_NOW )
         return false
 
 	if( Time() - player.p.lastTimeSpectateUsed < 3 )
@@ -2658,29 +2668,27 @@ bool function ClientCommand_SpectateEnemies(entity player, array<string> args)
     {
         entity specTarget = enemiesArray.getrandom()
 
-        if( !IsValid(specTarget) || specTarget.IsObserver())
+        if( !IsValid(specTarget) )
         {
             printf("error: try again")
             return false
         }
 
-        if( IsValid(player) && player.GetPlayerNetInt( "spectatorTargetCount" ) > 0 && player.IsObserver())
+        if( IsValid(player) && player.GetPlayerNetInt( "spectatorTargetCount" ) > 0 && player.p.isSpectating )
         {
-			player.UnfreezeControlsOnServer()
-			player.MakeVisible()
+			player.p.isSpectating = false
 			player.SetPlayerNetInt( "spectatorTargetCount", 0 )
 	        player.SetSpecReplayDelay( 0 )
 			player.SetObserverTarget( null )
             player.StopObserverMode()
-			player.p.comingFromSpectator = true
 			player.p.lastTimeSpectateUsed = Time()
-			player.TakeDamage(player.GetMaxHealth() + 1, null, null, { damageSourceId=damagedef_suicide, scriptType=DF_BYPASS_SHIELD })
+			_HandleRespawn( player )
         }
-        else if( IsValid(player) && player.GetPlayerNetInt( "spectatorTargetCount" ) == 0 && IsValid(specTarget))
+        else if( IsValid(player) && player.GetPlayerNetInt( "spectatorTargetCount" ) == 0 && IsValid(specTarget) )
         {
 			try{
-				player.FreezeControlsOnServer()
-				player.MakeInvisible()
+				player.p.isSpectating = true
+				player.Die( null, null, { damageSourceId = eDamageSourceId.damagedef_suicide } )
 				player.SetPlayerNetInt( "spectatorTargetCount", GetPlayerArray().len() )
 				player.SetObserverTarget( specTarget )
 				player.SetSpecReplayDelay( 5 )
@@ -2716,19 +2724,19 @@ bool function ClientCommand_Help(entity player, array<string> args)
 	if(IsValid(player)) {
 		if(FlowState_RandomGunsEverydie())
 		{
-			Message(player, "WELCOME TO FLOWSTATE: FIESTA", helpMessage(), 10)}
+			Message(player, "欢迎游玩死斗模式-盛宴", helpMessage(), 6)}
 		else if (FlowState_Gungame())
 		{
-			Message(player, "欢迎游玩军备竞赛", helpMessage(), 10)
+			Message(player, "欢迎游玩死斗模式-军备竞赛", helpMessage(), 6)
 
 		} else if (FlowState_PROPHUNT())
 		{
-			Message(player, "欢迎游玩躲猫猫模式", helpMessagePROPHUNT(), 10)
+			Message(player, "欢迎游玩躲猫猫模式", helpMessagePROPHUNT(), 6)
 		} else if (FlowState_SURF())
 		{
-			Message(player, "欢迎游玩滑翔模式", "", 5)
+			Message(player, "欢迎游玩滑翔模式", "", 6)
 		} else{
-			Message(player, "欢迎游玩死斗模式", helpMessage(), 10)
+			Message(player, "欢迎游玩死斗模式", helpMessage(), 6)
 		}
 	}
 	return true
@@ -2737,7 +2745,7 @@ bool function ClientCommand_Help(entity player, array<string> args)
 bool function ClientCommand_ShowLatency(entity player, array<string> args)
 {
     try{
-    	Message(player,"玩家延迟情况", LatencyBoard(), 8)
+    	Message(player,"玩家延迟情况", LatencyBoard(), 6)
     }catch(e) {}
 
     return true
@@ -2747,7 +2755,7 @@ bool function ClientCommand_GiveWeapon(entity player, array<string> args)
 {
     if ( FlowState_AdminTgive() && !IsAdmin(player) )
 	{
-		Message(player, "ERROR", "Admin has disabled TDM Weapons dev menu.")
+		Message(player, "指令未通过", "当前服务器已禁用自选武器")
 		return false
 	}
 

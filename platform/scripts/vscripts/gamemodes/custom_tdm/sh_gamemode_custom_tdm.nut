@@ -837,7 +837,7 @@ void function Sh_CustomTDM_Init()
 		case "mp_rr_desertlands_64k_x_64k_tt":
         Shared_RegisterLocation(
             NewLocationSettings(
-                "幻影航班",
+                "幻象游轮",
                 [
 					NewLocPair(<-25930, -3790, -2442>, <0, -37, 0>),
                     NewLocPair(<-22928, -5785, -2396>, <0, 147, 0>),
