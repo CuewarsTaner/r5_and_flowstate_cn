@@ -399,9 +399,7 @@ void function SetupDefaultDevCommandsMP()
 	}
 	else
 	{
-		SetupDevCommand( "Dev Menu已禁用，如需启用请运行sv_cheats 1", "empty" )
-		SetupDevCommand( "Dev Menu已禁用，如需启用请运行sv_cheats 1", "empty" )
-		SetupDevCommand( "Dev Menu已禁用，如需启用请运行sv_cheats 1", "empty" )
+		SetupDevCommand( "Dev Menu已禁用，控制台输入sv_cheats 1以启用", "empty" )
 	}
 }
 
