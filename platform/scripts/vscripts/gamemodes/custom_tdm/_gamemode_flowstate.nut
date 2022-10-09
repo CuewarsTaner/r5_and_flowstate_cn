@@ -165,7 +165,7 @@ void function _CustomTDM_Init()
 	}
 	
 	AddClientCommandCallback("controllerstate", ClientCommand_ControllerReport)
-	AddClientCommandCallback("sb", ClientCommand_ControllerSummary)
+	AddClientCommandCallback("shoubing", ClientCommand_ControllerSummary)
 
 	for(int i = 0; GetCurrentPlaylistVarString("whitelisted_weapon_" + i.tostring(), "~~none~~") != "~~none~~"; i++)
 	{
@@ -803,21 +803,21 @@ void function TpPlayerToSpawnPoint(entity player)
 void function Flowstate_GrantSpawnImmunity(entity player, float duration)
 {
 	if(!IsValid(player)) return
-	
-	//OnThreadEnd(
-	//function() : ( player )
-	//	{
-	//		if(!IsValid(player)) return
-	//		
-	//		player.MakeVisible()
-	//		player.ClearInvulnerable()
-	//		player.SetTakeDamageType( DAMAGE_YES )
-	//		Highlight_ClearEnemyHighlight( player )
-	//		
-	//		thread ReCheckGodMode(player)
-	//	}
-	//)
 	thread WpnPulloutOnRespawn(player, 0)
+	
+	OnThreadEnd(
+	function() : ( player )
+		{
+			if(!IsValid(player)) return
+			
+			player.MakeVisible()
+			player.ClearInvulnerable()
+			player.SetTakeDamageType( DAMAGE_YES )
+			Highlight_ClearEnemyHighlight( player )
+			
+			thread ReCheckGodMode(player)
+		}
+	)
 
 	//EmitSoundOnEntityOnlyToPlayer( player, player, "PhaseGate_Enter_1p" )
 	//EmitSoundOnEntityExceptToPlayer( player, player, "PhaseGate_Enter_3p" )
@@ -2680,7 +2680,7 @@ string function helpMessage()
 	"scoreboard: 显示积分榜\n" +
 	"latency: 显示所有玩家的PING值\n" +
 	"spectate: 观战其他玩家\n" +
-	"sb: 查看手柄玩家数量\n" +
+	"shoubing: 查看手柄玩家数量\n" +
 	"commands: 再次显示当前可用指令 \n" +
 	"\n" +
 	"Apex社区服KOOK频道: 98171075\n" +
