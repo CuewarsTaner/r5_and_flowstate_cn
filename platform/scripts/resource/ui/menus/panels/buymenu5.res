@@ -171,12 +171,14 @@ scripts/resource/ui/menus/panels/buymenu1.res
 			ControlName				Label
 			tall					30
 			wide                    224
-			labelText				"电能冲锋枪"
+			//labelText				"电能冲锋枪"
+			labelText				"电冲有BUG别用"
 			visible                 1
 			zpos 5
 			fgcolor_override		"2 252 240 255"
 			ypos                    32
-			xpos					95
+			//xpos					95
+			xpos					75
 			fontHeight				25
 			pin_to_sibling          Volt
 			pin_corner_to_sibling   BOTTOM_RIGHT

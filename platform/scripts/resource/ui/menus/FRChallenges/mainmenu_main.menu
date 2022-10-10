@@ -191,7 +191,7 @@ scripts/resource/ui/menus/FRChallenges/mainmenu_main.menu
 			tall					60
 			visible					1
 			fontHeight				30
-			labelText				"Dummies killed this session: 0"
+			labelText				"当前已击杀假人: 0"
 			font					Default
 			allcaps					0
 			fgcolor_override		"255 255 255 255"
@@ -209,7 +209,7 @@ scripts/resource/ui/menus/FRChallenges/mainmenu_main.menu
 			tall					60
 			visible					1
 			fontHeight				30
-			labelText				"Current weapon: "
+			labelText				"当前武器: "
 			font					Default
 			allcaps					0
 			fgcolor_override		"255 255 255 255"

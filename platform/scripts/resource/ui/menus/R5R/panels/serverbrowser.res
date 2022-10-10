@@ -65,11 +65,11 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"ControlName"			"Label"
 		"labelText"				"搜索："
 		"xpos"					"5"
-		"ypos"					"0"
+		"ypos"					"5"
 		"auto_wide_tocontents"	"1"
 		"zpos" 					"10"
-		"fontHeight"			"32"
-		"tall"					"32"
+		"fontHeight"			"35"
+		"tall"					"35"
 
 		"pin_to_sibling"		"BtnFilterServers"
 		"pin_corner_to_sibling"	"RIGHT"
@@ -115,12 +115,13 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 	"NoServersLbl"
 	{
 		"ControlName"			"Label"
-		"labelText"				"No Servers Found"
+		"labelText"				"加载失败，请刷新服务器列表"
 		"xpos"					"0"
 		"ypos"					"-15"
 		"auto_wide_tocontents"	"1"
 		"zpos" 					"10"
-		"fontHeight"			"40"
+		"fontHeight"			"60"
+		"tall"					"60"
 
 		"pin_to_sibling"		"ServersBG"
 		"pin_corner_to_sibling"	"CENTER"
@@ -275,7 +276,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"ypos"					"0"
 		"zpos"					"6"
 		"textalignment"			"center"
-		"wide"					"130"
+		"wide"					"150"
 		"zpos" 					"4"
 		"fontHeight"			"32"
 		"tall"					"32"
@@ -1060,6 +1061,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"630"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton0"
@@ -1077,6 +1079,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"630"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton1"
@@ -1094,6 +1097,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"630"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton2"
@@ -1111,6 +1115,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"630"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton3"
@@ -1128,6 +1133,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"630"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton4"
@@ -1145,6 +1151,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"630"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton5"
@@ -1162,6 +1169,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"630"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton6"
@@ -1179,6 +1187,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"630"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton7"
@@ -1196,6 +1205,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"630"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton8"
@@ -1213,6 +1223,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"630"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton9"
@@ -1230,6 +1241,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"630"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton10"
@@ -1247,6 +1259,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"630"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton11"
@@ -1264,6 +1277,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"630"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton12"
@@ -1281,6 +1295,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"630"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton13"
@@ -1298,6 +1313,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"630"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton14"
@@ -1315,6 +1331,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"630"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton15"
@@ -1332,6 +1349,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"630"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton16"
@@ -1349,6 +1367,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"630"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton17"
@@ -1366,6 +1385,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"630"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton18"
@@ -1384,6 +1404,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton0"
@@ -1402,6 +1423,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton1"
@@ -1420,6 +1442,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton2"
@@ -1438,6 +1461,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton3"
@@ -1456,6 +1480,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton4"
@@ -1474,6 +1499,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton5"
@@ -1492,6 +1518,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton6"
@@ -1510,6 +1537,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton7"
@@ -1528,6 +1556,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton8"
@@ -1546,6 +1575,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton9"
@@ -1564,6 +1594,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton10"
@@ -1582,6 +1613,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton11"
@@ -1600,6 +1632,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton12"
@@ -1618,6 +1651,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton13"
@@ -1636,6 +1670,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton14"
@@ -1654,6 +1689,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton15"
@@ -1672,6 +1708,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton16"
@@ -1690,6 +1727,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton17"
@@ -1708,6 +1746,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"230"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton18"
@@ -1726,6 +1765,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton0"
@@ -1744,6 +1784,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton1"
@@ -1762,6 +1803,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton2"
@@ -1780,6 +1822,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton3"
@@ -1798,6 +1841,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton4"
@@ -1816,6 +1860,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton5"
@@ -1834,6 +1879,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton6"
@@ -1852,6 +1898,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton7"
@@ -1870,6 +1917,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton8"
@@ -1888,6 +1936,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton9"
@@ -1906,6 +1955,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton10"
@@ -1924,6 +1974,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton11"
@@ -1942,6 +1993,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton12"
@@ -1960,6 +2012,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton13"
@@ -1978,6 +2031,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton14"
@@ -1996,6 +2050,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton15"
@@ -2014,6 +2069,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton16"
@@ -2032,6 +2088,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton17"
@@ -2050,6 +2107,7 @@ scripts/resource/ui/menus/R5R/panels/serverbrowser.res
 		"wide"						"110"
 		"zpos" 						"4"
 		"fontHeight"				"30"
+		"tall"						"30"
 		"classname"					"ServerLabels"
 
 		"pin_to_sibling"			"ServerButton18"
