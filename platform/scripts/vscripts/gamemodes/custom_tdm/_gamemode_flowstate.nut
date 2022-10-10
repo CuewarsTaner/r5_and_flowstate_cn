@@ -25,7 +25,6 @@ global function SetTdmStateToNextRound
 global function SetTdmStateToInProgress
 global function SetFallTriggersStatus
 global function CreateShipRoomFallTriggers
-global function AutoChangeLevelThread
 global function GiveFlowstateOvershield
 global function IsAdmin
 
@@ -69,6 +68,7 @@ struct {
 	entity previousChallenger
 	int maxPlayers
 	int maxTeams
+	int currentRound = 1
 
 	array<string> mAdmins
 	int randomprimary
@@ -526,11 +526,10 @@ void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
 	    		if(file.tdmState != eTDMState.NEXT_ROUND_NOW)
 	    		    wait Deathmatch_GetRespawnDelay()
 
-				if(IsValid(victim))
-				{
+				if( IsValid( victim ) && !IsAlive( victim ) )
 					_HandleRespawn( victim )
-					ClearInvincible(victim)
-				}
+				
+				ClearInvincible(victim)
 	    	}
 
             // Attacker
@@ -574,16 +573,15 @@ void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
 						switch( attacker.p.downedEnemy )
 						{
 							case 2:
-								announce = "diag_ap_aiNotify_killLeaderDoubleKill"
+								announce = "diag_ap_aiNotify_killLeaderDoubleKill_01"
 								break
 							
 							case 3:
-								announce = "diag_ap_aiNotify_killLeaderTripleKill"
+								announce = "diag_ap_aiNotify_killLeaderTripleKill_01"
 								break
 						}
 
-						foreach( player in GetPlayerArray_AliveConnected() )
-							EmitSoundOnEntityOnlyToPlayer( player, player, announce )
+						PlayAnnounce( announce )
 					}
 
 					printt( "attacker.p.lastDownedEnemyTime: " + attacker.p.lastDownedEnemyTime + " | attacker.p.downedEnemy: " + attacker.p.downedEnemy + " | Time() - attacker.p.lastDownedEnemyTime <= KILLLEADER_STREAK_ANNOUNCE_TIME: ", Time() - attacker.p.lastDownedEnemyTime <= KILLLEADER_STREAK_ANNOUNCE_TIME )
@@ -805,19 +803,19 @@ void function Flowstate_GrantSpawnImmunity(entity player, float duration)
 	if(!IsValid(player)) return
 	thread WpnPulloutOnRespawn(player, 0)
 	
-	OnThreadEnd(
-	function() : ( player )
-		{
-			if(!IsValid(player)) return
-			
-			player.MakeVisible()
-			player.ClearInvulnerable()
-			player.SetTakeDamageType( DAMAGE_YES )
-			Highlight_ClearEnemyHighlight( player )
-			
-			thread ReCheckGodMode(player)
-		}
-	)
+	//OnThreadEnd(
+	//function() : ( player )
+	//	{
+	//		if(!IsValid(player)) return
+	//		
+	//		player.MakeVisible()
+	//		player.ClearInvulnerable()
+	//		player.SetTakeDamageType( DAMAGE_YES )
+	//		Highlight_ClearEnemyHighlight( player )
+	//		
+	//		thread ReCheckGodMode(player)
+	//	}
+	//)
 
 	//EmitSoundOnEntityOnlyToPlayer( player, player, "PhaseGate_Enter_1p" )
 	//EmitSoundOnEntityExceptToPlayer( player, player, "PhaseGate_Enter_3p" )
@@ -843,8 +841,8 @@ void function WpnPulloutOnRespawn(entity player, float duration)
 	OnThreadEnd(
 	function() : ( player )
 		{
-			if(IsValid(player))
-				DeployAndEnableWeapons(player)
+			if( IsValid( player ) && file.tdmState != eTDMState.NEXT_ROUND_NOW )
+				DeployAndEnableWeapons( player )
 		}
 	)
 	
@@ -1645,7 +1643,7 @@ void function SimpleChampionUI()
     PlayerTrail( GetBestPlayer(),0 )
 
 	SetGameState( eGameState.Playing )
-	file.tdmState = eTDMState.IN_PROGRESS
+	SetTdmStateToInProgress()
 	file.FallTriggersEnabled = true
 
 	foreach( player in GetPlayerArray() )
@@ -1660,7 +1658,6 @@ void function SimpleChampionUI()
 			player.UnfreezeControlsOnServer()
 			HolsterAndDisableWeapons( player )
 		}
-		WaitFrame()
 	}
 
 	if (!file.mapIndexChanged)
@@ -1770,42 +1767,25 @@ void function SimpleChampionUI()
 			if(IsValid(ultimate) && ultimate.UsesClipsForAmmo())
 				ultimate.SetWeaponPrimaryClipCount( ultimate.GetWeaponPrimaryClipCountMax() )
 		} catch(e3){}
-		WaitFrame()
 	}
 
 
-	try {
-	if( GetBestPlayer()==PlayerWithMostDamage() )
+	try{
+	string subtext = ""
+	if( GetBestPlayer() == PlayerWithMostDamage() && GetBestPlayerName() != "-still nobody-" )
+		subtext = "\n           捍卫者: " + GetBestPlayerName() + " / " + GetBestPlayerScore() + "击杀 / " + GetDamageOfPlayerWithMostDamage() + "造成伤害"
+	else if( GetBestPlayerName() != "-still nobody-" )
+		subtext = "\n           捍卫者: " + GetBestPlayerName() + " / " + GetBestPlayerScore() + "击杀 \n    伤害王:  " + PlayerWithMostDamageName() + " / " + GetDamageOfPlayerWithMostDamage() + "造成伤害"
+
+	foreach( player in GetPlayerArray() )
 	{
-		foreach( player in GetPlayerArray() )
-		{
-			string nextlocation = file.selectedLocation.name
-			string subtext
-			if(GetBestPlayerName() != "-still nobody-")
-				subtext = "\n           捍卫者: " + GetBestPlayerName() + " / " + GetBestPlayerScore() + "击杀 / " + GetDamageOfPlayerWithMostDamage() + " 造成伤害"
-			else subtext = ""
-				Message(player, file.selectedLocation.name, subtext, 25, "")
-				EmitSoundOnEntityOnlyToPlayer( player, player, "diag_ap_aiNotify_circleTimerStartNext" )
-			file.previousChampion=GetBestPlayer()
-			file.previousChallenger=PlayerWithMostDamage()
-			GameRules_SetTeamScore(player.GetTeam(), 0)
-		}
+		Message( player, file.selectedLocation.name, subtext, 25, "" )
+		file.previousChampion = GetBestPlayer()
+		file.previousChallenger = PlayerWithMostDamage()
+		GameRules_SetTeamScore( player.GetTeam(), 0 )
 	}
-	else{
-		foreach(player in GetPlayerArray())
-		{
-			string nextlocation = file.selectedLocation.name
-			string subtext
-			if(GetBestPlayerName() != "-still nobody-")
-				subtext = "\n           捍卫者: " + GetBestPlayerName() + " / " + GetBestPlayerScore() + " 击杀 \n    伤害王:  " + PlayerWithMostDamageName() + " / " + GetDamageOfPlayerWithMostDamage() + " 造成伤害"
-			else subtext = ""
-				Message(player, file.selectedLocation.name, subtext, 25, "")
-				EmitSoundOnEntityOnlyToPlayer( player, player, "diag_ap_aiNotify_circleTimerStartNext" )
-			file.previousChampion=GetBestPlayer()
-			file.previousChallenger=PlayerWithMostDamage()
-			GameRules_SetTeamScore(player.GetTeam(), 0)
-		}
-	}
+
+	PlayAnnounce( "diag_ap_aiNotify_circleTimerStartNext_02" )
 
 	if( GetBestPlayer() != null )
 		SetChampion( GetBestPlayer() )
@@ -1816,29 +1796,29 @@ void function SimpleChampionUI()
 	} catch(e4){}
 	//printt("Flowstate DEBUG - Clearing last round stats.")
 	foreach( player in GetPlayerArray() )
+	{
+		if( IsValidPlayer(player) )
 		{
-			if( IsValidPlayer(player) )
+			player.p.playerDamageDealt = 0.0
+			if ( FlowState_ResetKillsEachRound() && IsValidPlayer( player ) )
 			{
-				player.p.playerDamageDealt = 0.0
-				if ( FlowState_ResetKillsEachRound() && IsValidPlayer( player ) )
-				{
-					player.SetPlayerNetInt("kills", 0) //Reset for kills
-					player.SetPlayerNetInt("assists", 0) //Reset for deaths
-				}
+				player.SetPlayerNetInt( "kills", 0 ) //Reset for kills
+				player.SetPlayerNetInt( "assists", 0 ) //Reset for deaths
+			}
 
-				if( FlowState_Gungame() )
-				{
-					player.SetPlayerGameStat( PGS_TITAN_KILLS, 0)
-					// KillStreakAnnouncer(player, true)
-				}
+			if( FlowState_Gungame() )
+			{
+				player.SetPlayerGameStat( PGS_TITAN_KILLS, 0 )
+				// KillStreakAnnouncer(player, true)
+			}
 
-				if( FlowState_RandomGunsEverydie() )
-				{
-					player.SetPlayerGameStat( PGS_TITAN_KILLS, 0)
-					UpgradeShields(player, true)
-				}
+			if( FlowState_RandomGunsEverydie() )
+			{
+				player.SetPlayerGameStat( PGS_TITAN_KILLS, 0 )
+				UpgradeShields(player, true)
 			}
 		}
+	}
 	ResetAllPlayerStats()
 	file.ringBoundary = CreateRingBoundary( file.selectedLocation )
 	//printt("Flowstate DEBUG - Bubble created, executing SimpleChampionUI.")
@@ -1854,8 +1834,7 @@ void function SimpleChampionUI()
 	if( GetCurrentPlaylistVarBool("flowstateEndlessFFAorTDM", false ) )
 	{
 		WaitForever()
-	} else if( Flowstate_EnableAutoChangeLevel() )
-		thread AutoChangeLevelThread(endTime)
+	}
 
 	if (FlowState_Timer()){
 		SetGlobalNetInt( "currentDeathFieldStage", 0 )
@@ -1906,35 +1885,26 @@ void function SimpleChampionUI()
 			if(Time() == endTime - 60)
 			{
 				foreach( player in GetPlayerArray() )
-				{
 					if( IsValid(player) )
-					{
 						Message(player,"距离本轮结束还有60秒!","", 5, "")
-						EmitSoundOnEntityOnlyToPlayer( player, player, "diag_ap_aiNotify_circleMoves60sec" )
-					}
-				}
+
+				PlayAnnounce( "diag_ap_aiNotify_circleMoves60sec_01" )
 			}
 			if(Time() == endTime - 30)
 			{
 				foreach( player in GetPlayerArray() )
-				{
-					if(IsValid(player))
-					{
+					if( IsValid(player) )
 						Message(player,"距离本轮结束还有30秒!","", 5, "")
-						EmitSoundOnEntityOnlyToPlayer( player, player, "diag_ap_aiNotify_circleMoves30sec" )
-					}
-				}
+
+				PlayAnnounce( "diag_ap_aiNotify_circleMoves30sec_01" )
 			}
 			if(Time() == endTime - 10)
 			{
 				foreach( player in GetPlayerArray() )
-				{
-					if(IsValid(player))
-					{
-						Message(player,"距离本轮结束还有10秒!", "\n 本轮即将结束", 8, "")
-						EmitSoundOnEntityOnlyToPlayer( player, player, "diag_ap_aiNotify_circleMoves10sec" )
-					}
-				}
+					if( IsValid(player) )
+						Message(player,"距离本轮结束还有10秒!","", 5, "")
+
+				PlayAnnounce( "diag_ap_aiNotify_circleMoves10sec_01" )
 			}
 			if( file.tdmState == eTDMState.NEXT_ROUND_NOW )
 			{
@@ -1956,6 +1926,8 @@ void function SimpleChampionUI()
 			WaitFrame()
 		}
 	}
+
+	SetTdmStateToNextRound()
 		
 	wait 1
 
@@ -1978,57 +1950,53 @@ void function SimpleChampionUI()
 
 			player.SetThirdPersonShoulderModeOn()
 			HolsterAndDisableWeapons( player )
-
-			WaitFrame()
 		}
 
 	wait 1
-	foreach(entity champion in GetPlayerArray())
+
+	if( GetBestPlayer() != null )
+		SurvivalCommentary_HostAnnounce( eSurvivalCommentaryBucket.WINNER )
+
+	foreach( entity champion in GetPlayerArray() )
 	{
-		if(!IsValid(champion)) continue
+		if( !IsValid( champion ) ) continue
 		array<ItemFlavor> characterSkinsA = GetValidItemFlavorsForLoadoutSlot( ToEHI( champion ), Loadout_CharacterSkin( LoadoutSlot_GetItemFlavor( ToEHI( champion ), Loadout_CharacterClass() ) ) )
-		CharacterSkin_Apply( champion, characterSkinsA[0])
-		if(GetBestPlayer() == champion) 
-		{
-			thread EmitSoundOnEntityOnlyToPlayer( champion, champion, "diag_ap_aiNotify_winnerFound_10" )
-			thread EmitSoundOnEntityExceptToPlayer( champion, champion, "diag_ap_aiNotify_winnerFound" )
+		CharacterSkin_Apply( champion, characterSkinsA[0] )
+		if( GetBestPlayer() == champion ) 
 			PlayerTrail(champion,1)
-		}
 	}
-	foreach(player in GetPlayerArray())
+	foreach( player in GetPlayerArray() )
 	{
-		if(!IsValid(player)) continue
+		if( !IsValid( player ) ) continue
 		
-		AddCinematicFlag(player, CE_FLAG_HIDE_MAIN_HUD | CE_FLAG_EXECUTION)
-		Message(player,"本轮积分榜", "\n         Name:    K  |   D   |   KD   |   造成伤害 \n \n" + ScoreboardFinal() + "\n          Custom_tdm made by sal#3261.\n     Flowstate DM " + file.scriptversion + " made by @CafeFPS.", 7, "UI_Menu_RoundSummary_Results")
+		AddCinematicFlag( player, CE_FLAG_HIDE_MAIN_HUD | CE_FLAG_EXECUTION )
+		Message( player,"本轮积分榜", "\n         Name:    K  |   D   |   KD   |   造成伤害 \n \n" + ScoreboardFinal() + "\n          Custom_tdm made by sal#3261.\n     Flowstate DM " + file.scriptversion + " made by @CafeFPS.", 7, "UI_Menu_RoundSummary_Results")
 	}
 
 	wait 7
 
-	foreach(player in GetPlayerArray())
+	if( file.currentRound == Flowstate_AutoChangeLevelRounds() && Flowstate_EnableAutoChangeLevel() )
 	{
-		if(!IsValid(player)) continue
+		foreach( player in GetPlayerArray() )
+			Message( player, "We have reached the round to change levels.", "Total Round: " + file.currentRound, 6.0 )
+
+		wait 6.0
+
+		GameRules_ChangeMap( GetMapName(), GameRules_GetGameMode() )
+	}
+
+	foreach( player in GetPlayerArray() )
+	{
+		if( !IsValid( player ) ) continue
 		
-		ClearInvincible(player)
-		RemoveCinematicFlag(player, CE_FLAG_HIDE_MAIN_HUD | CE_FLAG_EXECUTION)
+		ClearInvincible( player )
+		RemoveCinematicFlag( player, CE_FLAG_HIDE_MAIN_HUD | CE_FLAG_EXECUTION )
 		player.SetThirdPersonShoulderModeOff()
 	}
 
 	file.ringBoundary.Destroy()
-}
 
-void function AutoChangeLevelThread(float endTime)
-{
-	endTime = endTime*Flowstate_AutoChangeLevelRounds() + 10
-	OnThreadEnd(
-		function() : ( )
-		{
-			GameRules_ChangeMap(GetMapName(), GameRules_GetGameMode())
-		}
-	)
-
-	while(Time() <= endTime)
-		WaitFrame()
+	file.currentRound++
 }
 
 //       ██ ██████  ██ ███    ██  ██████  ██
@@ -2116,14 +2084,14 @@ void function AudioThread(entity circle, entity player, float radius)
 	EmitSoundOnEntity( audio, soundToPlay )
 
 	while(IsValid(circle)){
-			if(!IsValid(player)) continue
-			vector fwdToPlayer   = Normalize( <player.GetOrigin().x, player.GetOrigin().y, 0> - <circle.GetOrigin().x, circle.GetOrigin().y, 0> )
-			vector circleEdgePos = circle.GetOrigin() + (fwdToPlayer * radius)
-			circleEdgePos.z = player.EyePosition().z
-			if ( fabs( circleEdgePos.x ) < 61000 && fabs( circleEdgePos.y ) < 61000 && fabs( circleEdgePos.z ) < 61000 )
-			{
-				audio.SetOrigin( circleEdgePos )
-			}
+		if(!IsValid(player)) continue
+		vector fwdToPlayer   = Normalize( <player.GetOrigin().x, player.GetOrigin().y, 0> - <circle.GetOrigin().x, circle.GetOrigin().y, 0> )
+		vector circleEdgePos = circle.GetOrigin() + (fwdToPlayer * radius)
+		circleEdgePos.z = player.EyePosition().z
+		if ( fabs( circleEdgePos.x ) < 61000 && fabs( circleEdgePos.y ) < 61000 && fabs( circleEdgePos.z ) < 61000 )
+		{
+			audio.SetOrigin( circleEdgePos )
+		}
 		WaitFrame()
 	}
 
@@ -2536,6 +2504,15 @@ void function ResetPlayerStats(entity player)
     player.SetPlayerGameStat( PGS_ELIMINATED, 0)
 }
 
+void function PlayAnnounce( string sound )
+{
+	foreach( player in GetPlayerArray_Alive() )
+	{
+		EmitSoundAtPositionOnlyToPlayer( TEAM_ANY, player.GetOrigin() + < 500, 500, 500 >, player, sound )
+		EmitSoundAtPositionOnlyToPlayer( TEAM_ANY, player.GetOrigin() + < 1000, 500, 1000 >, player, sound )
+	}
+}
+
 //  ██████ ██      ██ ███████ ███    ██ ████████      ██████  ██████  ███    ███ ███    ███ ███    ███  █████  ███    ██ ██████  ███████
 // ██      ██      ██ ██      ████   ██    ██        ██      ██    ██ ████  ████ ████  ████ ████  ████ ██   ██ ████   ██ ██   ██ ██
 // ██      ██      ██ █████   ██ ██  ██    ██        ██      ██    ██ ██ ████ ██ ██ ████ ██ ██ ████ ██ ███████ ██ ██  ██ ██   ██ ███████
@@ -2692,19 +2669,19 @@ bool function ClientCommand_Help(entity player, array<string> args)
 	if(IsValid(player)) {
 		if(FlowState_RandomGunsEverydie())
 		{
-			Message(player, "欢迎游玩死斗模式-盛宴", helpMessage(), 6)}
+			Message(player, "欢迎游玩死斗模式-盛宴", helpMessage(), 5)}
 		else if (FlowState_Gungame())
 		{
-			Message(player, "欢迎游玩死斗模式-军备竞赛", helpMessage(), 6)
+			Message(player, "欢迎游玩死斗模式-军备竞赛", helpMessage(), 5)
 
 		} else if (FlowState_PROPHUNT())
 		{
-			Message(player, "欢迎游玩躲猫猫模式", helpMessagePROPHUNT(), 6)
+			Message(player, "欢迎游玩躲猫猫模式", helpMessagePROPHUNT(), 5)
 		} else if (FlowState_SURF())
 		{
-			Message(player, "欢迎游玩滑翔模式", "", 6)
+			Message(player, "欢迎游玩滑翔模式", "", 5)
 		} else{
-			Message(player, "欢迎游玩死斗模式", helpMessage(), 6)
+			Message(player, "欢迎游玩死斗模式", helpMessage(), 5)
 		}
 	}
 	return true
