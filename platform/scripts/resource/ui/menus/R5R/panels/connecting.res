@@ -40,7 +40,8 @@
 		"allcaps"				"1"
 		auto_wide_tocontents	1
 		zpos 					71
-		fontHeight				25
+		fontHeight				60
+		tall					60
 		xpos					0
 		ypos					-50
 		"fgcolor_override"		"255 255 255 255"
