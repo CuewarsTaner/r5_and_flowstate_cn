@@ -27,6 +27,7 @@ global function SetFallTriggersStatus
 global function CreateShipRoomFallTriggers
 global function GiveFlowstateOvershield
 global function IsAdmin
+global function Flowstate_ServerSaveChat
 
 global function	ClientCommand_RebalanceTeams
 global function	ClientCommand_FlowstateKick
@@ -83,6 +84,8 @@ struct {
 
 	bool FallTriggersEnabled = false
 	bool mapSkyToggle = false
+	array<string> allChatLines
+	array<string> battlelog
 } file
 
 struct PlayerInfo
@@ -157,6 +160,7 @@ void function _CustomTDM_Init()
 	AddClientCommandCallback("latency", ClientCommand_ShowLatency)
 	AddClientCommandCallback("flowstatekick", ClientCommand_FlowstateKick)
 	AddClientCommandCallback("commands", ClientCommand_Help)
+	AddClientCommandCallback("say", ClientCommand_Say)
 	
 	if(!FlowState_AdminTgive())
 	{
@@ -244,6 +248,27 @@ void function _OnPropDynamicSpawned(entity prop)
 
 int function GetTDMState(){
 	return file.tdmState
+}
+
+void function Flowstate_ServerSaveChat()
+{
+	if(file.allChatLines.len() == 0) return
+	
+	DevTextBufferClear()
+	DevTextBufferWrite("=== Flowstate DM server - CHAT #" + GetUnixTimestamp() + " ===\n")
+	
+	int i = 0
+	foreach(line in file.allChatLines)
+	{
+		DevTextBufferWrite(line + "\n")
+		i++
+	}
+
+	DevP4Checkout( "FlowstateServer_CHAT_" + GetUnixTimestamp() + ".txt" )
+	DevTextBufferDumpToFile( "FlowstateDM_GlobalChat/FlowstateServer_CHAT_" + GetUnixTimestamp() + ".txt" )
+	
+	file.allChatLines.clear()
+	Warning("[!] CHAT WAS SAVED in /r5reloaded/platform/, CHAT LINES: " + i)
 }
 
 void function SetTdmStateToNextRound(){
@@ -362,11 +387,11 @@ void function _OnPlayerConnected(entity player)
 	SetPlayerSettings(player, TDM_PLAYER_SETTINGS)
 
 	if(FlowState_RandomGunsEverydie())
-	    Message(player, "死斗模式-盛宴", "波浪键可呼出控制台，输入commands查看可用指令\n>>>>>>  KOOK频道:98171075  Q群:307689539  <<<<<<", 6)
+	    Message(player, "死斗模式-盛宴", "波浪键可呼出控制台，输入commands查看可用指令\n>>>>>>>  KOOK频道:98171075  Q群:307689539  <<<<<<<", 6)
 	else if (FlowState_Gungame())
-	    Message(player, "死斗模式-军备竞赛", "波浪键可呼出控制台，输入commands查看可用指令\n>>>>>>  KOOK频道:98171075  Q群:307689539  <<<<<<", 6)
+	    Message(player, "死斗模式-军备竞赛", "波浪键可呼出控制台，输入commands查看可用指令\n>>>>>>>  KOOK频道:98171075  Q群:307689539  <<<<<<<", 6)
 	else
-	    Message(player, "死斗模式", "波浪键可呼出控制台，输入commands查看可用指令\n>>>>>>  KOOK频道:98171075  Q群:307689539  <<<<<<", 6)
+	    Message(player, "死斗模式", "波浪键可呼出控制台，输入commands查看可用指令\n>>>>>>>  KOOK频道:98171075  Q群:307689539  <<<<<<<", 6)
 
 	if(IsValid(player))
 	{
@@ -473,6 +498,60 @@ void function __HighPingCheck(entity player)
 	}
 }
 
+void function Flowstate_AppendBattleLogEvent(entity killer, entity victim)
+{	
+	if (!IsValid(killer) || !IsValid(victim)) return
+	if (!killer.IsPlayer() || !victim.IsPlayer()) return
+	string killer_name = killer.GetPlayerName()
+	string victim_name = victim.GetPlayerName()
+	
+	string weapon_name = ""
+	if(IsValid(killer.GetLatestPrimaryWeapon( eActiveInventorySlot.mainHand )))
+		weapon_name = killer.GetLatestPrimaryWeapon( eActiveInventorySlot.mainHand ).GetWeaponClassName()
+	
+	string is_controller_dog = killer.p.AmIController.tostring()
+	if (!(killer_name.len()>0) || !(victim_name.len()>0) || !(weapon_name.len()>0) || !(is_controller_dog.len()>0)) return
+
+	string log = killer_name +"&&"+
+	victim_name+"&&"+
+	weapon_name+"&&"+
+	GetUnixTimestamp().tostring()+"&&"+
+	is_controller_dog
+
+	file.battlelog.append(log)
+}
+
+void function Flowstate_SaveBattleLogToFile()
+{
+	if(file.battlelog.len() == 0) return
+	
+	string to_save = ""
+	
+	foreach(log in file.battlelog)
+		to_save += log + "\n"
+
+	DevTextBufferClear()
+	DevTextBufferWrite(to_save)
+	DevP4Checkout( "Flowstate_BattleLog_" + GetUnixTimestamp() + ".txt" )
+	DevTextBufferDumpToFile( "FlowstateDM_BattleLog/Flowstate_BattleLog_" + GetUnixTimestamp() + ".txt" )
+	
+	Warning("[Flowstate] -> Match log saved! Events: " + file.battlelog.len())
+	
+	file.battlelog.clear()
+}
+
+void function Flowstate_SaveBattleLogToFile_Linux() //Use parser
+{
+	if(file.battlelog.len() == 0) return
+
+	foreach(log in file.battlelog)
+		Warning(" [BattleLog] " + log)
+		
+	Warning("[Flowstate] -> Match log saved! Events: " + file.battlelog.len())
+	
+	file.battlelog.clear()
+}
+
 void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
 {
 	if (FlowState_RandomGunsEverydie() && FlowState_FIESTADeathboxes())
@@ -481,6 +560,9 @@ void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
 	if( victim.p.isSpectating )
 		return
 
+	if(victim != attacker && GetCurrentPlaylistVarBool("flowstateBattleLogEnable", false ))
+		Flowstate_AppendBattleLogEvent(attacker, victim)
+	
 	switch(GetGameState())
     {
         case eGameState.Playing:
@@ -817,28 +899,15 @@ void function TpPlayerToSpawnPoint(entity player)
 
 void function Flowstate_GrantSpawnImmunity(entity player, float duration)
 {
-	if(!IsValid(player)) return
+	if(!IsValid(player) || !IsValid(player) && !player.IsPlayer()) return
 	
-	//OnThreadEnd(
-	//function() : ( player )
-	//	{
-	//		if(!IsValid(player)) return
-	//		
-	//		player.MakeVisible()
-	//		player.ClearInvulnerable()
-	//		player.SetTakeDamageType( DAMAGE_YES )
-	//		Highlight_ClearEnemyHighlight( player )
-	//		
-	//		thread ReCheckGodMode(player)
-	//	}
-	//)
 	thread WpnPulloutOnRespawn(player, 0)
 
-	//EmitSoundOnEntityOnlyToPlayer( player, player, "PhaseGate_Enter_1p" )
-	//EmitSoundOnEntityExceptToPlayer( player, player, "PhaseGate_Enter_3p" )
+	EmitSoundOnEntityOnlyToPlayer( player, player, "PhaseGate_Enter_1p" )
+	EmitSoundOnEntityExceptToPlayer( player, player, "PhaseGate_Enter_3p" )
 
 	StatusEffect_AddTimed( player, eStatusEffect.adrenaline_visuals, 1.0, duration, duration )
-	StatusEffect_AddTimed( player, eStatusEffect.speed_boost, 0.3, duration, duration )
+	StatusEffect_AddTimed( player, eStatusEffect.speed_boost, 0.6, duration, duration )
 	StatusEffect_AddTimed( player, eStatusEffect.drone_healing, 1.0, duration, duration )
 	StatusEffect_AddTimed( player, eStatusEffect.stim_visual_effect, 1.0, duration, duration )
 
@@ -846,9 +915,24 @@ void function Flowstate_GrantSpawnImmunity(entity player, float duration)
 	//Highlight_SetEnemyHighlight( player, "survival_enemy_skydiving" )
 	//player.SetInvulnerable()
 
-	//float endTime = Time() + duration
-	//while(Time() <= endTime && IsValid(player))
-	//	wait 0.1
+	float endTime = Time() + duration
+	
+	while(Time() <= endTime)
+		wait 0.1
+	
+	if(!IsValid(player)) return
+	
+	player.MakeVisible()
+	player.ClearInvulnerable()
+	player.SetTakeDamageType( DAMAGE_YES )
+	Highlight_ClearEnemyHighlight( player )
+	
+	StatusEffect_StopAllOfType( player, eStatusEffect.adrenaline_visuals )
+	StatusEffect_StopAllOfType( player, eStatusEffect.speed_boost )
+	StatusEffect_StopAllOfType( player, eStatusEffect.drone_healing )
+	StatusEffect_StopAllOfType( player, eStatusEffect.stim_visual_effect )
+	
+	thread ReCheckGodMode(player)
 }
 
 void function WpnPulloutOnRespawn(entity player, float duration)
@@ -887,7 +971,7 @@ void function WpnPulloutOnRespawn(entity player, float duration)
 	}
 	player.ClearFirstDeployForAllWeapons()
 	HolsterAndDisableWeapons(player)
-	wait duration-0.5
+	wait duration-0.2
 }
 
 
@@ -1864,9 +1948,9 @@ void function SimpleChampionUI()
 		SetGlobalNetTime( "nextCircleStartTime", endTime )
 		SetGlobalNetTime( "circleCloseTime", endTime + 8 )
 
-		if( isFinalRound )
-			AddSurvivalCommentaryEvent( eSurvivalEventType.ROUND_TIMER_STARTED )
-		else
+		// if( isFinalRound )
+			// AddSurvivalCommentaryEvent( eSurvivalEventType.ROUND_TIMER_STARTED )
+		// else
 			PlayAnnounce( "diag_ap_aiNotify_circleTimerStartNext_02" )
 		
 		while( Time() <= endTime )
@@ -1982,7 +2066,16 @@ void function SimpleChampionUI()
 		}
 
 	wait 1
-
+	
+	if(GetCurrentPlaylistVarBool("flowstateBattleLogEnable", false ))
+		if(GetCurrentPlaylistVarBool("flowstateBattleLog_Linux", false ))
+			thread Flowstate_SaveBattleLogToFile_Linux()
+		else
+			thread Flowstate_SaveBattleLogToFile()
+			
+	if(GetCurrentPlaylistVarBool("flowstateChatLogEnable", false ))
+		Flowstate_ServerSaveChat()
+	
 	if( GetBestPlayer() != null )
 		SurvivalCommentary_HostAnnounce( eSurvivalCommentaryBucket.WINNER )
 
@@ -2006,8 +2099,11 @@ void function SimpleChampionUI()
 
 	if( file.currentRound == Flowstate_AutoChangeLevelRounds() && Flowstate_EnableAutoChangeLevel() )
 	{
+		// foreach( player in GetPlayerArray() )
+			// Message( player, "即将重新加载地图", "总轮次: " + file.currentRound, 6.0 )
+
 		foreach( player in GetPlayerArray() )
-			Message( player, "We have reached the round to change levels.", "Total Round: " + file.currentRound, 6.0 )
+			Message( player, "服务器优化即将开始", "请勿退出，服务器即将重启以优化内存.", 6.0 )
 
 		wait 6.0
 
@@ -2681,7 +2777,7 @@ bool function ClientCommand_SpectateEnemies(entity player, array<string> args)
 
 string function helpMessage()
 {
-	return "\n\n           可用控制台命令\n\n " +
+	return "\n\n           可用控制台命令:\n\n " +
 	"kill_self: 复活自己（如果你卡住了）\n" +
 	"scoreboard: 显示积分榜\n" +
 	"latency: 显示所有玩家的PING值\n" +
@@ -2713,6 +2809,24 @@ bool function ClientCommand_Help(entity player, array<string> args)
 			Message(player, "欢迎游玩死斗模式", helpMessage(), 5)
 		}
 	}
+	return true
+}
+
+bool function ClientCommand_Say(entity player, array<string> args)
+{
+	if(!IsValid(player)) return false 
+	
+	string finalMsg = player.GetPlayerName() + " "
+	
+	foreach(arg in args)
+	{
+		if(arg == "say") continue
+		
+		finalMsg+=arg
+	}
+	
+	file.allChatLines.append(finalMsg)
+	
 	return true
 }
 
