@@ -302,9 +302,7 @@ void function SetupDefaultDevCommandsMP()
 		{
 			SetupDevMenu( "更换传奇", SetDevMenu_SurvivalCharacter )
 			//SetupDevMenu( "Override Spawn Character", SetDevMenu_OverrideSpawnSurvivalCharacter )
-			#if DEVELOPER
 			SetupDevMenu( "Survival", SetDevMenu_Survival )
-			#endif
 			SetupDevMenu( "自定义：武器: Weapons", SetDevMenu_SurvivalLoot, "weapon_custom" )
 			SetupDevMenu( "自定义：配件", SetDevMenu_SurvivalLoot, "attachment_custom" )			
 			SetupDevMenu( "生存：武器", SetDevMenu_SurvivalLoot, "main_weapon" )

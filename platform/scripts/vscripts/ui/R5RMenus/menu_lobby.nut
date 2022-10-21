@@ -48,8 +48,6 @@ global table<string, asset> MapAssets = {
 //Map to readable name
 global table<string, string> MapNames = {
 	[ "mp_rr_canyonlands_staging" ] = "靶场",
-	[ "mp_rr_aqueduct" ] = "熔岩流",
-	[ "mp_rr_aqueduct_night" ] = "熔岩流(黑夜)",
 	[ "mp_rr_ashs_redemption" ] = "艾许战场",
 	[ "mp_rr_canyonlands_64k_x_64k" ] = "S1诸王峡谷",
 	[ "mp_rr_canyonlands_mu1" ] = "S2诸王峡谷",
@@ -57,9 +55,11 @@ global table<string, string> MapNames = {
 	[ "mp_rr_desertlands_64k_x_64k" ] = "S3世界尽头",
 	[ "mp_rr_desertlands_64k_x_64k_nx" ] = "S3世界尽头(黑夜)",
 	[ "mp_rr_desertlands_64k_x_64k_tt" ] = "S3世界尽头(幻象游轮)",
-	[ "mp_rr_arena_composite" ] = "控制",
-	[ "mp_rr_arena_skygarden" ] = "再来一次",
-	[ "mp_rr_party_crasher" ] = "派对破坏者",
+	[ "mp_rr_aqueduct" ] = "竞技场: 熔岩流",
+	[ "mp_rr_aqueduct_night" ] = "竞技场: 熔岩流(黑夜)",
+	[ "mp_rr_arena_composite" ] = "竞技场: 控制",
+	[ "mp_rr_arena_skygarden" ] = "竞技场: 再来一次",
+	[ "mp_rr_party_crasher" ] = "竞技场: 派对破坏者",
 	[ "mp_lobby" ] = "大厅"
 }
 

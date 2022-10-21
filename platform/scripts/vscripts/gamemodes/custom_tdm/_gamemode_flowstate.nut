@@ -42,7 +42,6 @@ global table<string,string> weaponlist
 
 global bool isBrightWaterByZer0 = false
 global const float KILLLEADER_STREAK_ANNOUNCE_TIME = 5
-bool plsTripleAudio = false;
 table playersInfo
 
 enum eTDMState
@@ -52,7 +51,7 @@ enum eTDMState
 }
 
 struct {
-	string scriptversion = "v3.35"
+	string scriptversion = "v3.5"
     int tdmState = eTDMState.IN_PROGRESS
     int nextMapIndex = 0
 	bool mapIndexChanged = true
@@ -233,6 +232,8 @@ LocPair function _GetVotingLocation()
             return NewLocPair(<0, 4780, 220>, <0, -90, 0>)
 		case "mp_rr_desertlands_64k_x_64k_tt":
             return NewLocPair(<-25197, -4278, -2138>, <0, -34, 0>)
+		case "mp_rr_arena_skygarden":
+			return NewLocPair(<4284.88037, -102.993355, 2671.03125>, <0, -179.447098, 0>)
 		case "mp_rr_party_crasher":
 			return NewLocPair(<1729.17407, -3585.65137, 581.736206>, <0, 103.168709, 0>)
         default:
@@ -545,9 +546,9 @@ void function Flowstate_SaveBattleLogToFile_Linux() //Use parser
 	if(file.battlelog.len() == 0) return
 
 	foreach(log in file.battlelog)
-		Warning(" [BattleLog] " + log)
+		printt(" [BattleLog] " + log)
 		
-	Warning("[Flowstate] -> Match log saved! Events: " + file.battlelog.len())
+	printt("[Flowstate] -> Match log saved! Events: " + file.battlelog.len())
 	
 	file.battlelog.clear()
 }
@@ -1230,7 +1231,7 @@ void function GiveRandomTac(entity player)
 void function GiveRandomUlt(entity player )
 {
     array<string> Weapons = [
-		"mp_weapon_grenade_gas",
+		"//mp_weapon_grenade_gas",
 		"mp_weapon_jump_pad",
 		"mp_weapon_phase_tunnel",
 		"mp_ability_3dash",

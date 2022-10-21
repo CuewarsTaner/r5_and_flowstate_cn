@@ -48,7 +48,7 @@ void function Sh_CustomTDM_Init()
    case "mp_rr_aqueduct_night":
         Shared_RegisterLocation(
             NewLocationSettings(
-               "Overflow",
+               "竞技场: 熔岩流",
                 [
                     NewLocPair(<3863.79321, -3262.95703, 282.03125>, <0, -135.066055, 0>),
                     NewLocPair(<4169.18262, -5555.22119, 410.03125>, <0, 146.240646, 0>),
@@ -90,7 +90,7 @@ void function Sh_CustomTDM_Init()
     case "mp_rr_ashs_redemption":
         Shared_RegisterLocation(
             NewLocationSettings(
-                "Ash's Redemption",
+                "泰坦陨落2: 艾许的战场",
                 [
                     NewLocPair(<-22104, 6009, -26529>, <0, 0, 0>),
 					NewLocPair(<-21372, 3709, -26555>, <-5, 55, 0>),
@@ -105,7 +105,7 @@ void function Sh_CustomTDM_Init()
     case "mp_rr_arena_composite":
         Shared_RegisterLocation(
             NewLocationSettings(
-                "Drop-Off",
+                "控制",
                 [
                     NewLocPair(<-3592, 1081, 258>, <0, 37, 0>),
                     NewLocPair(<3592, 1081, 258>, <0, 142, 0>),
@@ -131,7 +131,7 @@ void function Sh_CustomTDM_Init()
 	case "mp_rr_party_crasher":
 	Shared_RegisterLocation(
 		NewLocationSettings(
-				"Party Crasher",
+				"竞技场: 派对破坏者",
 				[
 					NewLocPair(<1729.17407, -3585.65137, 601.736206>, <0, 103.168709, 0>),
 					NewLocPair(<345.111481, -3769.65674, 583.285156>, <0, 78.5349045, 0>),
@@ -153,6 +153,32 @@ void function Sh_CustomTDM_Init()
 			)
 		)
 		break
+		
+	case "mp_rr_arena_skygarden":
+	Shared_RegisterLocation(
+		NewLocationSettings(
+				"竞技场: 再来一次",
+				[
+					NewLocPair(<4284.88037, -102.993355, 2680.03125>, <0, -179.447098, 0>),
+					NewLocPair(<-4282.63086, -94.0586777, 2680.03125>, <0, -1.49068689, 0>),
+					NewLocPair(<-4016.35449, -2984.96777, 2723.82983>, <0, 97.363739, 0>),
+					NewLocPair(<-3202.32129, -3163.42432, 2863.03125>, <0, 91.0571976, 0>),
+					NewLocPair(<11.4232283, -3441.22241, 2836.03125>, <0, 92.0147095, 0>),					
+					NewLocPair(<2008.17126, -3265.22412, 2863.03125>, <0, 114.795891, 0>),					
+					NewLocPair(<4112.67383, -2757.43213, 2717.97461>, <0, 108.537872, 0>),					
+					NewLocPair(<2756.42676, 2774.64746, 2664.18604>, <0, -106.51664, 0>),					
+					NewLocPair(<1610.47034, 3414.86646, 2786.24658>, <0, -85.7662277, 0>),					
+					NewLocPair(<-799.999512, 3280.4292, 2930.03125>, <0, -77.9509888, 0>),
+					NewLocPair(<-1641.51526, 3283.95166, 2785.31738>, <0, -90.7040482, 0>),					
+					NewLocPair(<2215.3208, -131.611176, 2599.72876>, <0, 175.527969, 0>),					
+					NewLocPair(<-2034.16443, -41.9182587, 2599.34814>, <0, -0.69002372, 0>),					
+					NewLocPair(<3.56009603, 2732.36084, 2930.03125>, <0, -86.8429184, 0>),
+					NewLocPair(<3.75123262, -2400.2561, 2829.96875>, <0, 92.3833466, 0>)
+				],
+				<0, 0, 1000>
+			)
+		)
+		break	
 		
 	case "mp_rr_canyonlands_mu1_night":		
 	case "mp_rr_canyonlands_mu1":

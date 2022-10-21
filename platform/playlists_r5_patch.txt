@@ -1,25 +1,31 @@
 playlists //汉化版本 by融化的芒果CC
 {
 	version stable
-	versionNum 226
+	versionNum 228
 	Gamemodes
 	{
 		defaults
 		{
 			vars
 			{
-				// custom_weapon_list "mp_weapon_clickweapon mp_weapon_clickweaponauto mp_weapon_mastiff mp_weapon_lstar mp_weapon_car mp_weapon_rampage"
+				///////////////////////////////////////////////////////////////////////////////////
+				//// Custom General Settings (Flowstate custom)
+				///////////////////////////////////////////////////////////////////////////////////
 				
-				// mp_weapon_lstar_tier 1
-				// mp_weapon_lstar_attachments "barrel mag sight grip"
-				
-				// mp_weapon_mastiff_attachments "mag sight"
-				// mp_weapon_mastiff_tier 1
 				r5reloaded_AnimatedCharacterSelect				0
-				register_damage_to_ai 						1
-				register_dummie_kill_as_actual_kill 				1
+				register_damage_to_ai 							1
+				register_dummie_kill_as_actual_kill 			1
 				dummies_have_random_shields 					1
-				dummies_agressivedummies 					1				
+				dummies_agressivedummies 						1	//Toggle for combat/training dummies
+				
+				///////////////////////////////////////////////////////////////////////////////////
+				//// Custom Weapons
+				///////////////////////////////////////////////////////////////////////////////////
+				custom_weapon_list "mp_weapon_volt_smg mp_weapon_sentinel"
+				
+				mp_weapon_volt_smg_class "smg"
+				mp_weapon_sentinel_class  "sniper"
+				mp_weapon_sentinel_attachments "mag sight grip"
 				
 				///////////////////////////////////////////////////////////////////////////////////
 				//// Code Required Vars
@@ -224,6 +230,16 @@ playlists //汉化版本 by融化的芒果CC
 				player_revive_enabled                          1
 				match_ending_enabled                           1
 				battlechatter_enabled                          1
+				survival_shields                               1
+				survival_jumpkit_enabled                       0
+				survival_wallrun_enabled                       0
+				survival_drop_item                             1
+				survival_pickup_item                           1
+				survival_swap_item                             1
+				survival_equip_attachment                      1
+				survival_unequip_attachment                    1
+				survival_transfer_attachment                   1
+				survival_drop_equipment                        1
 
 				///////////////////////////////////////////////////////////////////////////////////
 				//// Player Reporting
@@ -295,18 +311,16 @@ playlists //汉化版本 by融化的芒果CC
 		{
 			inherit defaults
 		}
-		
-		custom_tdm 
+		menufall
 		{
 			inherit defaults
 		}
-		
-		custom_ctf
-		{
-			inherit defaults
-		}
-		
 		custom_aimtrainer
+		{
+			inherit defaults
+		}
+
+		custom_ctf
 		{
 			inherit defaults
 		}
@@ -315,6 +329,12 @@ playlists //汉化版本 by融化的芒果CC
 		{
 			inherit defaults
 		}
+
+		custom_tdm
+		{
+			inherit defaults
+		}
+
 	}
 
 	Playlists
@@ -357,10 +377,7 @@ playlists //汉化版本 by融化的芒果CC
 				// mp_rr_desertlands_64k_x_64k_nx                 1
 			// } } }
 		// }
-		
-		///////////////////////////////////
-		////////////  CUSTOM  /////////////
-		///////////////////////////////////
+
 		custom_aimtrainer
 		{
 			inherit survival
@@ -445,11 +462,10 @@ playlists //汉化版本 by融化的芒果CC
 				abbreviation                       "TDM"
 				lobbytitle                         "TDM"
 				pin_match_type                     survival
-				enable_nessies                     0		//是否启用小水怪
+				enable_nessies                     0		//是否启用水怪
 				
    				//Flowstate By CaféDeColombiaFPS.
 				
-				ring_radius_padding                800		//安全区半径，默认为800
 				max_teams                          16		//队伍数量上限
 				max_players                        16		//玩家数量上限
 				min_players                        0		//启动游戏所需的玩家数量最小值
@@ -477,7 +493,7 @@ playlists //汉化版本 by融化的芒果CC
 				match_ending_enabled               0
 				sur_circle_start_paused            1
 
-				replay_new_ui 0
+				replay_new_ui 1
 					
 				//For FFA classic mode						//死斗模式默认武器和技能
 				//specific weapons and abilities settings	//复活默认武器与技能设定
@@ -500,6 +516,9 @@ playlists //汉化版本 by融化的芒果CC
 				//whitelisted_ability_1 ""											//技能白名单序号1
 				
 				//GENERAL SETTINGS
+				flowstateBattleLogEnable 				0
+				flowstateChatLogEnable 					0
+				
 				flowstateEndlessFFAorTDM			0								//是否开启无尽模式（不会刷新新的轮次，不会产生捍卫者）
 				Admins 								"CuewarsTaner NNanfeng1 Makimakimaaaaa" 		//管理员游戏ID（多个管理员请用空格隔开）
 				respawn_delay						5								//复活延迟
@@ -518,22 +537,22 @@ playlists //汉化版本 by融化的芒果CC
 				flowstate_headshots_only_gamemode	0								//是否开启仅爆头模式（推荐respawn kit只有小帮手或单发狙击枪并关闭随机武器）
 				flowstateReloadTacticalOnRespawn	1								//复活战术技能冷却重置
 				flowstateReloadUltimateOnRespawn	1								//复活终极技能冷却重置
+				
+				//custom maps by community
 				//World's Edge Map										//S3世界尽头
 				flowstate_Enable_BRIGHWATER_By_Zero				0       //是否开启Zero制作的地图POI（白色森林、湖泊竞技场）
 				flowstate_Enable_CAVE_By_BlessedSeal			0		//是否开启BlessedSeal制作的地图POI（高台竞技场）
 				flowstate_Enable_SKILLTRAINER_By_Colombia		0		//是否开启Columbia制作的地图POI（天空竞技场）
 				
 				//Kings Canyon OG map									//S0诸王峡谷
-				flowstate_Enable_CUSTOMMAP_By_Biscutz			1		//是否开启Biscutz制作的地图POI
-				flowstate_Enable_WHITEFOREST_By_Zero			1		//是否开启Zero制作的地图POI
+				flowstate_Enable_CUSTOMMAP_By_Biscutz			0		//是否开启Biscutz制作的地图POI
+				flowstate_Enable_WHITEFOREST_By_Zero			0		//是否开启Zero制作的地图POI
 				
-				flowstateKickHighPingPlayer			1					//是否开启延迟自动踢人功能
-				flowstateMaxPingAllowed				200					//高于该延迟将被自动提出服务器
-				solo_mode 							1					//启用该选项以显示游戏中的在线玩家数量，不启用则会显示两个问号
-				flowstateDoorsEnabled				1					//是否开启建筑物的门
-				flowstateDoorsRegen					0 					//若门受到了伤害但未被摧毁，则会自动回复生命值。推荐关闭
-
-	
+				flowstateKickHighPingPlayer				1					//是否开启延迟自动踢人功能
+				flowstateMaxPingAllowed					200					//高于该延迟将被自动提出服务器
+				solo_mode 								1					//启用该选项以显示游戏中的在线玩家数量，不启用则会显示两个问号
+				flowstateDoorsEnabled					1					//是否开启建筑物的门
+				flowstateDoorsRegen						0 					//若门受到了伤害但未被摧毁，则会自动回复生命值。推荐关闭
 
 				//visuals	//视觉选项
 				flowstateForceCharacter 			1		//是否强制所有玩家的传奇
@@ -542,7 +561,7 @@ playlists //汉化版本 by融化的芒果CC
 				flowstateChosenAdminCharacter		6		//0烟妹 1狗子 2侵蚀 3胖子 4命脉 5幻象 6动力 7机器人 8恶灵 9电妹 10密客
 				flowstateDummyOverride 				0		// explains itself, it's bugged with some abilities (grapple ie)
 				
-				//game continuity
+				//game continuity 
 				flowstateAutoreloadPrimary 			1		//主武器是否自动重新加载
 				flowstateAutoreloadSecondary 		1		//副武器是否自动重新加载
 				flowstateKillshotEnabled 			1		//是否开启击杀声效
@@ -558,14 +577,15 @@ playlists //汉化版本 by融化的芒果CC
 				mp_rr_canyonlands_mu1                          1			//S2诸王峡谷
 				mp_rr_desertlands_64k_x_64k                    1			//S3世界尽头
 				mp_rr_desertlands_64k_x_64k_nx                 1			//S3世界尽头(黑夜)
+				mp_rr_desertlands_64k_x_64k_tt                 	1			//S3世界尽头(幻象游轮)
+				mp_rr_arena_skygarden                          	1			//
+				mp_rr_party_crasher                      		1			//派对破坏者
 				mp_rr_canyonlands_mu1_night                    1			//S2诸王峡谷(黑夜)
 				mp_rr_canyonlands_staging                      1			//靶场
 				mp_rr_ashs_redemption                          1			//艾许战场
 				mp_rr_aqueduct									1			//熔岩流
 				mp_rr_arena_composite							1			//控制
 				mp_rr_aqueduct_night							1			//熔岩流(黑夜)
-				mp_rr_desertlands_64k_x_64k_tt					1			//S3世界尽头(幻象游轮)
-				mp_rr_party_crasher								1			//派对破坏者
 			} } }
 		}
 		
@@ -690,14 +710,18 @@ playlists //汉化版本 by融化的芒果CC
 
 			}
 			gamemodes { custom_tdm { maps {
-				mp_rr_canyonlands_64k_x_64k                    1
-				mp_rr_canyonlands_mu1                          1
-				mp_rr_desertlands_64k_x_64k                    1
-				mp_rr_desertlands_64k_x_64k_nx                 1
-				mp_rr_canyonlands_mu1_night                    1
-				mp_rr_canyonlands_staging                      1
-				mp_rr_ashs_redemption                          1
+				mp_rr_canyonlands_64k_x_64k                     1
+				mp_rr_canyonlands_mu1                           1
+				mp_rr_desertlands_64k_x_64k                     1
+				mp_rr_desertlands_64k_x_64k_nx                  1
+				mp_rr_desertlands_64k_x_64k_tt                  1
+				mp_rr_arena_skygarden                           1
+				mp_rr_party_crasher                       		1
+				mp_rr_canyonlands_mu1_night                     1
+				mp_rr_canyonlands_staging                       1
+				mp_rr_ashs_redemption                           1
 				mp_rr_aqueduct									1
+				mp_rr_arena_composite							1
 				mp_rr_aqueduct_night							1
 			} } }
 		}
@@ -819,14 +843,18 @@ playlists //汉化版本 by融化的芒果CC
 
 			}
 			gamemodes { custom_tdm { maps {
-				mp_rr_canyonlands_64k_x_64k                    1
-				mp_rr_canyonlands_mu1                          1
-				mp_rr_desertlands_64k_x_64k                    1
-				mp_rr_desertlands_64k_x_64k_nx                 1
-				mp_rr_canyonlands_mu1_night                    1
-				mp_rr_canyonlands_staging                      1
-				mp_rr_ashs_redemption                          1
+				mp_rr_canyonlands_64k_x_64k                    	1
+				mp_rr_canyonlands_mu1                          	1
+				mp_rr_desertlands_64k_x_64k                    	1
+				mp_rr_desertlands_64k_x_64k_nx                 	1
+				mp_rr_desertlands_64k_x_64k_tt                 	1
+				mp_rr_arena_skygarden                          	1
+				mp_rr_party_crasher                      	1
+				mp_rr_canyonlands_mu1_night                    	1
+				mp_rr_canyonlands_staging                      	1
+				mp_rr_ashs_redemption                          	1
 				mp_rr_aqueduct									1
+				mp_rr_arena_composite							1
 				mp_rr_aqueduct_night							1
 			} } }
 		}
@@ -836,7 +864,7 @@ playlists //汉化版本 by融化的芒果CC
 			inherit survival
 			vars
 			{
-				movement_map_enable			0
+				movement_map_enable							   1
 				visible                                        1
 
 				// Skip intros:
@@ -864,9 +892,7 @@ playlists //汉化版本 by融化的芒果CC
 				enable_nessies                                 0
 			}
 			gamemodes { map_editor { maps {
-				mp_rr_canyonlands_64k_x_64k                    1
 				mp_rr_desertlands_64k_x_64k                    1
-				mp_rr_desertlands_64k_x_64k_nx                 1
 			} } }
 		}
 		
@@ -887,7 +913,7 @@ playlists //汉化版本 by融化的芒果CC
 				pin_match_type                     survival
 				enable_nessies                     0
 				
-   				//Flowstate By CaféDeColombiaFPS.
+   				//SURF
 				
 				max_teams                          16
 				max_players                        16
@@ -978,14 +1004,8 @@ playlists //汉化版本 by融化的芒果CC
 				respawn_kit_secondary_weapon 		"mp_weapon_wingman optic_cq_hcog_classic highcal_mag_l3"
 				respawn_kit_tactical 				"mp_ability_phase_walk"
 				respawn_kit_ultimate 				"mp_weapon_jump_pad"
-				
-				//random weapons and abilities settings, change every round
-				flowstateRandomGuns 				0 	//round, big weapons list
-				flowstateRandomGunsMetagame			0 	//Metagame small weapon list primary:(r99,r301,flatline) secondary:(wingman,pk,eva,mastiff) every round
-				flowstateRandomTactical 			0 	//grapple,phase walk,stim,bubble, bang smokes, hound q, tf2 cloak
-				flowstateRandomUltimate				0 	//caustic ult,jumppad,wraith ult,3dash,hound ult, gibby ult
-				
-				//GENERAL SETTINGS
+
+				//GENERAL SETTINGS PROPHUNT
 				flowstateEndlessFFAorTDM	0 //location won't change, no champion will be defined
 				flowstateHoster 					"r5r_ColombiaFPS"
 				flowstateAdmin1 					"r5r_ColombiaFPS"
@@ -1005,43 +1025,12 @@ playlists //汉化版本 by融化的芒果CC
 				flowstateKickHighPingPlayer			0
 				flowstateMaxPingAllowed				230
 				solo_mode 							1 //this will fix the ingame player count text, so it wont display "??" in players alive (now players connected) count.
-				flowstateDoorsEnabled				0 //Doors enabled or disabled in all buildings.
-				flowstateDoorsRegen					0 //if door is damaged but not destroyed, it will regen health. Suggestion: false.
-				
-				//custom maps by community
-				flowstate_Enable_BRIGHWATER_By_Zero 0
-				flowstate_Enable_CAVE_By_BlessedSeal 0
-				
-				//flowstate gamemodes!! these settings have exclusive overrides, DONT MIX
-				flowstateFIESTA 					0 	//FIESTA gamemode, deathboxes/armor swaps available here
-					flowstateFIESTAShieldsUpgrade	0  //with this you will override the default_shield_hp value and you will get better shields with kill streak. You start with blue shield.
-					flowstateFIESTADeathboxes		1
-				flowstateGUNGAME 					0 	//GUNGAME gamemode
-					flowstateGUNGAMESecondary		"mp_weapon_shotgun_pistol"  //secondary shitty weapon
-					flowstateGUNGAMESecondary_0		"optic_cq_hcog_classic" //secondary shitty weapon attachment 1
-					flowstateGUNGAMESecondary_1		"" //secondary shitty weapon attachment 2
-					flowstateGUNGAMESecondary_2		"" //secondary shitty weapon attachment 3
-					flowstateGUNGAMERandomAbilities	0	//1 will give you a random tactical and ultimate when killing, 0 will take the values from below
-					flowstateGUNGAME_tactical	"mp_ability_grapple"
-					flowstateGUNGAME_ultimate	"mp_weapon_jump_pad"
-				flowstateSURF 						0	//Exclusive Apex Surf by AyeZee. Only works on WE
-					flowstateSURFRoundtime			300  //it has two maps. Time for them.
-					flowstateSURFLockPOI			0
-					flowstateSURFLockeedPOI			0
+
 				flowstatePROPHUNT					1	//Exclusive Apex Prophunt by ColombiaFPS. Please enable kvoverride at the end of the file.
 					flowstatePROPHUNTweapon1		"mp_weapon_rspn101" //primary prophunt wepaon
 					flowstatePROPHUNTweapon2		"mp_weapon_shotgun_pistol" //secondary prophunt weapon
 					flowstatePROPHUNTLimitTime		240
-					
-				//dropship
-                flowstateenabledropship 			0
-				flowstateffaortdm 					1 	// 1 means FFA it won't group ppl, 0 means TDM it can group teammates in same ship
-				flowstateDroppodsOnPlayerConnected 	0 	//this is disabled in main code rn
-				
-				//serverside allchat
-				flowstateAllChat 					1
-				flowstateChatCd 					1
-				
+
 				//visuals
 				flowstateForceCharacter 			1	//It enables the following settings
 				flowstateChosenCharacter 			8	// 0 Bang// 1 Bloodhound// 2 Caustic// 3 Gibby// 4 Lifeline// 5 Mirage// 6 Octane// 7 Pathy// 8 Wraith// 9 Watty// 10 Crypto
@@ -1051,16 +1040,6 @@ playlists //汉化版本 by融化的芒果CC
 				flowstateAutoreloadPrimary 			1
 				flowstateAutoreloadSecondary 		1
 				flowstateKillshotEnabled 			1	//enables the killshot sound when killing
-				
-				//extrashields
-				flowstateExtrashieldsEnabled 		0
-				flowstateExtrashieldsSpawntime 		240
-				flowstateExtrashieldValue 			150 //extrashield actual value
-				
-				//perma ChatBans //up to 10 slots
-				// flowstateBannedFromChat1 		""
-				// flowstateBannedFromChat2 		""
-				// flowstateBannedFromChat3 		""
 			}
 			gamemodes { custom_tdm { maps {
 				mp_rr_desertlands_64k_x_64k                    1
@@ -1081,7 +1060,7 @@ playlists //汉化版本 by融化的芒果CC
 				panel_image                                    panel_worlds_edge
 				visible                                        1
 				battlechatter_enabled                          1
-				name                                           custom_ctf
+				name                                           "Capture The Flag"
 				description                                    "Two teams each have their own color flag placed in their home base. The objective is to steal the other team's flag and take it to their own base"
 				abbreviation                                   "Capture The Flag"
 				lobbytitle                                     "Capture The Flag"
@@ -1121,6 +1100,7 @@ playlists //汉化版本 by融化的芒果CC
 
 				// CTF Settings:
 				//// General CTF Settings:
+				global_chat_enabled                            1    //Enables Global chat
 				teammate_huds_enabled                          0    //Enables teammate huds
 				survival_jumpkit_enabled                       0    //Enables double jump
 				survival_wallrun_enabled                       0    //Enables wallrun
@@ -1176,7 +1156,9 @@ playlists //汉化版本 by融化的芒果CC
 				mp_rr_canyonlands_mu1_night                    1
 				mp_rr_canyonlands_staging                      1
 				mp_rr_aqueduct                                 1
+				mp_rr_aqueduct_night                           1
 				mp_rr_ashs_redemption                          1
+				mp_rr_arena_composite                          1
 			} } }
 		}
 		
@@ -1202,7 +1184,7 @@ playlists //汉化版本 by融化的芒果CC
 				enable_apex_screens                            1
 				skydive_ziplines_enabled                       1
 				enable_bolo_heirloom				0
-				rgb_skydive 					0
+				rgb_skydive 					1
 			}
 			gamemodes { survival { maps {
 				mp_rr_desertlands_64k_x_64k                    1
@@ -1314,16 +1296,19 @@ playlists //汉化版本 by融化的芒果CC
 
 			}
 			gamemodes { survival { maps {
-				mp_rr_canyonlands_64k_x_64k                    1
-				mp_rr_canyonlands_mu1                          1
-				mp_rr_desertlands_64k_x_64k                    1
-				mp_rr_desertlands_64k_x_64k_nx                 1
-				mp_rr_canyonlands_mu1_night                    1
-				mp_rr_canyonlands_staging                      1
-				mp_rr_aqueduct                                 1
-				mp_rr_aqueduct_night                           1
-				mp_rr_ashs_redemption                          1
-				mp_rr_arena_composite                          1
+				mp_rr_canyonlands_staging                      	1
+				mp_rr_canyonlands_64k_x_64k                    	1
+				mp_rr_canyonlands_mu1                          	1
+				mp_rr_canyonlands_mu1_night                    	1
+				mp_rr_desertlands_64k_x_64k                    	1
+				mp_rr_desertlands_64k_x_64k_nx                 	1
+				mp_rr_desertlands_64k_x_64k_tt                 	1
+				mp_rr_arena_skygarden                          	1
+				mp_rr_party_crasher                     		1
+				mp_rr_aqueduct                                 	1
+				mp_rr_aqueduct_night                           	1
+				mp_rr_ashs_redemption                          	1
+				mp_rr_arena_composite                          	1
 			} } }
 		}
 
@@ -1331,6 +1316,7 @@ playlists //汉化版本 by融化的芒果CC
 		{
 			vars
 			{
+				name                                           "menufall"
 				visible                                        0
 				menu_fall_ltm                                  1
 
@@ -1363,16 +1349,19 @@ playlists //汉化版本 by融化的芒果CC
 				survival_wallrun_enabled                       1
 			}
 			gamemodes { survival { maps {
-				mp_rr_canyonlands_64k_x_64k                    1
-				mp_rr_canyonlands_mu1                          1
-				mp_rr_desertlands_64k_x_64k                    1
-				mp_rr_desertlands_64k_x_64k_nx                 1
-				mp_rr_canyonlands_mu1_night                    1
-				mp_rr_canyonlands_staging                      1
-				mp_rr_aqueduct                                 1
-				mp_rr_aqueduct_night                           1
-				mp_rr_ashs_redemption                          1
-				mp_rr_arena_composite                          1
+				mp_rr_canyonlands_64k_x_64k                    	1
+				mp_rr_canyonlands_mu1                          	1
+				mp_rr_desertlands_64k_x_64k                    	1
+				mp_rr_desertlands_64k_x_64k_nx                 	1
+				mp_rr_desertlands_64k_x_64k_tt                 	1
+				mp_rr_arena_skygarden                          	1
+				mp_rr_party_crasher                     		1
+				mp_rr_canyonlands_mu1_night                    	1
+				mp_rr_canyonlands_staging                      	1
+				mp_rr_aqueduct                                 	1
+				mp_rr_aqueduct_night                           	1
+				mp_rr_ashs_redemption                          	1
+				mp_rr_arena_composite                          	1
 			} } }
 		}
 	}
@@ -1383,17 +1372,27 @@ playlists //汉化版本 by融化的芒果CC
 			"Language" "english"
 			"Tokens"
 			{
-				"MP_RR_DESERTLANDS_64K_X_64K_NX"      "World's Edge After Dark"
-				"MP_RR_DESERTLANDS_64K_X_64K"         "World's Edge"
+				"MP_RR_DESERTLANDS_64K_X_64K_NX"      "S3世界尽头(黑夜)"
+				"MP_RR_DESERTLANDS_64K_X_64K"         "S3世界尽头"
+				"MP_RR_DESERTLANDS_64K_X_64K_TT"      "S3世界尽头(幻象游轮)"
+				"MP_RR_ASHS_REDEMPTION"               "艾许战场"
+				"MP_RR_AQUEDUCT"                      "熔岩流"
+				"MP_RR_AQUEDUCT_NIGHT"                "熔岩流(黑夜)"
+				"MP_RR_ARENA_COMPOSITE"               "控制"
+				"MP_RR_ARENA_SKYGARDEN"               "再来一次"
+				"mp_rr_party_crasher" 		  		  "派对破坏者"
+
 				"WORLDS_EDGE_NIGHT"                   "SHADOWFALL WORLD'S EDGE"
 				"WORLDS_EDGE_NIGHT_DESC"              "Dead Legends respawn as Shadows.\nSurvive and escape with final 10 Legends."
-				"Kings_Canyon_OG"                     "Kings Canyon"
-				"KC_MU1"                              "Kings Canyon Season 2"
-				"KCAD"                                "Kings Canyon After Dark"
-				"Playtest"                            "Playtest"
-				"Playtest_Only"                       "Playtest"
-				"MP_RR_ASHS_REDEMPTION"               "Ash's Redemption"
-				"MP_RR_AQUEDUCT"                      "Overflow"
+				"Kings_Canyon_OG"                     "S1诸王峡谷"
+				"KC_MU1"                              "S2诸王峡谷"
+				"KCAD"                                "S2诸王峡谷(黑夜)"
+				"Playtest"                            "新图内测"
+				"Playtest_Only"                       "新图内测"
+				"PLAYER_KILLSTREAK"                   "`1%s1`0 is on a `1%s2`0 player killstreak"
+				"PLAYER_ENDED_KILLSTREAK"             "`1%s1`0 ended `1%s2`0's killstreak"
+				"PLAYER_ENDED_OWN_KILLSTREAK"         "`1%s1`0 ended their own killstreak"
+
                 "VALVE_REJECT_BANNED"                 "You have been banned from this server."
                 "DISCONNECT_BANNED"                   "The client's game account has been banned."
 
@@ -1401,14 +1400,15 @@ playlists //汉化版本 by融化的芒果CC
                 "DISCONNECT_SEND_OVERFLOW"            "Connection to server overflowed (code:dam)."
                 "DISCONNECT_NETCHAN_OVERFLOW"         "Connection to server overflowed (code:vulkan)."
                 "DISCONNECT_STRINGCMD_OVERFLOW"       "Connection to server overflowed (code:mountain)."
-				"BETA_BUILD_WATERMARK" "CN服务器不需加速 \n KOOK频道:98171075 \n QQ群:307689539"	//在这里设置你的服务器水印（可用\n换行）
-				"MP_RR_PARTY_CRASHER" "PARTY CRASHER"
+				"BETA_BUILD_WATERMARK" 				  "CN服务器不需加速 \n KOOK频道:98171075 \n QQ群:307689539"	//在这里设置你的服务器水印（可用\n换行）
 			}
 		}
 	}
 	"KVFileOverrides"
 	{
+		//Override for client weapon settings from server
 		//Enable the code below if you want to play PROPHUNT.
+		//You can also use this as an example.
 		
 		// "scripts/weapons/mp_ability_phase_walk.txt"
 		// {
