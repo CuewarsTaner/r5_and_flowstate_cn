@@ -102,9 +102,6 @@ void function InitDevMenu( var newMenuArg )
 		AddMenuEventHandler( menu, eUIEvent.MENU_NAVIGATE_BACK, BackOnePage_Activate )
 		AddMenuFooterOption( menu, LEFT, BUTTON_Y, true, "%[Y_BUTTON|]% 重复上一次指令: ", "重复上一次指令: ", RepeatLastCommand_Activate )
 		AddMenuFooterOption( menu, LEFT, BUTTON_BACK, true, "%[BACK|]% Bind Selection to Gamepad", "", BindCommandToGamepad_Activate )
-		#if !DEVELOPER
-		AddMenuFooterOption( menu, LEFT, BUTTON_SHOULDER_RIGHT, true, "Some commands are hidden because -dev is not specified.", "Some commands are hidden because -dev is not specified." )
-		#endif
 		file.footerHelpTxtLabel = GetElementsByClassname( menu, "FooterHelpTxt" )[0]
 
 		RegisterSignal( "DEV_InitCodeDevMenu" )
@@ -320,10 +317,8 @@ void function SetupDefaultDevCommandsMP()
 			//SetupDevCommand( "Survival Loot Zone Preprocess", "script_ui Dev_CommandLineAddParm( \"-survival_preprocess\", \"\" ); reload" )
 		}
 
-		#if DEVELOPER
 		SetupDevMenu( "重生玩家", SetDevMenu_RespawnPlayers )
 		SetupDevMenu( "Set Respawn Behaviour Override", SetDevMenu_RespawnOverride )
-		#endif
 
 		//SetupDevMenu( "Spawn NPC [IMC]", SetDevMenu_AISpawn, TEAM_IMC )
 		//SetupDevMenu( "Spawn NPC [Militia]", SetDevMenu_AISpawn, TEAM_MILITIA )
@@ -374,16 +369,12 @@ void function SetupDefaultDevCommandsMP()
 		//SetupDevCommand( "Max Activity (Conger Mode)", "script SetMaxActivityMode(4)" )
 		//SetupDevCommand( "Max Activity (Disabled)", "script SetMaxActivityMode(0)" )
 
-		#if DEVELOPER
 		SetupDevCommand( "Toggle Skybox View", "script thread ToggleSkyboxView()" )
-		#endif
-		SetupDevCommand( "切换HUD界面", "ToggleHUD" )
+		SetupDevCommand( "Toggle HUD", "ToggleHUD" )
 
-		#if DEVELOPER
 		SetupDevCommand( "近战：装备自定义传家宝", "script thread SetupHeirloom()" )
 		SetupDevCommand( "近战：装备暗影之手", "script thread SetupShadowHands()" )
 		SetupDevCommand( "近战：卸装", "script thread UnEquipMelee()" )		
-		#endif
 		
 		//SetupDevCommand( "Toggle Offhand Low Recharge", "ToggleOffhandLowRecharge" )
 		//SetupDevCommand( "Map Metrics Toggle", "script_client GetLocalClientPlayer().ClientCommand( \"toggle map_metrics 0 1 2 3\" )" )
@@ -391,8 +382,8 @@ void function SetupDefaultDevCommandsMP()
 		//SetupDevCommand( "Jump Randomly Forever", "script_client thread JumpRandomlyForever()" )
 
 		//SetupDevCommand( "Toggle Zeroing Mode", "script ToggleZeroingMode()" )
-		SetupDevCommand( "开启上帝模式", "script MakeInvincible( GetPlayerArray()[0] )" )
-		SetupDevCommand( "关闭上帝模式", "script ClearInvincible( GetPlayerArray()[0] )" )
+		SetupDevCommand( "开启上帝模式", "script MakeInvincible( gp()[0] )" )
+		SetupDevCommand( "关闭上帝模式", "script ClearInvincible( gp()[0] )" )
 		//SetupDevCommand( "Toggle Screen Alignment Tool", "script_client DEV_ToggleScreenAlignmentTool()" )
 
 		SetupDevCommand( "切换第三人称视角", "ToggleThirdPerson" )
@@ -741,7 +732,7 @@ void function SetupRespawnPlayersDevMenu()
 	SetupDevCommand( "Respawn dead bots", "respawn deadbots" )
 	SetupDevCommand( "Respawn my teammates", "respawn allies" )
 	SetupDevCommand( "Respawn my enemies", "respawn enemies" )
-	//foreach ( player in GetPlayerArray() )
+	//foreach ( player in gp() )
 	//{
 	//	SetupDevCommand( "Respawn player: " + player.GetPlayerName(), "respawn " + player.GetEntIndex() )
 	//}
@@ -781,7 +772,7 @@ void function SetupTDMPrimaryWeapsons()
 	//SetupDevCommand( "克雷贝尔", "tgive p mp_weapon_sniper" )
 	
 
-	//foreach ( player in GetPlayerArray() )
+	//foreach ( player in gp() )
 	//{
 	//	SetupDevCommand( "Respawn player: " + player.GetPlayerName(), "respawn " + player.GetEntIndex() )
 	//}
@@ -822,7 +813,7 @@ void function SetupTDMSecondaryWeapsons()
 	//SetupDevCommand( "克雷贝尔", "tgive s mp_weapon_sniper" )
 	
 
-	//foreach ( player in GetPlayerArray() )
+	//foreach ( player in gp() )
 	//{
 	//	SetupDevCommand( "Respawn player: " + player.GetPlayerName(), "respawn " + player.GetEntIndex() )
 	//}
@@ -884,8 +875,8 @@ void function SetDevMenu_Prototypes( var _ )
 
 void function SetupPrototypesDevMenu()
 {
-	SetupDevCommand( "Toggle Akimbo With Current Weapon", "script DEV_ToggleAkimboWeapon(GetPlayerArray()[0])" )
-	SetupDevCommand( "Toggle Akimbo With Holstered Weapon", "script DEV_ToggleAkimboWeaponAlt(GetPlayerArray()[0])" )
+	SetupDevCommand( "Toggle Akimbo With Current Weapon", "script DEV_ToggleAkimboWeapon(gp()[0])" )
+	SetupDevCommand( "Toggle Akimbo With Holstered Weapon", "script DEV_ToggleAkimboWeaponAlt(gp()[0])" )
 	// SetupDevCommand( "Change to Shadow Squad", "script Dev_ShadowFormEnable( GP() )" )
 }
 
@@ -1116,7 +1107,7 @@ void function BindCommandToGamepad_Activate( var button )
 
 		string prompt = "Bound to gamepad BACK: " + fullName
 		printt( prompt )
-		//string cmdText = "script Dev_PrintMessage( GetPlayerArray()[0], \"" + prompt + "\" )"
+		//string cmdText = "script Dev_PrintMessage( gp()[0], \"" + prompt + "\" )"
 		//ClientCommand( cmdText )
 		EmitUISound( "wpn_pickup_titanweapon_1p" )
 	}

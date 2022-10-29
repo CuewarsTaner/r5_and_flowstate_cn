@@ -78,7 +78,6 @@ playlists //汉化版本 by融化的芒果CC
 				//character_wattson                              lock
 				//character_crypto                               lock
 				character_random                               lock
-				//============= Hide from Normal Use ============//
 
 
 				///////////////////////////////////////////////////////////////////////////////////
@@ -554,35 +553,35 @@ playlists //汉化版本 by融化的芒果CC
 				flowstateDoorsEnabled					1					//是否开启建筑物的门
 				flowstateDoorsRegen						0 					//若门受到了伤害但未被摧毁，则会自动回复生命值。推荐关闭
 
-				//visuals	//视觉选项
-				flowstateForceCharacter 			1		//是否强制所有玩家的传奇
-				flowstateChosenCharacter 			6		//0烟妹 1狗子 2侵蚀 3胖子 4命脉 5幻象 6动力 7机器人 8恶灵 9电妹 10密客
-				flowstateForceAdminCharacter		1		//是否强制管理员的传奇
-				flowstateChosenAdminCharacter		6		//0烟妹 1狗子 2侵蚀 3胖子 4命脉 5幻象 6动力 7机器人 8恶灵 9电妹 10密客
-				flowstateDummyOverride 				0		// explains itself, it's bugged with some abilities (grapple ie)
+				//visuals									//视觉选项
+				flowstateForceCharacter 				1	//是否强制所有玩家的传奇
+				flowstateChosenCharacter 				6	//0烟妹// 1狗子// 2侵蚀// 3胖子// 4命脉// 5幻象// 6动力// 7机器// 8恶灵// 9电妹// 10密客
+				flowstateForceAdminCharacter			1	//是否强制管理员的传奇
+				flowstateChosenAdminCharacter			6	//0烟妹// 1狗子// 2侵蚀// 3胖子// 4命脉// 5幻象// 6动力// 7机器// 8恶灵// 9电妹// 10密客
+				flowstateDummyOverride 					0	// explains itself, it's bugged with some abilities (grapple ie)
 				
 				//game continuity 
-				flowstateAutoreloadPrimary 			1		//主武器是否自动重新加载
-				flowstateAutoreloadSecondary 		1		//副武器是否自动重新加载
-				flowstateKillshotEnabled 			1		//是否开启击杀声效
+				flowstateAutoreloadPrimary 				1	//主武器是否自动重新加载
+				flowstateAutoreloadSecondary 			1	//副武器是否自动重新加载
+				flowstateKillshotEnabled 				1	//是否开启击杀声效
 				
 				//extrashields
-				flowstateExtrashieldsEnabled 		0
-				flowstateExtrashieldsSpawntime 		240
-				flowstateExtrashieldValue 			150 //extrashield actual value
+				flowstateExtrashieldsEnabled 			0
+				flowstateExtrashieldsSpawntime 			240
+				flowstateExtrashieldsSpawntime 			240 //extrashield actual value
 
 			}
 			gamemodes { custom_tdm { maps {
-				mp_rr_canyonlands_64k_x_64k                    1			//S1诸王峡谷
-				mp_rr_canyonlands_mu1                          1			//S2诸王峡谷
-				mp_rr_desertlands_64k_x_64k                    1			//S3世界尽头
-				mp_rr_desertlands_64k_x_64k_nx                 1			//S3世界尽头(黑夜)
+				mp_rr_canyonlands_64k_x_64k                    	1			//S1诸王峡谷
+				mp_rr_canyonlands_mu1                         	1			//S2诸王峡谷
+				mp_rr_desertlands_64k_x_64k                    	1			//S3世界尽头
+				mp_rr_desertlands_64k_x_64k_nx                 	1			//S3世界尽头(黑夜)
 				mp_rr_desertlands_64k_x_64k_tt                 	1			//S3世界尽头(幻象游轮)
-				mp_rr_arena_skygarden                          	1			//
+				mp_rr_arena_skygarden                          	1			//再来一次
 				mp_rr_party_crasher                      		1			//派对破坏者
-				mp_rr_canyonlands_mu1_night                    1			//S2诸王峡谷(黑夜)
-				mp_rr_canyonlands_staging                      1			//靶场
-				mp_rr_ashs_redemption                          1			//艾许战场
+				mp_rr_canyonlands_mu1_night                    	1			//S2诸王峡谷(黑夜)
+				mp_rr_canyonlands_staging                      	1			//靶场
+				mp_rr_ashs_redemption                          	1			//艾许战场
 				mp_rr_aqueduct									1			//熔岩流
 				mp_rr_arena_composite							1			//控制
 				mp_rr_aqueduct_night							1			//熔岩流(黑夜)
