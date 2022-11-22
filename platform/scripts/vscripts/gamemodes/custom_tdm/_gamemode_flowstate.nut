@@ -28,10 +28,18 @@ global function CreateShipRoomFallTriggers
 global function GiveFlowstateOvershield
 global function IsAdmin
 global function Flowstate_ServerSaveChat
+global function GetWhiteListedWeapons
+global function GetWhiteListedAbilities
+global function GiveRandomPrimaryWeaponMetagame
+global function GiveRandomSecondaryWeaponMetagame
+global function LoadCustomWeapon
 
 global function	ClientCommand_RebalanceTeams
 global function	ClientCommand_FlowstateKick
 global function	ClientCommand_ShowLatency
+global function WpnPulloutOnRespawn
+global function WpnAutoReload
+global function ReCheckGodMode
 
 const string WHITE_SHIELD = "armor_pickup_lv1"
 const string BLUE_SHIELD = "armor_pickup_lv2"
@@ -39,6 +47,8 @@ const string PURPLE_SHIELD = "armor_pickup_lv3"
 
 //TDM Saved Weapon List
 global table<string,string> weaponlist
+global table<string,string> skilllist //stored players skills
+global array<int> characterslist = [0,4,5,6,7,8,9,10] //allowed character for normal players
 
 global bool isBrightWaterByZer0 = false
 global const float KILLLEADER_STREAK_ANNOUNCE_TIME = 5
@@ -58,8 +68,8 @@ struct {
 	array<entity> playerSpawnedProps
 	array<ItemFlavor> characters
 	int SameKillerStoredKills=0
-	array<string> whitelistedWeapons
-	array<string> whitelistedAbilities
+	array<string> blacklistedWeapons
+	array<string> blacklistedAbilities
 	array<LocationSettings> locationSettings
     LocationSettings& selectedLocation
 	array<vector> thisroundDroppodSpawns
@@ -85,6 +95,7 @@ struct {
 	bool mapSkyToggle = false
 	array<string> allChatLines
 	array<string> battlelog
+	string authkey = ""
 } file
 
 struct PlayerInfo
@@ -157,27 +168,39 @@ void function _CustomTDM_Init()
 	}
 
 	AddClientCommandCallback("latency", ClientCommand_ShowLatency)
+	
+	//AddClientCommandCallback("myffadata", ClientCommand_MyFFAData)	
+	// AddClientCommandCallback("CC_MenuGiveAimTrainerWeapon", CC_MenuGiveAimTrainerWeapon)
+	// AddClientCommandCallback("CC_AimTrainer_SelectWeaponSlot", CC_AimTrainer_SelectWeaponSlot)
+	// AddClientCommandCallback("CC_AimTrainer_WeaponSelectorClose", CC_AimTrainer_CloseWeaponSelector)
+
 	AddClientCommandCallback("flowstatekick", ClientCommand_FlowstateKick)
 	AddClientCommandCallback("commands", ClientCommand_Help)
 	AddClientCommandCallback("say", ClientCommand_Say)
-	
+	AddClientCommandCallback("adminlogin", ClientCommand_adminlogin)
+
 	if(!FlowState_AdminTgive())
 	{
 		AddClientCommandCallback("saveguns", ClientCommand_SaveCurrentWeapons)
 		AddClientCommandCallback("resetguns", ClientCommand_ResetSavedWeapons)
+		AddClientCommandCallback("saveskills", ClientCommand_Maki_SaveCurSkill)
+		AddClientCommandCallback("resetskills", ClientCommand_Maki_ResetSkills)
 	}
 	
 	AddClientCommandCallback("controllerstate", ClientCommand_ControllerReport)
 	AddClientCommandCallback("shoubing", ClientCommand_ControllerSummary)
-
-	for(int i = 0; GetCurrentPlaylistVarString("whitelisted_weapon_" + i.tostring(), "~~none~~") != "~~none~~"; i++)
+	
+	if( is1v1EnabledAndAllowed() )
+		_soloModeInit(GetMapName())
+		
+	for(int i = 0; GetCurrentPlaylistVarString("blacklisted_weapon_" + i.tostring(), "~~none~~") != "~~none~~"; i++)
 	{
-		file.whitelistedWeapons.append(GetCurrentPlaylistVarString("whitelisted_weapon_" + i.tostring(), "~~none~~"))
+		file.blacklistedWeapons.append(GetCurrentPlaylistVarString("blacklisted_weapon_" + i.tostring(), "~~none~~"))
 	}
 
-	for(int i = 0; GetCurrentPlaylistVarString("whitelisted_ability_" + i.tostring(), "~~none~~") != "~~none~~"; i++)
+	for(int i = 0; GetCurrentPlaylistVarString("blacklisted_ability_" + i.tostring(), "~~none~~") != "~~none~~"; i++)
 	{
-		file.whitelistedAbilities.append(GetCurrentPlaylistVarString("whitelisted_ability_" + i.tostring(), "~~none~~"))
+		file.blacklistedAbilities.append(GetCurrentPlaylistVarString("blacklisted_ability_" + i.tostring(), "~~none~~"))
 	}
 
 	if(FlowState_PROPHUNT()){
@@ -375,7 +398,12 @@ void function _OnPlayerConnected(entity player)
 
 	if(FlowState_ForceCharacter()){
 		player.SetPlayerNetBool( "hasLockedInCharacter", true)
-		CharSelect(player)
+		
+		if(GetCurrentPlaylistVarBool("flowstateRandomCharacterOnSpawn", false))
+			GivePlayerRandomCharacter(player)
+		
+		if(GetCurrentPlaylistVarBool("flowstateForceCharacter", false))
+			CharSelect(player)
 	}
 
 	if(GetMapName() == "mp_rr_aqueduct")
@@ -472,12 +500,25 @@ void function _OnPlayerConnected(entity player)
 	}
 
 	thread __HighPingCheck( player )
+	
+	if( is1v1EnabledAndAllowed() )
+	{
+		addPlayerToSoloMode(player)
+	}
+}
+
+bool function is1v1EnabledAndAllowed()
+{
+	if (GetCurrentPlaylistVarBool("flowstate_1v1mode", false) && GetMapName() == "mp_rr_arena_composite")
+		return true
+	
+	return false
 }
 
 void function __HighPingCheck(entity player)
 {
 	wait 12
-    if(!IsValid(player)) return
+    if(!IsValid(player) || IsValid(player) && IsAdmin(player) ) return
 
 	if ( FlowState_KickHighPingPlayer() && (int(player.GetLatency()* 1000) - 40) > FlowState_MaxPingAllowed() )
 	{
@@ -564,13 +605,39 @@ void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
 	if(victim != attacker && GetCurrentPlaylistVarBool("flowstateBattleLogEnable", false ))
 		Flowstate_AppendBattleLogEvent(attacker, victim)
 	
+	if( is1v1EnabledAndAllowed() )
+	{
+		if(isPlayerInSoloMode(victim))
+		{
+			// _HandleRespawn( victim )
+			soloGroupStruct group = returnSoloGroupOfPlayer(victim) 
+			//也许这个group为空?
+			if(!group.IsKeep)
+				group.IsFinished =true //tell solo thread this round is finish
+			ClearInvincible(victim)
+			int invscore = victim.GetPlayerGameStat( PGS_DEATHS )
+			invscore++
+			victim.SetPlayerGameStat( PGS_DEATHS, invscore)
+
+			int invscore2 = victim.GetPlayerNetInt( "assists" )
+			invscore2++
+			victim.SetPlayerNetInt( "assists", invscore2 )
+			return
+		}//all respawn
+
+		if(isPlayerInWatingList(victim))
+		{
+			return
+		}//player who is wating for his opponent
+	}
+
 	switch(GetGameState())
     {
         case eGameState.Playing:
             // Víctim
             void functionref() victimHandleFunc = void function() : (victim, attacker, damageInfo) {
-				
-				wait 1.5
+
+				wait DEATHCAM_TIME_SHORT
 				
 				if(!IsValid(victim) || !IsValid(attacker)) return
 
@@ -588,7 +655,7 @@ void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
 				{
 					victim.FreezeControlsOnServer()
 	    			victim.SetObserverTarget( attacker )
-	    			victim.SetSpecReplayDelay( 4 )
+	    			victim.SetSpecReplayDelay( 2 + DEATHCAM_TIME_SHORT )
 	    			victim.StartObserverMode( OBS_MODE_IN_EYE )
 	    			Remote_CallFunction_NonReplay(victim, "ServerCallback_KillReplayHud_Activate")
 					thread CheckForObservedTarget(victim)
@@ -609,7 +676,7 @@ void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
 	    		//if(FlowState_Gungame())
 	    		    //KillStreakAnnouncer(victim, true)
 
-	    		if(file.tdmState != eTDMState.NEXT_ROUND_NOW)
+	    		if( file.tdmState != eTDMState.NEXT_ROUND_NOW && ShouldSetObserverTarget( attacker ) )
 	    		    wait Deathmatch_GetRespawnDelay()
 				
 				if( !IsValid( victim ) ) return
@@ -747,6 +814,13 @@ void function _HandleRespawn(entity player, bool isDroppodSpawn = false)
 
 	if( IsValid( player ) && player.IsPlayer() && !IsAlive(player) )
     {
+		if( GetCurrentPlaylistVarBool("flowstateRandomCharacterOnSpawn", false) && !GetCurrentPlaylistVarBool("flowstateForceCharacter", false) )
+		{
+			player.SetPlayerNetBool( "hasLockedInCharacter", false)
+			GivePlayerRandomCharacter(player)
+			player.SetPlayerNetBool( "hasLockedInCharacter", true)			
+		}
+		
         if(Equipment_GetRespawnKitEnabled() && !FlowState_Gungame())
         {
 			DecideRespawnPlayer(player, true)
@@ -874,8 +948,16 @@ void function _HandleRespawn(entity player, bool isDroppodSpawn = false)
 	if(FlowState_Gungame() && IsValid( player ))
 		GiveGungameWeapon(player)
 
+	
+
+	player.SetActiveWeaponBySlot(eActiveInventorySlot.mainHand, WEAPON_INVENTORY_SLOT_PRIMARY_2)
 	thread Flowstate_GrantSpawnImmunity(player, 2.5)
 	thread LoadCustomWeapon(player)		///TDM Auto-Reloaded Saved Weapons at Respawn
+	//maki script
+	thread LoadCustomSkill(player)	
+	
+	
+	//maki script
 }
 
 void function ReCheckGodMode(entity player)
@@ -902,19 +984,19 @@ void function Flowstate_GrantSpawnImmunity(entity player, float duration)
 {
 	if(!IsValid(player) || !IsValid(player) && !player.IsPlayer()) return
 	
-	thread WpnPulloutOnRespawn(player, 0)
+	// thread WpnPulloutOnRespawn(player, duration)
 
 	EmitSoundOnEntityOnlyToPlayer( player, player, "PhaseGate_Enter_1p" )
 	EmitSoundOnEntityExceptToPlayer( player, player, "PhaseGate_Enter_3p" )
 
 	StatusEffect_AddTimed( player, eStatusEffect.adrenaline_visuals, 1.0, duration, duration )
-	StatusEffect_AddTimed( player, eStatusEffect.speed_boost, 0.6, duration, duration )
+	StatusEffect_AddTimed( player, eStatusEffect.speed_boost, 0.3, duration, duration )
 	StatusEffect_AddTimed( player, eStatusEffect.drone_healing, 1.0, duration, duration )
 	StatusEffect_AddTimed( player, eStatusEffect.stim_visual_effect, 1.0, duration, duration )
 
-	//player.SetTakeDamageType( DAMAGE_NO )
-	//Highlight_SetEnemyHighlight( player, "survival_enemy_skydiving" )
-	//player.SetInvulnerable()
+	player.SetTakeDamageType( DAMAGE_NO )
+	Highlight_SetEnemyHighlight( player, "survival_enemy_skydiving" )
+	player.SetInvulnerable()
 
 	float endTime = Time() + duration
 	
@@ -934,28 +1016,45 @@ void function Flowstate_GrantSpawnImmunity(entity player, float duration)
 	StatusEffect_StopAllOfType( player, eStatusEffect.stim_visual_effect )
 	
 	thread ReCheckGodMode(player)
+	//maki script
+	wait 0.5
+	try
+	{
+		highlightKdMoreThan2(player)
+
+	}
+	catch(err){}
+	
+	//maki script
 }
 
 void function WpnPulloutOnRespawn(entity player, float duration)
 {
 	if(!IsValid( player ) || !IsAlive(player) ) return
-	
-	OnThreadEnd(
-	function() : ( player )
-		{
-			if( IsValid( player ) && file.tdmState != eTDMState.NEXT_ROUND_NOW )
-				DeployAndEnableWeapons( player )
-		}
-	)
-	
+	//maki script
+	// OnThreadEnd(
+	// function() : ( player )
+	// 	{
+	// 		if( IsValid( player ) && file.tdmState != eTDMState.NEXT_ROUND_NOW )
+	// 			DeployAndEnableWeapons( player )
+	// 	}
+	// )
+
+	// if( IsValid( player ) && file.tdmState != eTDMState.NEXT_ROUND_NOW )
+	// 	DeployAndEnableWeapons( player )
+	player.ClearFirstDeployForAllWeapons()
 	if(GetCurrentPlaylistVarBool("flowstateReloadTacticalOnRespawn", false ))
 	{
 		entity tactical = player.GetOffhandWeapon( OFFHAND_TACTICAL )
+		//maki script
+		if(!IsValid(tactical)) return
 		tactical.SetWeaponPrimaryClipCount( tactical.GetWeaponPrimaryClipCountMax() )
 	}
 	if(GetCurrentPlaylistVarBool("flowstateReloadUltimateOnRespawn", false ))
 	{
 		entity ultimate = player.GetOffhandWeapon( OFFHAND_ULTIMATE )
+		//maki script
+		if(!IsValid(ultimate)) return
 		ultimate.SetWeaponPrimaryClipCount( ultimate.GetWeaponPrimaryClipCountMax() )
 	}
 
@@ -970,11 +1069,28 @@ void function WpnPulloutOnRespawn(entity player, float duration)
 		weapon.SetWeaponCharm( $"mdl/props/charm/charm_nessy.rmdl", "CHARM")
 		player.SetActiveWeaponBySlot(eActiveInventorySlot.mainHand, WEAPON_INVENTORY_SLOT_PRIMARY_0)
 	}
-	player.ClearFirstDeployForAllWeapons()
-	HolsterAndDisableWeapons(player)
-	wait duration-0.2
+
+	//maki script
+	// HolsterAndDisableWeapons(player)
+	// wait duration-0.2
 }
 
+void function WpnAutoReload( entity player )
+{	
+	if(!IsValid(player)) return
+	
+	try
+	{
+		entity primary = player.GetNormalWeapon( WEAPON_INVENTORY_SLOT_PRIMARY_0 )
+		entity sec = player.GetNormalWeapon( WEAPON_INVENTORY_SLOT_PRIMARY_1 )
+		primary.SetWeaponPrimaryClipCount(primary.GetWeaponPrimaryClipCountMax())
+		sec.SetWeaponPrimaryClipCount(sec.GetWeaponPrimaryClipCountMax())
+	}
+	catch (error)
+	{
+		
+	}
+}
 
 void function WpnAutoReloadOnKill( entity player )
 {
@@ -1052,16 +1168,36 @@ void function GiveRandomPrimaryWeaponMetagame(entity player)
 	int slot = WEAPON_INVENTORY_SLOT_PRIMARY_0
 
     array<string> Weapons = [
-		"mp_weapon_rspn101 optic_cq_hcog_bruiser barrel_stabilizer_l3 stock_tactical_l3 bullets_mag_l3",
-		"mp_weapon_vinson optic_cq_hcog_bruiser stock_tactical_l3 highcal_mag_l3",
-		"mp_weapon_energy_ar optic_cq_hcog_bruiser hopup_turbocharger stock_tactical_l3"
+		"mp_weapon_r97 optic_cq_hcog_classic  stock_tactical_l1 bullets_mag_l2",
+		"mp_weapon_volt_smg optic_cq_hcog_classic energy_mag_l2  stock_tactical_l1",
+		"mp_weapon_r97 optic_cq_hcog_classic  stock_tactical_l1 bullets_mag_l2",
+		"mp_weapon_volt_smg optic_cq_hcog_classic energy_mag_l2  stock_tactical_l1",
+		"mp_weapon_r97 optic_cq_hcog_classic  stock_tactical_l1 bullets_mag_l2",
+		"mp_weapon_volt_smg optic_cq_hcog_classic energy_mag_l2  stock_tactical_l1",
+		"mp_weapon_r97 optic_cq_hcog_classic  stock_tactical_l1 bullets_mag_l2",
+		"mp_weapon_volt_smg optic_cq_hcog_classic energy_mag_l2  stock_tactical_l1",
+		"mp_weapon_r97 optic_cq_hcog_classic  stock_tactical_l1 bullets_mag_l2",
+		"mp_weapon_volt_smg optic_cq_hcog_classic energy_mag_l2  stock_tactical_l1",
+		"mp_weapon_r97 optic_cq_hcog_classic  stock_tactical_l1 bullets_mag_l2",
+		"mp_weapon_volt_smg optic_cq_hcog_classic energy_mag_l2  stock_tactical_l1",
+		"mp_weapon_r97 optic_cq_hcog_classic  stock_tactical_l1 bullets_mag_l2",
+		"mp_weapon_volt_smg optic_cq_hcog_classic energy_mag_l2  stock_tactical_l1",
+		"mp_weapon_r97 optic_cq_hcog_classic  stock_tactical_l1 bullets_mag_l2",
+		"mp_weapon_volt_smg optic_cq_hcog_classic energy_mag_l2  stock_tactical_l1",
+		"mp_weapon_r97 optic_cq_hcog_classic  stock_tactical_l1 bullets_mag_l2",
+		"mp_weapon_volt_smg optic_cq_hcog_classic energy_mag_l2  stock_tactical_l1",
+		"mp_weapon_energy_shotgun optic_cq_threat shotgun_bolt_l2",
+		"mp_weapon_energy_shotgun optic_cq_threat shotgun_bolt_l2",
+		"mp_weapon_mastiff",
+		"mp_weapon_shotgun optic_cq_threat shotgun_bolt_l3",
+		"mp_weapon_shotgun optic_cq_threat shotgun_bolt_l3",
 	]
 
 	foreach(weapon in Weapons)
 	{
 		array<string> weaponfullstring = split( weapon , " ")
 		string weaponName = weaponfullstring[0]
-		if(file.whitelistedWeapons.find(weaponName) != -1)
+		if(file.blacklistedWeapons.find(weaponName) != -1)
 				Weapons.removebyvalue(weapon)
 	}
 
@@ -1073,20 +1209,25 @@ void function GiveRandomSecondaryWeaponMetagame(entity player)
 	int slot = WEAPON_INVENTORY_SLOT_PRIMARY_1
 
     array<string> Weapons = [
-		"mp_weapon_wingman optic_cq_hcog_classic highcal_mag_l3",
-		"mp_weapon_energy_shotgun shotgun_bolt_l3 optic_cq_threat hopup_energy_choke",
-		"mp_weapon_shotgun shotgun_bolt_l3 optic_cq_threat",
-		"mp_weapon_r97 optic_cq_hcog_classic barrel_stabilizer_l3 stock_tactical_l3 bullets_mag_l3",
-		"mp_weapon_pdw optic_cq_hcog_classic stock_tactical_l3 highcal_mag_l3",
-		"mp_weapon_car optic_cq_hcog_classic barrel_stabilizer_l3 stock_tactical_l3 bullets_mag_l3",
-		//"mp_weapon_volt_smg optic_cq_hcog_classic barrel_stabilizer_l3 stock_tactical_l3 energy_mag_l3"
+		"mp_weapon_wingman optic_cq_hcog_classic highcal_mag_l2",
+		// "mp_weapon_rspn101 optic_cq_hcog_bruiser barrel_stabilizer_l4_flash_hider stock_tactical_l1 bullets_mag_l2",
+		"mp_weapon_rspn101 optic_cq_hcog_bruiser stock_tactical_l1 bullets_mag_l2",
+		"mp_weapon_vinson optic_cq_hcog_bruiser stock_tactical_l1 highcal_mag_l1",
+		"mp_weapon_wingman optic_cq_hcog_classic highcal_mag_l2",
+		"mp_weapon_rspn101 optic_cq_hcog_bruiser  stock_tactical_l1 bullets_mag_l2",
+		"mp_weapon_vinson optic_cq_hcog_bruiser stock_tactical_l2 highcal_mag_l1",
+		"mp_weapon_wingman optic_cq_hcog_classic highcal_mag_l2",
+		"mp_weapon_rspn101 optic_cq_hcog_bruiser  stock_tactical_l1 bullets_mag_l2",
+		"mp_weapon_vinson optic_cq_hcog_bruiser stock_tactical_l1 highcal_mag_l1",
+		//"mp_weapon_esaw optic_cq_hcog_bruiser energy_mag_l1 hopup_turbocharger",
+		"mp_weapon_energy_ar optic_cq_hcog_bruiser  energy_mag_l1 hopup_turbocharger",
 	]
 
 	foreach(weapon in Weapons)
 	{
 		array<string> weaponfullstring = split( weapon , " ")
 		string weaponName = weaponfullstring[0]
-		if(file.whitelistedWeapons.find(weaponName) != -1)
+		if(file.blacklistedWeapons.find(weaponName) != -1)
 				Weapons.removebyvalue(weapon)
 	}
 
@@ -1114,7 +1255,7 @@ void function GiveRandomPrimaryWeapon(entity player)
 	{
 		array<string> weaponfullstring = split( weapon , " ")
 		string weaponName = weaponfullstring[0]
-		if(file.whitelistedWeapons.find(weaponName) != -1)
+		if(file.blacklistedWeapons.find(weaponName) != -1)
 				Weapons.removebyvalue(weapon)
 	}
 
@@ -1126,7 +1267,7 @@ void function GiveRandomSecondaryWeapon( entity player)
 	int slot = WEAPON_INVENTORY_SLOT_PRIMARY_1
 
     array<string> Weapons = [
-		"mp_weapon_r97 optic_cq_holosight bullets_mag_l2 stock_tactical_l3 barrel_stabilizer_l3",
+		"mp_weapon_r97 optic_cq_holosight bullets_mag_l2 stock_tactical_l3 barrel_stabilizer_l4_flash_hider",
 		"mp_weapon_energy_shotgun shotgun_bolt_l2",
 		"mp_weapon_pdw highcal_mag_l3 stock_tactical_l2",
 		"mp_weapon_mastiff shotgun_bolt_l3",
@@ -1144,7 +1285,7 @@ void function GiveRandomSecondaryWeapon( entity player)
 	{
 		array<string> weaponfullstring = split( weapon , " ")
 		string weaponName = weaponfullstring[0]
-		if(file.whitelistedWeapons.find(weaponName) != -1)
+		if(file.blacklistedWeapons.find(weaponName) != -1)
 				Weapons.removebyvalue(weapon)
 	}
 
@@ -1156,13 +1297,13 @@ void function GiveActualGungameWeapon(int index, entity player)
 	int slot = WEAPON_INVENTORY_SLOT_PRIMARY_0
 
     array<string> Weapons = [
-		"mp_weapon_r97 optic_cq_hcog_classic barrel_stabilizer_l3 stock_tactical_l3 bullets_mag_l2",
+		"mp_weapon_r97 optic_cq_hcog_classic barrel_stabilizer_l4_flash_hider stock_tactical_l3 bullets_mag_l2",
 		"mp_weapon_wingman optic_cq_hcog_classic highcal_mag_l1",
-		"mp_weapon_rspn101 optic_cq_hcog_bruiser barrel_stabilizer_l3 stock_tactical_l3 bullets_mag_l2",
+		"mp_weapon_rspn101 optic_cq_hcog_bruiser barrel_stabilizer_l4_flash_hider stock_tactical_l3 bullets_mag_l2",
 		"mp_weapon_energy_shotgun shotgun_bolt_l1",
 		"mp_weapon_vinson optic_cq_hcog_bruiser stock_tactical_l3 highcal_mag_l3",
 		"mp_weapon_shotgun shotgun_bolt_l1",
-		"mp_weapon_hemlok optic_cq_hcog_bruiser stock_tactical_l3 highcal_mag_l3 barrel_stabilizer_l3",
+		"mp_weapon_hemlok optic_cq_hcog_bruiser stock_tactical_l3 highcal_mag_l3 barrel_stabilizer_l4_flash_hider",
 		"mp_weapon_mastiff",
 		"mp_weapon_pdw optic_cq_hcog_classic stock_tactical_l3 highcal_mag_l3",
 		"mp_weapon_autopistol optic_cq_hcog_classic bullets_mag_l1",
@@ -1173,7 +1314,7 @@ void function GiveActualGungameWeapon(int index, entity player)
 		"mp_weapon_energy_ar optic_cq_hcog_bruiser energy_mag_l3 stock_tactical_l3 hopup_turbocharger",
 		"mp_weapon_alternator_smg optic_cq_hcog_classic bullets_mag_l3 stock_tactical_l3",
 		"mp_weapon_semipistol",
-		"mp_weapon_esaw optic_cq_hcog_bruiser energy_mag_l1 barrel_stabilizer_l2",
+		//"mp_weapon_esaw optic_cq_hcog_bruiser energy_mag_l1 barrel_stabilizer_l2",
 		"mp_weapon_doubletake energy_mag_l3",
 		"mp_weapon_rspn101 optic_cq_hcog_classic bullets_mag_l1 barrel_stabilizer_l1 stock_tactical_l1",
 		"mp_weapon_wingman highcal_mag_l1",
@@ -1184,11 +1325,11 @@ void function GiveActualGungameWeapon(int index, entity player)
 		"mp_weapon_autopistol",
 		"mp_weapon_dmr optic_cq_hcog_bruiser highcal_mag_l2 barrel_stabilizer_l2 stock_sniper_l3",
 		"mp_weapon_pdw stock_tactical_l1 highcal_mag_l1",
-		"mp_weapon_esaw optic_cq_hcog_classic energy_mag_l1 barrel_stabilizer_l3",
+		//"mp_weapon_esaw optic_cq_hcog_classic energy_mag_l1 barrel_stabilizer_l4_flash_hider",
 		"mp_weapon_alternator_smg optic_cq_hcog_classic barrel_stabilizer_l2",
 		"mp_weapon_sniper",
 		"mp_weapon_defender optic_sniper stock_sniper_l2",
-		"mp_weapon_esaw optic_cq_holosight_variable",
+		//"mp_weapon_esaw optic_cq_holosight_variable",
 		"mp_weapon_rspn101 optic_cq_holosight_variable",
 		"mp_weapon_semipistol bullets_mag_l2"
 	]
@@ -1197,7 +1338,7 @@ void function GiveActualGungameWeapon(int index, entity player)
 	{
 		array<string> weaponfullstring = split( weapon , " ")
 		string weaponName = weaponfullstring[0]
-		if(file.whitelistedWeapons.find(weaponName) != -1)
+		if(file.blacklistedWeapons.find(weaponName) != -1)
 				Weapons.removebyvalue(weapon)
 	}
 
@@ -1221,7 +1362,7 @@ void function GiveRandomTac(entity player)
 		"mp_ability_phase_rewind"
 	]
 
-	foreach(ability in file.whitelistedAbilities)
+	foreach(ability in file.blacklistedAbilities)
 		Weapons.removebyvalue(ability)
 
 	if(IsValid(player))
@@ -1231,16 +1372,17 @@ void function GiveRandomTac(entity player)
 void function GiveRandomUlt(entity player )
 {
     array<string> Weapons = [
-		"//mp_weapon_grenade_gas",
+		//"mp_weapon_grenade_gas",
 		"mp_weapon_jump_pad",
-		"mp_weapon_phase_tunnel",
+		//"mp_weapon_phase_tunnel",
 		"mp_ability_3dash",
 		"mp_ability_hunt_mode",
-		"mp_weapon_grenade_creeping_bombardment",
-		"mp_weapon_grenade_defensive_bombardment"
+		//"mp_weapon_grenade_creeping_bombardment",
+		//"mp_weapon_grenade_defensive_bombardment"
+
 	]
 
-	foreach(ability in file.whitelistedAbilities)
+	foreach(ability in file.blacklistedAbilities)
 		Weapons.removebyvalue(ability)
 
 	if(IsValid(player))
@@ -1712,7 +1854,6 @@ void function RunTDM()
 {
     WaitForGameState(eGameState.Playing)
     AddSpawnCallback("prop_dynamic", _OnPropDynamicSpawned)
-	isTitanfallDeathcam = true
 
 	if(!Flowstate_DoorsEnabled()){
 		array<entity> doors = GetAllPropDoors()
@@ -1890,7 +2031,6 @@ void function SimpleChampionUI()
 	if( GetBestPlayer() != null )
 		SetChampion( GetBestPlayer() )
 
-	FlagClear( "SurvivalCommentary_FirstBloodReached" )
 	SurvivalCommentary_ResetAllData()
 
 	} catch(e4){}
@@ -2657,6 +2797,15 @@ void function __InitAdmins()
 	}
 }
 
+bool function ClientCommand_adminlogin(entity player, array < string > args) 
+{
+	if(file.authkey == "" || args.len() != 1 || file.mAdmins.find(player.GetPlayerName()) == -1 || args[0] != file.authkey) return false
+
+	player.p.isAdmin = true
+	Message(player, "Log in successful")
+	return true
+}
+
 string function GetOwnerName()
 {
 	if(file.mAdmins.len() != 0)
@@ -2667,14 +2816,79 @@ string function GetOwnerName()
 	unreachable
 }
 
-bool function IsAdminStr( string playername )
-{
-    return file.mAdmins.find(playername) != -1
-}
-
 bool function IsAdmin( entity player )
 {
-    return file.mAdmins.find(player.GetPlayerName()) != -1
+	if(file.authkey == "") return false
+	
+	return player.p.isAdmin
+}
+
+bool function CC_TDM_Weapon_Selector_Open( entity player, array<string> args )
+{
+	//green highlight?
+	
+	return true
+}
+
+bool function ClientCommand_MyFFAData(entity player, array < string > args) 
+{
+	// if( Time() - player.p.lastTimeDataRequestUsed < 5 )
+	// {
+		// printt("Cooldown request: " + player.GetPlayerName())
+		// return false
+	// }
+	
+	// thread ShowPlayerKD(player, args[0])
+	
+	return true
+}
+
+void function ShowPlayerKD(entity player, string name)
+{
+	// if(!IsValid(player)) 
+		// return
+	
+	// player.p.lastTimeDataRequestUsed = Time()
+	
+	// array<int> killsAndDeaths
+	// int timeOut = int(Time()) + 3
+	// string RequestIdString = GetUnixTimestamp().tostring()
+
+	// FS_DataPost( format("%s;%s",RequestIdString, name) )
+
+	// while ( killsAndDeaths.len() == 0 && timeOut > Time() && IsValid(player) )
+	// {
+		// //Requesting...
+		// killsAndDeaths = FS_DataGet(RequestIdString) //Sdk function
+		// WaitFrame()
+	// }
+	
+	// if(killsAndDeaths.len() == 0) 
+	// {
+		// printt("ERROR")
+		// return
+	// }
+
+	// float kd = getkd(killsAndDeaths[0],killsAndDeaths[1])
+	// float cRatio = getcontrollerratio(killsAndDeaths[2],killsAndDeaths[0])
+	
+	// printt("kills: " + killsAndDeaths[0] + " | deaths: " + killsAndDeaths[1] + " | kd: " + kd + " | controller kills: " + killsAndDeaths[2] + " | controller ratio: " + cRatio)
+	
+	// string tempStr = format("Your kd is %s",kd.tostring())
+	// Message(player,tempStr,"",5)	
+}
+
+float function getcontrollerratio(int count, int kills)
+//By michae\l/#1125 & Retículo Endoplasmático#5955
+{
+	float cCount
+	int floorcCount
+	if(count == 0) return 0
+	cCount = count.tofloat()/kills.tofloat() 
+	cCount = cCount*100
+	floorcCount = int(floor(cCount+0.5))
+	cCount = (float(floorcCount))/100
+	return cCount
 }
 
 bool function ClientCommand_FlowstateKick(entity player, array < string > args) {
@@ -2727,11 +2941,17 @@ bool function ClientCommand_ControllerSummary(entity player, array < string > ar
 
 bool function ClientCommand_SpectateEnemies(entity player, array<string> args)
 {
-    if ( GetGameState() == eGameState.MapVoting || GetGameState() == eGameState.WaitingForPlayers || file.tdmState == eTDMState.NEXT_ROUND_NOW )
+	if( GetCurrentPlaylistVarBool("flowstate_1v1mode", false) )
+		return false
+	
+    if ( GetGameState() == eGameState.MapVoting || GetGameState() == eGameState.WaitingForPlayers || file.tdmState == eTDMState.NEXT_ROUND_NOW || !player.p.isSpectating && !IsAlive( player ) )
         return false
 
 	if( Time() - player.p.lastTimeSpectateUsed < 3 )
+	{
+		Message( player, "An error has occured", "It is in cool down. Please try again later." )
 		return false
+	}
 	
     array<entity> enemiesArray = GetPlayerArray_Alive()
 	enemiesArray.fastremovebyvalue( player )
@@ -2742,6 +2962,7 @@ bool function ClientCommand_SpectateEnemies(entity player, array<string> args)
         if( !IsValid(specTarget) )
         {
             printf("error: try again")
+			Message( player, "An error has occured", "You could not specate the player you were trying to spectate. Please try again later." )
             return false
         }
 
@@ -2766,12 +2987,15 @@ bool function ClientCommand_SpectateEnemies(entity player, array<string> args)
 				player.StartObserverMode( OBS_MODE_IN_EYE )				
 				thread CheckForObservedTarget(player)
 				player.p.lastTimeSpectateUsed = Time()
-			} catch(e420){}
+			} catch(e420){
+				Message( player, "An error has occured", "Unknown error occurred. Please try again later." )
+			}
         }
     }
     else
     {
         printt("There is no one to spectate!")
+		Message( player, "An error has occured", "There are no players available to spectate. Please try again later." )
     }
     return true
 }
@@ -2840,6 +3064,17 @@ bool function ClientCommand_ShowLatency(entity player, array<string> args)
     return true
 }
 
+array<string> function GetWhiteListedWeapons()
+{
+	return file.blacklistedWeapons
+}
+
+array<string> function GetWhiteListedAbilities()
+{
+	return file.blacklistedAbilities
+}
+
+
 bool function ClientCommand_GiveWeapon(entity player, array<string> args)
 {
     if ( FlowState_AdminTgive() && !IsAdmin(player) )
@@ -2850,15 +3085,15 @@ bool function ClientCommand_GiveWeapon(entity player, array<string> args)
 
 	if(args.len() < 2) return false
 
-    if(file.whitelistedWeapons.len() && file.whitelistedWeapons.find(args[1]) != -1)
+    if(file.blacklistedWeapons.len() && file.blacklistedWeapons.find(args[1]) != -1)
 	{
-		Message(player, "武器白名单")
+		Message(player, "武器黑名单")
 		return false
 	}
 
-	if( file.whitelistedAbilities.len() && file.whitelistedAbilities.find(args[1]) != -1 )
+	if( file.blacklistedAbilities.len() && file.blacklistedAbilities.find(args[1]) != -1 )
 	{
-		Message(player, "技能白名单")
+		Message(player, "技能黑名单")
 		return false
 	}
 
@@ -3121,15 +3356,15 @@ bool function ClientCommand_SaveCurrentWeapons(entity player, array<string> args
 //Auto-load TDM Saved Weapons at Respawn
 void function LoadCustomWeapon(entity player)
 {
+	if(!IsValid(player)) return
 	if (player.GetPlayerName() in weaponlist)
-	{	print(weaponlist[player.GetPlayerName()])
+	{	
 		ClientCommand( player, weaponlist[player.GetPlayerName()] )
-		wait 0.1
+		wait 0.3
 		
 		if(!IsValid(player)) return
-		
-		WpnAutoReloadOnKill(player)
-		thread WpnPulloutOnRespawn(player, 0)
+		WpnAutoReload(player)
+		WpnPulloutOnRespawn(player, 0)
 	}
 }
 
@@ -3143,4 +3378,66 @@ bool function ClientCommand_ResetSavedWeapons(entity player, array<string> args)
 		delete weaponlist[player.GetPlayerName()]
 	}
 	return true
+}
+void function LoadCustomSkill(entity player)
+{	if (!IsValid(player)) return
+	if (player.GetPlayerName() in skilllist) //列表里存在该玩家数据
+	{	
+		array<string> splited = split(skilllist[player.GetPlayerName()] , ";")
+        	ClientCommand( player, "tgive t "+ splited[0] )
+        	ClientCommand( player, "tgive u "+ splited[1] )
+	}
+}
+bool function ClientCommand_Maki_SaveCurSkill(entity player, array<string> args)
+{	
+	try
+	{
+		entity ultimate = player.GetOffhandWeapon( OFFHAND_INVENTORY )
+		entity tactical = player.GetOffhandWeapon( OFFHAND_LEFT )
+		string skillname = tactical.GetWeaponClassName() + ";"
+		string ultname = ultimate.GetWeaponClassName()
+		skilllist[player.GetPlayerName()] <- skillname + ultname
+	}
+	catch(error)
+	{}	
+	
+	return true
+} 
+bool function ClientCommand_Maki_ResetSkills(entity player, array<string> args)
+{	
+	if (!IsValid(player)) return false
+	if (player.GetPlayerName() in skilllist)
+	{
+		delete skilllist[player.GetPlayerName()]
+	}
+	return true
+}
+
+void function GivePlayerRandomCharacter(entity player)
+{
+	if(!IsValid(player)) return
+	
+	array<ItemFlavor> characters = GetAllCharacters()
+	int random_character_index = RandomIntRangeInclusive(0,characterslist.len()-1)
+	ItemFlavor random_character = characters[characterslist[random_character_index]]
+	CharacterSelect_AssignCharacter( ToEHI( player ), random_character )
+	TakeAllWeapons(player)
+    GiveRandomPrimaryWeaponMetagame(player)
+	GiveRandomSecondaryWeaponMetagame(player)	
+	player.GiveWeapon( "mp_weapon_bolo_sword_primary", WEAPON_INVENTORY_SLOT_PRIMARY_2, [] )
+    player.GiveOffhandWeapon( "melee_bolo_sword", OFFHAND_MELEE, [] )
+    GiveRandomTac(player)
+    GiveRandomUlt(player)
+}
+void function highlightKdMoreThan2(entity player)
+{	
+	return //disable for solo mode
+	if (getkd(player.GetPlayerGameStat( PGS_KILLS ),player.GetPlayerGameStat( PGS_DEATHS )) >= 2)
+	{
+		Highlight_SetEnemyHighlight(player, "crypto_camera_friendly")
+	}
+	else
+	{
+		Highlight_ClearEnemyHighlight( player )
+	}
 }

@@ -382,8 +382,8 @@ void function SetupDefaultDevCommandsMP()
 		//SetupDevCommand( "Jump Randomly Forever", "script_client thread JumpRandomlyForever()" )
 
 		//SetupDevCommand( "Toggle Zeroing Mode", "script ToggleZeroingMode()" )
-		SetupDevCommand( "开启上帝模式", "script MakeInvincible( gp()[0] )" )
-		SetupDevCommand( "关闭上帝模式", "script ClearInvincible( gp()[0] )" )
+		SetupDevCommand( "开启上帝模式", "script EnableDemigod( gp()[0] )" )
+		SetupDevCommand( "关闭上帝模式", "script DisableDemigod( gp()[0] )" )
 		//SetupDevCommand( "Toggle Screen Alignment Tool", "script_client DEV_ToggleScreenAlignmentTool()" )
 
 		SetupDevCommand( "切换第三人称视角", "ToggleThirdPerson" )
