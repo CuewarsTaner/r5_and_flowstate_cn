@@ -5,6 +5,7 @@ global function CloseFRChallengesSettingsWpnSelector
 global function EnableBuyWeaponsMenuTabs
 global function DisableBuyWeaponsMenuTabs
 global function GetWeaponNameForUI
+global function SetWeaponSwitcherVisible
 
 struct
 {
@@ -71,6 +72,12 @@ void function InitFRChallengesSettingsWpnSelector( var newMenuArg )
 	AddButtonEventHandler( Hud_GetChild( file.menu, "SelectSecondaryWeapon"), UIE_CLICK, SelectSecondaryWeaponFunctFunct )
 	
 	Hud_SetSelected( Hud_GetChild( file.menu, "SelectPrimaryWeapon"), true )
+}
+
+void function SetWeaponSwitcherVisible( bool visible )
+{
+	Hud_SetVisible( Hud_GetChild( file.menu, "SelectPrimaryWeapon"), visible )
+	Hud_SetVisible( Hud_GetChild( file.menu, "SelectSecondaryWeapon"), visible )
 }
 
 void function DisableBuyWeaponsMenuTabs()

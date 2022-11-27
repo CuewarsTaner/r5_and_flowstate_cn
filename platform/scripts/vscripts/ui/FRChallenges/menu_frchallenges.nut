@@ -1,3 +1,4 @@
+//汉化
 global function InitFRChallengesResultsMenu
 global function OpenFRChallengesMenu
 global function CloseFRChallengesMenu

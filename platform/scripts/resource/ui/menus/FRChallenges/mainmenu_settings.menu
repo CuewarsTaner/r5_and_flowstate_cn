@@ -1,3 +1,4 @@
+//汉化
 scripts/resource/ui/menus/FRChallenges/mainmenu_settings.menu
 {
 	menu
@@ -477,7 +478,7 @@ scripts/resource/ui/menus/FRChallenges/mainmenu_settings.menu
 				"无护甲"      0
 				"等级1（白甲）"      1
 				"等级2（蓝甲）"  2
-				"等级3 （紫甲）"      3
+				"等级3（紫甲）"      3
 				"等级4（红甲）"  4
 			}
 			childGroupAlways        MultiChoiceButtonAlways
@@ -566,10 +567,11 @@ scripts/resource/ui/menus/FRChallenges/mainmenu_settings.menu
 			ConVar "hud_setting_accessibleChat"				
 			list
 			{
-				"较慢"      0
-				"正常"      1
-				"快"  2
-				"极快"      3		
+				"静止"	0
+				"较慢"	1
+				"正常"	2
+				"较快"	3
+				"极快"	4
 			}
 
 			pin_to_sibling          SpeedTargetsText

@@ -511,8 +511,8 @@ void function _OnPlayerConnected(entity player)
 			wait 9
 			if(!IsValid(player)) return
 			
-			EnableOffhandWeapons( player )
-			DeployAndEnableWeapons(player)
+			// EnableOffhandWeapons( player )
+			// DeployAndEnableWeapons(player)
 			soloModePlayerToWaitingList(player)
 
 			try
@@ -531,9 +531,16 @@ void function _OnPlayerConnected(entity player)
 
 bool function is1v1EnabledAndAllowed()
 {
-	if (GetCurrentPlaylistVarBool("flowstate_1v1mode", false) && GetMapName() == "mp_rr_arena_composite")
+	if (!GetCurrentPlaylistVarBool("flowstate_1v1mode", false) )
+		return false
+	switch (GetMapName())
+	{
+		case "mp_rr_arena_composite":
+		case "mp_rr_aqueduct":
 		return true
-	
+		default:
+		return false
+	}
 	return false
 }
 
@@ -582,18 +589,19 @@ void function Flowstate_AppendBattleLogEvent(entity killer, entity victim)
 	if( is1v1EnabledAndAllowed() )
 		flowstate_gamemode = "fs_1v1"
 	
-	if(IsValid(killer.GetNormalWeapon( WEAPON_INVENTORY_SLOT_PRIMARY_0 )))
-		attackerweapon1 = killer.GetNormalWeapon( WEAPON_INVENTORY_SLOT_PRIMARY_0 ).GetWeaponClassName()
-
-	if(IsValid(killer.GetNormalWeapon( WEAPON_INVENTORY_SLOT_PRIMARY_1 )))
+	if(IsValid(killer.GetLatestPrimaryWeapon( eActiveInventorySlot.mainHand )))
+		attackerweapon1 = killer.GetLatestPrimaryWeapon( eActiveInventorySlot.mainHand ).GetWeaponClassName()
+	
+	if(IsValid(killer.GetNormalWeapon( WEAPON_INVENTORY_SLOT_PRIMARY_0 )) && attackerweapon1 == killer.GetNormalWeapon( WEAPON_INVENTORY_SLOT_PRIMARY_0 ).GetWeaponClassName() && IsValid(killer.GetNormalWeapon( WEAPON_INVENTORY_SLOT_PRIMARY_1 )))
 		attackerweapon2 = killer.GetNormalWeapon( WEAPON_INVENTORY_SLOT_PRIMARY_1 ).GetWeaponClassName()
+	else if(IsValid(killer.GetNormalWeapon( WEAPON_INVENTORY_SLOT_PRIMARY_1 )) && attackerweapon1 == killer.GetNormalWeapon( WEAPON_INVENTORY_SLOT_PRIMARY_1 ).GetWeaponClassName() && IsValid(killer.GetNormalWeapon( WEAPON_INVENTORY_SLOT_PRIMARY_0 )))
+		attackerweapon2 = killer.GetNormalWeapon( WEAPON_INVENTORY_SLOT_PRIMARY_0 ).GetWeaponClassName()
 	
 	if(IsValid(victim.GetNormalWeapon( WEAPON_INVENTORY_SLOT_PRIMARY_0 )))
 		victimweapon1 = victim.GetNormalWeapon( WEAPON_INVENTORY_SLOT_PRIMARY_0 ).GetWeaponClassName()
 	
 	if(IsValid(victim.GetNormalWeapon( WEAPON_INVENTORY_SLOT_PRIMARY_1 )))
 		victimweapon2 = victim.GetNormalWeapon( WEAPON_INVENTORY_SLOT_PRIMARY_1 ).GetWeaponClassName()
-		
 	
 	string is_controller_dog = killer.p.AmIController.tostring()
 	if (!(killer_name.len()>0) || !(victim_name.len()>0) || !(is_controller_dog.len()>0)) return
@@ -853,7 +861,6 @@ void function _HandleRespawn(entity player, bool isDroppodSpawn = false)
 
 	if( player.p.isSpectating )
 		return
-
 	if( player.IsObserver() )
     {
 		player.SetSpecReplayDelay( 0 )
@@ -1194,20 +1201,26 @@ void function __GiveWeapon( entity player, array<string> WeaponData, int slot, i
 {
 	array<string> Data = split(WeaponData[select], " ")
 	string weaponclass = Data[0]
-
+	
+	if(weaponclass == "tgive") return
+	
 	array<string> Mods
 	foreach(string mod in Data)
 	{
 		if(strip(mod) != "" && strip(mod) != weaponclass)
 		    Mods.append( strip(mod) )
 	}
-
-	if(IsValid(player))
-	    player.GiveWeapon( weaponclass , slot, Mods )
-	else if(IsValid(player) && isGungame)
-	{
-		player.ReplaceActiveWeapon(slot, weaponclass, Mods)
-		player.SetActiveWeaponBySlot(eActiveInventorySlot.mainHand, WEAPON_INVENTORY_SLOT_PRIMARY_0)
+	
+	try{
+		if(IsValid(player))
+			player.GiveWeapon( weaponclass , slot, Mods )
+		else if(IsValid(player) && isGungame)
+		{
+			player.ReplaceActiveWeapon(slot, weaponclass, Mods)
+			player.SetActiveWeaponBySlot(eActiveInventorySlot.mainHand, WEAPON_INVENTORY_SLOT_PRIMARY_0)
+		}
+	}catch(e420){
+		printt("Invalid weapon name for tgive command.")
 	}
 }
 
@@ -1259,16 +1272,16 @@ void function GiveRandomSecondaryWeaponMetagame(entity player)
     array<string> Weapons = [
 		"mp_weapon_wingman optic_cq_hcog_classic highcal_mag_l2",
 		// "mp_weapon_rspn101 optic_cq_hcog_bruiser barrel_stabilizer_l4_flash_hider stock_tactical_l1 bullets_mag_l2",
-		"mp_weapon_rspn101 optic_cq_hcog_bruiser stock_tactical_l1 bullets_mag_l2",
-		"mp_weapon_vinson optic_cq_hcog_bruiser stock_tactical_l1 highcal_mag_l1",
+		"mp_weapon_rspn101 optic_cq_hcog_classic stock_tactical_l1 bullets_mag_l2",
+		"mp_weapon_vinson optic_cq_hcog_classic stock_tactical_l1 highcal_mag_l1",
 		"mp_weapon_wingman optic_cq_hcog_classic highcal_mag_l2",
-		"mp_weapon_rspn101 optic_cq_hcog_bruiser  stock_tactical_l1 bullets_mag_l2",
-		"mp_weapon_vinson optic_cq_hcog_bruiser stock_tactical_l2 highcal_mag_l1",
+		"mp_weapon_rspn101 optic_cq_hcog_classic  stock_tactical_l1 bullets_mag_l2",
+		"mp_weapon_vinson optic_cq_hcog_classic stock_tactical_l2 highcal_mag_l1",
 		"mp_weapon_wingman optic_cq_hcog_classic highcal_mag_l2",
-		"mp_weapon_rspn101 optic_cq_hcog_bruiser  stock_tactical_l1 bullets_mag_l2",
-		"mp_weapon_vinson optic_cq_hcog_bruiser stock_tactical_l1 highcal_mag_l1",
+		"mp_weapon_rspn101 optic_cq_hcog_classic  stock_tactical_l1 bullets_mag_l2",
+		"mp_weapon_vinson optic_cq_hcog_classic stock_tactical_l1 highcal_mag_l1",
 		//"mp_weapon_esaw optic_cq_hcog_bruiser energy_mag_l1 hopup_turbocharger",
-		"mp_weapon_energy_ar optic_cq_hcog_bruiser  energy_mag_l1 hopup_turbocharger",
+		"mp_weapon_energy_ar optic_cq_hcog_classic  energy_mag_l1 hopup_turbocharger",
 	]
 
 	foreach(weapon in Weapons)
@@ -2289,7 +2302,7 @@ void function SimpleChampionUI()
 		if( !IsValid( player ) ) continue
 		
 		AddCinematicFlag( player, CE_FLAG_HIDE_MAIN_HUD | CE_FLAG_EXECUTION )
-		Message( player,"本轮积分榜", "\n         Name:    K  |   D   |   KD   |   造成伤害 \n \n" + ScoreboardFinal() + "\n          Custom_tdm made by sal#3261.\n     Flowstate DM " + file.scriptversion + " made by @CafeFPS.", 7, "UI_Menu_RoundSummary_Results")
+		Message( player,"本轮积分榜", "\n         Name:    K  |   D   |   KD   |   造成伤害 \n \n" + ScoreboardFinal() + "\n \n"+ "Your data:\n" + player.GetPlayerName() + ":   " + player.GetPlayerGameStat( PGS_KILLS ) + " | " + player.GetPlayerGameStat( PGS_DEATHS ) + " | " + getkd(player.GetPlayerGameStat( PGS_KILLS ),player.GetPlayerGameStat( PGS_DEATHS )) + " | " + player.p.playerDamageDealt  + "\n\n               Custom_tdm by sal#3261.\n\n                    Flowstate DM " + file.scriptversion + " \n by @CafeFPS & 暇人のEndergreen#7138", 7, "UI_Menu_RoundSummary_Results" )
 	}
 
 	wait 7
@@ -2349,6 +2362,10 @@ entity function CreateRingBoundary(LocationSettings location)
     }
 
     ringRadius += GetCurrentPlaylistVarFloat("ring_radius_padding", 800)
+
+    if(is1v1EnabledAndAllowed())//we dont need rings in 1v1 mode
+    	ringRadius = 99999
+
 	//We watch the ring fx with this entity in the threads
 	entity circle = CreateEntity( "prop_script" )
 	circle.SetValueForModelKey( $"mdl/fx/ar_survival_radius_1x100.rmdl" )
@@ -3397,14 +3414,16 @@ bool function ClientCommand_SaveCurrentWeapons(entity player, array<string> args
 			optics1 = mod + " " + optics1
 		foreach (mod in mods2)
 			optics2 = mod + " " + optics2
-		weaponname1 = "tgive p "+weapon1.GetWeaponClassName()+" " + optics1 + "; "
-		weaponname2 = "tgive s "+weapon2.GetWeaponClassName()+" " + optics2
+
+		if(!IsValid(weapon1) || !IsValid(weapon2)) return false
+		weaponname1 = weapon1.GetWeaponClassName()+" " + optics1 + "; "
+		weaponname2 = weapon2.GetWeaponClassName()+" " + optics2
 	}
 	catch(error)
-	{}	
+	{}
+
+	if(weaponname1 == "" || weaponname2 == "") return false //dont save if player is dead
 	weaponlist[player.GetPlayerName()] <- weaponname1+weaponname2
-	// print(weaponname1)
-	// print(weaponname2)
 	return true
 }
 
