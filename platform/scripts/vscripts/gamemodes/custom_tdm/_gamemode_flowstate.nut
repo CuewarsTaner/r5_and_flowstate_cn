@@ -55,6 +55,8 @@ global bool isBrightWaterByZer0 = false
 global const float KILLLEADER_STREAK_ANNOUNCE_TIME = 5
 table playersInfo
 
+//solo mode
+global function CheckForObservedTarget
 enum eTDMState
 {
 	IN_PROGRESS = 0
@@ -192,8 +194,10 @@ void function _CustomTDM_Init()
 	AddClientCommandCallback("controllersummary", ClientCommand_ControllerSummary)
 	
 	if( is1v1EnabledAndAllowed() )
+	{
 		AddClientCommandCallback("rest", ClientCommand_Maki_SoloModeRest)
 		_soloModeInit(GetMapName())
+	}
 		
 	for(int i = 0; GetCurrentPlaylistVarString("blacklisted_weapon_" + i.tostring(), "~~none~~") != "~~none~~"; i++)
 	{
@@ -858,7 +862,6 @@ void function CheckForObservedTarget(entity player)
 void function _HandleRespawn(entity player, bool isDroppodSpawn = false)
 {
     if(!IsValid(player)) return
-
 	if( player.p.isSpectating )
 		return
 	if( player.IsObserver() )
